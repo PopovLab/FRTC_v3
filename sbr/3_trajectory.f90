@@ -69,8 +69,8 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
     integer, parameter :: unit_bias = 10
     integer, parameter :: m=7
     real(wp), parameter :: pleft=1.d-10 !m may be chaged together with name(m)
-    real(wp) ptt(m),pll(m),pcc(m),paa(m)
-    real(wp) pt_c(m),pl_c(m),pc_c(m),pa_c(m)
+    !real(wp) ptt(m),pll(m),pcc(m),paa(m)
+    !real(wp) pt_c(m),pl_c(m),pc_c(m),pa_c(m)
     character(40) fname
     character*40 name(m)
     save name !sav#
@@ -109,18 +109,8 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
     end do
     close(1)
 
-    do n=1,m
-        open(n+unit_bias,file=name(n))
-        write(n+unit_bias,*)
-        close(n+unit_bias)
-        open(n+unit_bias,file=name(n))
-        write(n+unit_bias,3)
-        write(n+unit_bias,*)
-        ptt(n)=zero
-        pll(n)=zero
-        pcc(n)=zero
-        paa(n)=zero
-    end do
+    open(1,file=fname)
+    write(1,3) !write header 
     ntraj=0 !sav2008
     do itr=1,nnz*ntet !sav2008
         pow=1.d0
@@ -215,17 +205,11 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
                     nturn=nturn+1
                     jznak=-jznak
                 end if
-                mn = nturn + unit_bias
-                write(mn, 7) x,z,xr,th,parn,npoli,pt,pl,pc,pa,ifast,idir,itr
-                mm = m + unit_bias
-                write(mm, 7) x,z,xr,th,parn,npoli,pt,pl,pc,vthcg,ifast,idir,itr
-                do n=m,nturn,-1
-                    pt_c(n)=pt
-                    pl_c(n)=pl
-                    pc_c(n)=pc
-                    pa_c(n)=pa
-                end do
-                if(pt.ge.1d0-pleft) go to 11 !maximal absorbed power along a ray
+                !mn = nturn + unit_bias
+                !write(mn, 7) x,z,xr,th,parn,npoli,pt,pl,pc,pa,ifast,idir,itr
+                !mm = m + unit_bias
+                write(1, 7) x,z,xr,th,parn,npoli,pt,pl,pc,vthcg,ifast,idir,itr
+                 if(pt.ge.1d0-pleft) go to 11 !maximal absorbed power along a ray
             end do
             jchek=jrad(ie+1)
             if(jchek.ne.0) then  !continue this trajectory
@@ -234,23 +218,12 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
                 goto 10
             end if
 11          continue
-            do n=1,m
-                ptt(n)=ptt(n)+pt_c(n)
-                pll(n)=pll(n)+pl_c(n)
-                pcc(n)=pcc(n)+pc_c(n)
-                paa(n)=paa(n)+pa_c(n)
-            end do
-            if(itr.lt.nnz*ntet) then
-                write(m+unit_bias,*)
-                write(nturn+unit_bias,*)
-            end if
+
         end if
     end do
-    do n=1,m
-        close(n+unit_bias)
-    end do
 
 
+    close(1)
 
 
 1     format(2x,'N_traj',3x,'mbad',6x,'theta',9x,'Npar',9x,'rho_start')
