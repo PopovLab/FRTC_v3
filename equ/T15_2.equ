@@ -66,7 +66,7 @@ QLH=4.0d0;
 CF1=0.1d-3;  !interval between lhcd() calls, sec
 CF2=0.180d0;  !first call of lhcd()
 CF3=0.21d0;
-DSTART=0.175;
+DSTART=0.16;
 debug:0.0001:DSTART::;
 saveprofiles::CF2:CF3:;
 lhcd2017(PELH):CF1:CF2:CF3:;
@@ -78,8 +78,10 @@ CCD2=IINT(CULHB);   !driven current
 
 !========Current Density===========
 IPL=1.0;
-CU:Eq;
-CU=0.3;
+CU:As;
+CU=CUX;
+!CU:Eq;
+!CU=0.3;
 CC="work(j,303)"; !+CCMHD;
 CD=CULH;
 CUBS="work(j,301)";
@@ -150,7 +152,6 @@ Iohm_IOHMB_-10;
 L_LINT_2;
 V_UPLB_2; 
 ICD_ILHB_-21;
-
 
 
 
