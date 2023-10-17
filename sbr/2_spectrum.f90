@@ -408,8 +408,7 @@ module spectrum1D
     use spectrum_mod
     implicit none    
 
-    type(Spectrum) :: full_spectrum
-    type(Spectrum) :: pos_spectr, neg_spectr
+
     integer :: ispl
     !! size of spectrum
     real(wp) :: plaun

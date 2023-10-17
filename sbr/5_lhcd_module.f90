@@ -1,8 +1,12 @@
 module lhcd_module
     !! LHCD модуль
     use kind_module
+    use spectrum_mod
     implicit none
     
+    type(Spectrum) :: full_spectrum
+    type(Spectrum) :: pos_spectr, neg_spectr
+
     real(wp), dimension(:), allocatable:: vvj, vdfj
 
     integer, parameter :: kpt1=20, kpt3=20
