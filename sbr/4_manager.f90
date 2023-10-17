@@ -9,7 +9,6 @@ contains
         use constants            
         use plasma
         use rt_parameters, only : nr, ipri, iw, nmaxm, pabs0, eps, eps_const            
-        !use spectrum1D, only: ynzm, pm
         use trajectory
         use spectrum_mod
         use iterator_mod,only: plost, pnab

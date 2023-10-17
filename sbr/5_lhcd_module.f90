@@ -15,7 +15,6 @@ contains
         use chebyshev
         use plasma
         use rt_parameters
-        !use spectrum1D
         use maxwell      
         use trajectory, only: view, nrefj, init_trajectory
         use spectrum_mod
