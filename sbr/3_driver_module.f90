@@ -218,6 +218,7 @@ contains
         use current
         use dispersion_module
         !implicit real*8 (a-h,o-z)
+        implicit none
         real(wp), intent(in) :: pabs
         real(wp)    :: radth
         !dimension an1(length),an2(length)
