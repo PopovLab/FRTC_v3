@@ -256,24 +256,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         paa(n)=paa(n)/dble(ntraj)
     end do
 
-    open(1,file='lhcd/out/absorp.dat')
-    write(1,2)
-    write(1,*)
-    do n=1,m-1
-        if(n.eq.1) then
-            dpt=ptt(n)
-            dpl=pll(n)
-            dpc=pcc(n)
-            dpa=paa(n)
-        else
-            dpt=ptt(n)-ptt(n-1)
-            dpl=pll(n)-pll(n-1)
-            dpc=pcc(n)-pcc(n-1)
-            dpa=paa(n)-paa(n-1)
-        end if
-        write(1,4) n,ptt(n),pll(n),pcc(n),paa(n),dpt,dpl,dpc,dpa
-    end do
-    close(1)
+
 
 1     format(2x,'N_traj',3x,'mbad',6x,'theta',9x,'Npar',9x,'rho_start')
 2     format('R_pass',4x,'Ptot',6x,'Pland',6x,'Pcoll',8x,'Pa',7x,'dPtot',6x,'dPland',5x,'dPcoll',6x,'dPa')
