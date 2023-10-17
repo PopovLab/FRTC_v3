@@ -267,29 +267,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         pcc(n)=pcc(n)/dble(ntraj)
         paa(n)=paa(n)/dble(ntraj)
     end do
-    open(1,file='lhcd/out/info_traj.dat')
-    write(1,20) tview
-    write(1,*)
-    do n=1,m-1
-        if(n.lt.m-1) then
-            write(1,8) n,ptt(n),pll(n),pcc(n),paa(n)
-        else
-            write(1,9) ptt(n),pll(n),pcc(n),paa(n)
-        end if
-        write(1,*)
-    end do
-    write(1,*)
-    write(1,1)
-    write(1,*)
-    itr=0
-    do itet=1,ntet
-        tetin=tet1+htet*(itet-1)
-        do inz=1,nnz
-            itr=itr+1
-            write(1,6) itr,mbad(itr),tetin,ynzm(inz),rbeg(itr)
-        end do
-    end do
-    close(1)
+
     open(1,file='lhcd/out/absorp.dat')
     write(1,2)
     write(1,*)
