@@ -143,27 +143,23 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
                 dek3=zero
                 th=tetai(i)
                 parn=xnpar(i)
-!         xn1=an1(i)
-!         xn2=an2(i)
                 if(itend0.gt.0) then
                     argum=clt/(refr*valfa)
                     dek3=zatukh(argum,abs(jr),vperp,kv)
                 end if
-                ! old variant
-                ! call raspr(v,abs(jr),iv,df)
-                !
+
                 call distr(v,abs(jr),iv,df)
                 if(jr.lt.0) then    !case of turn
                     jr=-jr
-!variant          pintld=-dland(i)*df
-!!          pintld=-dland(i)*(dflf+dfrt)/2d0
+                    !variant          pintld=-dland(i)*df
+                    !!          pintld=-dland(i)*(dflf+dfrt)/2d0
                     pintld=dabs(dland(i)*(dflf+dfrt)/2d0)
                     pdec2=dexp(-2d0*dcoll(i))
                     pintal=dabs(dalf(i)*dek3)
                 else
                     pdec2=dcoll(i)
                     pdecv=dland(i)
-!!          pdec1=-pdecv*df
+                    !!          pdec1=-pdecv*df
                     pdec1=dabs(pdecv*df)
                     pdec3=dabs(dalf(i)*dek3)
                     pintld=(pdec1+pdec1z)/2d0*h
@@ -209,7 +205,8 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
                 !write(mn, 7) x,z,xr,th,parn,npoli,pt,pl,pc,pa,ifast,idir,itr
                 !mm = m + unit_bias
                 write(1, 7) x,z,xr,th,parn,npoli,pt,pl,pc,vthcg,ifast,idir,itr
-                 if(pt.ge.1d0-pleft) go to 11 !maximal absorbed power along a ray
+                
+                if(pt.ge.1d0-pleft) go to 11 !maximal absorbed power along a ray
             end do
             jchek=jrad(ie+1)
             if(jchek.ne.0) then  !continue this trajectory
