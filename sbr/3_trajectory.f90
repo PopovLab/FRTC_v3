@@ -249,12 +249,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
     do n=1,m
         close(n+unit_bias)
     end do
-    do n=1,m
-        ptt(n)=ptt(n)/dble(ntraj)
-        pll(n)=pll(n)/dble(ntraj)
-        pcc(n)=pcc(n)/dble(ntraj)
-        paa(n)=paa(n)/dble(ntraj)
-    end do
+
 
 
 
