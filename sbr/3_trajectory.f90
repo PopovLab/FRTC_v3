@@ -108,18 +108,6 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         write(1,5) x,z
     end do
     close(1)
-    open(1,file='lhcd/out/npar_crit.dat')
-    write(1,*)'  Npar_crit=sqrt(50/Te(keV))'
-    write(1,*)
-    write(1,*)'   rho         Npar_strong absorption'
-    write(1,*)
-    do i=1,101
-        xr=dble(i-1)/dble(100)
-        tmp=ft(xr)/0.16d-8  !Te,  KeV
-        parn_c=dsqrt(50d0/tmp)
-        write(1,5) xr,parn_c
-    end do
-    close(1)
 
     do n=1,m
         open(n+unit_bias,file=name(n))
