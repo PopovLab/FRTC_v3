@@ -16,7 +16,7 @@
       },
       "xmi1": {
         "title": "xmi1",
-        "value": 2.0,
+        "value": 1.0,
         "type": "float",
         "description": "Mi1/Mp,  relative mass of ions 1"
       },
@@ -321,7 +321,7 @@
         },
         "spline": {
           "title": "Spline",
-          "value": true,
+          "value": false,
           "type": "logical",
           "description": "Apply spline approximation"
         }

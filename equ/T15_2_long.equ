@@ -5,10 +5,10 @@ DPOUT=1.d-4;
 DROUT=1.d-4;
 DTOUT=0.00001;
 TSTART = 0.11;
-TEND = 0.3;
+TEND = 10.3;
 TINIT=0.178;
 TSCALE = 0.032;
-TPAUSE = 0.2;
+TPAUSE = 10.2;
 
      
 !BTOR=1.0d0;
@@ -64,9 +64,9 @@ CCD3=VINT(CAR12B);  !absorbed power via collisional damping
 QLH=4.0d0;
 
 CF1=0.1d-3;  !interval between lhcd() calls, sec
-CF2=0.180d0;  !first call of lhcd()
-CF3=0.21d0;
-DSTART=0.16;
+CF2=9.950d0;  !first call of lhcd()
+CF3=10.21d0;
+DSTART=9.9;
 debug:0.0001:DSTART::;
 saveprofiles::CF2:CF3:;
 lhcd2017(PELH):CF1:CF2:CF3:;
