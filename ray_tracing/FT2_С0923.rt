@@ -16,7 +16,7 @@
       },
       "xmi1": {
         "title": "xmi1",
-        "value": 2.0,
+        "value": 1.0,
         "type": "float",
         "description": "Mi1/Mp,  relative mass of ions 1"
       },
@@ -304,7 +304,7 @@
     },
     "spectrum": {
       "spectrum_type": "spectrum_1D",
-      "source": "C:/Users/user1/Desktop/WK/1spcpz.dat",
+      "source": "C:/Users/user1/Desktop/spec/19_10/spcpz.dat",
       "parameters": {
         "angle": {
           "title": "Angle",
