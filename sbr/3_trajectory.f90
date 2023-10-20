@@ -54,7 +54,9 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
     use spectrum1D, only: ynzm, pm 
     use dispersion_module
     use driver_module !, only: jrad, iww, izz, length
-    implicit real(wp) (a-h,o-z)
+    #implicit real(wp) (a-h,o-z)
+    implicit none
+    
     real(wp), intent(in) :: tview
 
     integer, intent(in) :: ispectr, nnz, ntet  !sav#
@@ -69,6 +71,14 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
     integer, parameter :: unit_bias = 10
     integer, parameter :: m=7
     real(wp), parameter :: pleft=1.d-10 !m may be chaged together with name(m)
+
+    real(wp) :: htet, h, xr, xdl, xdlp, xly, xlyp, xgm, xgmp, th
+    real(wp) :: x, xx, z, zz, pl, pc, pa
+    real(wp) :: pdec1z, pdec3z, pintld, pintal
+    real(wp) :: cotet, sitet
+    real(wp) :: v, refr, dek3, parn, argum
+    real(wp) :: df, powpr, powd, powal, pil, pic
+    real(wp) :: powcol, pia, pt, denom, powdamped, domin, fff
     !real(wp) ptt(m),pll(m),pcc(m),paa(m)
     !real(wp) pt_c(m),pl_c(m),pc_c(m),pa_c(m)
     character(40) fname
