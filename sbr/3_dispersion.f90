@@ -466,7 +466,51 @@ contains
         !use trajectory, only: 
         !use dispersion_module, only: yn3, icall1, icall2, ynz, ynpopq
         !use dispersion_module, only: disp2, source_new
-        implicit real*8 (a-h,o-z)
+        !implicit real*8 (a-h,o-z)
+        implicit none
+        real(wp), intent(inout) :: pa
+        real(wp), intent(in)    :: yn2
+        real(wp), intent(in)    :: ptet
+        real(wp), intent(inout) :: xnr
+            
+        real(wp) :: pn
+        real(wp) :: fnr, fnrr
+        real(wp) :: wpq
+        real(wp) :: xdl, xdlp, xdlpp
+        real(wp) :: xly, xlyp, xlypp, xlyv
+        real(wp) :: xgm, xgmp, xgmpp
+        real(wp) :: xmy, xmyp
+        real(wp) :: dxdr, dxrt, dzdr, dzdt
+        real(wp) :: dxdrdr, dxdtdt, dxdtdr, dxdrdt
+        real(wp) :: dzdrdr, dzdtdr, dzdtdt
+        real(wp) :: dvdr, du1dr, dudr, du1dt, dudt
+        real(wp) :: cotet, sitet
+        real(wp) :: x0, x0t, x0r, xj, xjr, xjt
+        real(wp) :: dxdt, dzdrdt
+        real(wp) :: g2jq, g2gq, g22q, g33q
+        real(wp) :: b, bt, bp, bpt, bpr, btr, btt
+        real(wp) :: bar, bat
+        real(wp) :: sit, cot, sir, cor
+        real(wp) :: v, vt, vpop, vpopr, vpopt, u, u1
+        real(wp) :: sl1, pnye, pnyi, tmp
+        real(wp) :: fcoll, dek1, dek2
+        real(wp) :: e1, e2, e3
+        real(wp) :: e1t, e1r, e2t, e2r, e3r
+        real(wp) :: ynzr, ynzt, ynzqr, ynzqt, ynpopqr, ynpopqt
+        real(wp) :: whe, wde3dw, wdbsdw, wdcsdw, wdhdw
+        real(wp) :: yny, ynzq, ynyr, ynyt
+        real(wp) :: gpr, dgpr, gdop, gprr,  gprt, gdopr, gdopt
+        real(wp) :: as, bs, cs 
+        real(wp) :: asr, bsr, csr, ast, bst, cst
+        real(wp) :: dhdv, dhdu
+        real(wp) :: dnx, dny, dnz, ddn2
+        real(wp) :: gr, gt, g11r, g22r, g11t, g22t,  g12r, g12t
+        real(wp) :: g22qr, g22qt, g33qr, g33qt
+        real(wp) :: g2jqr, g2jqt
+        real(wp) :: g33r, g33t
+        real(wp) :: g2gqt, g2gqr
+        real(wp) :: source
+        real(wp) :: aimh
         !common /bcef/ ynz,ynpopq
         !common /aef2/ icall1,icall2
 
@@ -480,7 +524,7 @@ contains
         integer :: idec
         irefl=0
         iconv=0
-        if(pa.eq.zero) pa=1.d-7
+        if(pa.eq.zero) pa=1.d-7 ! TODO не хорошо, что изменяется pa
         if(pa.lt.zero) pa=dabs(pa)
         !sav2008      if(pa.gt.one) then
         !sav2008       dhdm=666d0
@@ -735,7 +779,7 @@ contains
                 !cc        tdens=dn2*pn
                 !cc        tt=fti(pa)**0.33333d0    ! (ti, kev)^1/3
                 !cc        source=4d-12*factor*ddens*tdens*dexp(-20d0/tt)/tt**2
-                call source_new(pa,source)
+                call source_new(pa, source)
                 dek1=cnstal*pdec14*(1.d0-e3/ynpopq)**2/dsqrt(ynpopq)
                 dek2=source/(fcoll*pn)
                 pdec34=dek1*dek2
