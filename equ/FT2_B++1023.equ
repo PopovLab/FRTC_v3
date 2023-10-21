@@ -20,24 +20,25 @@ CF3 = 0.034d0;
 
 NE:AS;
 
-!NE = NEX;
+NE = NEX;
 CF10 = 1.5d0*(1.d0+0.5d0*FRAMP(CF2,CF3));
 CF11 = 0.15d0;
 CF13 = 0.015d0;
 CF14 = 1.5d0;
-NE = (CF10-CF11)*FPA**CF14+CF11;
+!NE = (CF10-CF11)*FPA**CF14+CF11;
 !NE = (CF10+CF11)*EXP(-(CF14+0.4)*(RHO/ROC)**2);
 
 TE:AS;
 CF12 = 0.58d0*(1.d0-0.2d0*FRAMP(TSTART,0.030));
-TE = (CF12-CF13)*FPA**CF14+CF13 + 0.13*FRAMP(0.030,CF3);
+TE = TEX;
+!TE = (CF12-CF13)*FPA**CF14+CF13 + 0.13*FRAMP(0.030,CF3);
 !TE = (CF12+CF13 + 0.13*FRAMP(0.030,CF3))*EXP(-(CF14+0.4)*(RHO/ROC)**2);
 
 !----------------- Ion parametrs -----------------
 
 TI:AS;
 
-TI = 0.25*(1.d0+0.1d0*FRAMP(TSTART,CF3))*FPR**CF14+CF13;
+TI = 0.21*(1.d0+0.1d0*FRAMP(TSTART,CF3))*FPR**CF14+CF13;
 !TI = 0.265*(1.d0+0.1d0*FRAMP(TSTART,CF3))*EXP(-(CF14+0.4)*(RHO/ROC)**2);
 
 !----------------- Impurities -----------------
@@ -89,7 +90,7 @@ CCD2 = IINT(CULHB);
 J\CU\-1;       Upl\UPL;       Johm\CUOHM\8;   E\UPL/RTOR/GP2;
 Poh\POH\-2;    Te\TE;         CC\CC\-3;       Q\1./MU;
 Jlh\CULH\-1;   Plh\PELH;      Jlh\CULH\8;     En\CAR24;
-Plh\PELH\-2;   Ne\NE\\NEX;    sig\CAR32\-3;   Chr\CAR31; 
+Plh\PELH\-2;   Ne\NE;         sig\CAR32\-3;   Chr\CAR31; 
 
 !----------------- Time output -----------------
 
