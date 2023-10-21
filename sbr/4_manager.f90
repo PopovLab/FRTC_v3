@@ -247,6 +247,7 @@ contains
         use spectrum_mod
         !use trajectory
         use dispersion_module
+        use metrics
         implicit none
 
         type(SpectrumPoint), intent(in) :: point

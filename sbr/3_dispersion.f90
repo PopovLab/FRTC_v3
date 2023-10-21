@@ -1,3 +1,85 @@
+module metrics
+    use kind_module    
+    implicit none
+
+    real(wp) :: g11,g12,g22,g33,gg,g,si,co
+    !!common/metrika/g11,g12,g22,g33,gg,g,si,co    
+    real(wp) :: g2v1, g2jq, g3v
+    real(wp) :: b, bp, bt
+
+    real(wp) :: x0, x0t, xj, xjt
+    real(wp) :: dxdr, dxdt, dzdr, dzdt
+    real(wp) :: dxdrdt, dxdtdt, dzdrdt, dzdtdt
+    real(wp) :: bat, bpt,  btt
+    real(wp) :: g2jqt
+    real(wp) :: g11t, g22t, g33t, g12t, gprt
+contains        
+    subroutine calculate_metrics(pa,ptet)
+        use constants
+        use approximation
+        use plasma
+        use rt_parameters
+        implicit none
+        real(wp), intent(in) :: pa
+        real(wp), intent(in) :: ptet
+        real(wp) :: xdl, xdlp, xly, xlyp
+        real(wp) :: xgm, xgmp, xmy, xmyp, xlyv, cotet, sitet
+
+
+        xdl=fdf(pa,cdl,ncoef,xdlp)
+        xly=fdf(pa,cly,ncoef,xlyp)
+        xgm=fdf(pa,cgm,ncoef,xgmp)
+        xmy=fdf(pa,cmy,ncoef,xmyp)
+        xlyv=xlyp*pa+xly
+        cotet=dcos(ptet)
+        sitet=dsin(ptet)
+        dxdr=-xdlp+cotet-xgmp*sitet**2
+        dxdt=-(pa+two*xgm*cotet)*sitet
+        dzdr=xlyv*sitet
+        dzdt=xly*pa*cotet
+        x0=r0/rm-xdl+pa*cotet-xgm*sitet**2
+        dxdrdt=-sitet-two*xgmp*sitet*cotet
+        dzdrdt=xlyv*cotet
+        dxdtdt=-pa*cotet-two*xgm*(cotet**2-sitet**2)
+        dzdtdt=-xly*pa*sitet
+        x0t=dxdt
+        !--------------------------------------
+        ! components of metric tensor
+        !--------------------------------------
+        g11=dxdr**2+dzdr**2
+        g22=dxdt**2+dzdt**2
+        g12=dxdr*dxdt+dzdr*dzdt
+        g33=x0**2
+        xj=(dzdr*dxdt-dxdr*dzdt)**2  !gg=g11*g22-g12*g12
+        gg=xj
+        g=xj*g33
+        g2v1=one/dsqrt(g22)
+        g2jq=dsqrt(g22/xj)
+        g3v=one/dsqrt(g33)
+        !--------------------------------------
+        !  magnetic field
+        !--------------------------------------
+        bt=b_tor*(r0/rm)/x0
+        bp=g2jq*g3v*xmy
+        b=dsqrt(bp*bp+bt*bt)
+        si=bp/b
+        co=bt/b
+
+        !------ calculation of derivatives ------
+
+        g11t=two*(dxdr*dxdrdt+dzdr*dzdrdt)
+        g22t=two*(dxdt*dxdtdt+dzdt*dzdtdt)
+        g33t=two*x0*(-pa*sitet-two*xgm*sitet*cotet)
+        g12t=dxdrdt*dxdt+dxdr*dxdtdt+dzdrdt*dzdt+dzdr*dzdtdt
+        xjt=g11t*g22+g22t*g11-two*g12*g12t
+        btt=-b_tor*(r0/rm)/x0**2*x0t
+        g2jqt=(g22t/xj-g22/xj**2*xjt)/(g2jq*two)
+        bpt=xmy*(g2jqt*g3v-.5d0*g2jq*g3v/g33*g33t)
+        bat=one/b*(bp*bpt+bt*btt)
+
+    end subroutine calculate_metrics
+end module metrics
+
 module dispersion_module
     use kind_module    
     implicit none
@@ -43,8 +125,7 @@ module dispersion_module
     real(wp) :: znakstart
     !!common/direct/znakstart
 
-    real(wp) :: g11,g12,g22,g33,gg,g,si,co
-    !!common/metrika/g11,g12,g22,g33,gg,g,si,co
+
     real(wp) :: ham
     !!common/fjham/ham
 
@@ -69,6 +150,7 @@ contains
         use approximation
         use plasma
         use rt_parameters
+        use metrics
         implicit none
         real(wp), intent(in) :: pa
         real(wp), intent(in) :: yn2
@@ -76,48 +158,26 @@ contains
         real(wp), intent(inout) :: xnro
         real(wp), intent(inout) :: prt
         real(wp), intent(inout) :: prm        
-        !use manager_mod, only: ivar, yn3, icall1, icall2
-        !use trajectory !, only: iroot, izn, ynz,ynpopq
-        !implicit real*8 (a-h,o-z)
-        !common /abcde/ izn!,iw
-        !common /bcef/ ynz,ynpopq
-        !common /aef2/ icall1,icall2
-        !common /be1/ xnr1,xnr2,xnr3,xnr4
-        !common /be2/ ider
-
-        !common /cefn/ iconv,irefl
-        !common /ceg/ ipow,jfoundr
-        !common /eg1/ vfound,ifound
-        !common /eg2/ pdec1,pdec2,pdec3,pdecv,pdecal,dfdv,icf1,icf2     
-        !common /eg3/ cf1,cf2,cf3,cf4,cf5,cf6
-
-        
-        !common/fj/dhdm,dhdnr,dhdtet,dhdr,ddn,dhdn3,dhdv2v,dhdu2u
-
-
-        !common/direct/znakstart
-
-        !common/metrika/g11,g12,g22,g33,gg,g,si,co
-        !common/fjham/ham
 
         integer  :: jr
-        real(wp) :: xdl, xdlp, xly, xlyp
-        real(wp) :: xgm, xgmp, xmy, xmyp, xlyv, cotet, sitet
-        real(wp) :: dxdr, dxdt, dzdr, dzdt
-        real(wp) :: x0, x0t, xj
-        real(wp) :: g2v1, g2jq, g3v
-        real(wp) :: b, bp, bt
-        real(wp) :: dxdrdt, dxdtdt, dzdrdt, dzdtdt
+        !real(wp) :: xdl, xdlp, xly, xlyp
+        !real(wp) :: xgm, xgmp, xmy, xmyp, xlyv, cotet, sitet
+        !real(wp) :: dxdr, dxdt, dzdr, dzdt
+        !real(wp) :: x0, x0t, xj
+        !real(wp) :: g2v1, g2jq, g3v
+        !real(wp) :: b, bp, bt
+        !real(wp) :: dxdrdt, dxdtdt, dzdrdt, dzdtdt
         real(wp) :: pn, fnr, fnrr, wpq, whe, v,u1, u
         real(wp) :: e1, e2, e3
         real(wp) :: ynzq
         real(wp) :: as, bs, cs, pnew, yny, gpr, dls
         real(wp) :: dl1, ynpopq1, al, bl, cl, cl1, dll
         real(wp) :: s1, p1, p2, p3, ynzt, e2t, u1t, cot, sit
-        real(wp) :: bpt, g2jqt, btt, xjt
-        real(wp) :: g11t, g22t, g33t, g12t, gprt
+        !real(wp) :: bpt, g2jqt, btt, xjt
+        !real(wp) :: g11t, g22t, g33t, g12t, gprt
         real(wp) :: dl2, xnr, ynyt, dnym
-        real(wp) :: dnx, dll1, bat, e1t
+        real(wp) :: dnx, dll1,  e1t
+
         real(wp) :: s2, dnm, v1, v2, vvt, vvm, vz, vt
         real(wp) :: s21, sjg, s23, s24, s22, sl1
         real(wp) :: pnewt, fder,  aimh, pnye, pnyi
@@ -129,44 +189,9 @@ contains
         irefl=0
         if(pa.ge.one.or.pa.le.zero) goto 70
         icall1=icall1+1
-        xdl=fdf(pa,cdl,ncoef,xdlp)
-        xly=fdf(pa,cly,ncoef,xlyp)
-        xgm=fdf(pa,cgm,ncoef,xgmp)
-        xmy=fdf(pa,cmy,ncoef,xmyp)
-        xlyv=xlyp*pa+xly
-        cotet=dcos(ptet)
-        sitet=dsin(ptet)
-        dxdr=-xdlp+cotet-xgmp*sitet**2
-        dxdt=-(pa+two*xgm*cotet)*sitet
-        dzdr=xlyv*sitet
-        dzdt=xly*pa*cotet
-        x0=r0/rm-xdl+pa*cotet-xgm*sitet**2
-        dxdrdt=-sitet-two*xgmp*sitet*cotet
-        dzdrdt=xlyv*cotet
-        dxdtdt=-pa*cotet-two*xgm*(cotet**2-sitet**2)
-        dzdtdt=-xly*pa*sitet
-        x0t=dxdt
-        !--------------------------------------
-        ! components of metric tensor
-        !--------------------------------------
-        g11=dxdr**2+dzdr**2
-        g22=dxdt**2+dzdt**2
-        g12=dxdr*dxdt+dzdr*dzdt
-        g33=x0**2
-        xj=(dzdr*dxdt-dxdr*dzdt)**2  !gg=g11*g22-g12*g12
-        gg=xj
-        g=xj*g33
-        g2v1=one/dsqrt(g22)
-        g2jq=dsqrt(g22/xj)
-        g3v=one/dsqrt(g33)
-        !--------------------------------------
-        !  magnetic field
-        !--------------------------------------
-        bt=b_tor*(r0/rm)/x0
-        bp=g2jq*g3v*xmy
-        b=dsqrt(bp*bp+bt*bt)
-        si=bp/b
-        co=bt/b
+        
+        call calculate_metrics(pa, ptet)
+
         if(ivar.eq.1) return
         !---------------------------------------
         ! components of dielectric tensor
@@ -333,15 +358,16 @@ contains
         !--------------------------------------
         !   calculation of derivatives
         !--------------------------------------
-        g11t=two*(dxdr*dxdrdt+dzdr*dzdrdt)
-        g22t=two*(dxdt*dxdtdt+dzdt*dzdtdt)
-        g33t=two*x0*(-pa*sitet-two*xgm*sitet*cotet)
-        g12t=dxdrdt*dxdt+dxdr*dxdtdt+dzdrdt*dzdt+dzdr*dzdtdt
-        xjt=g11t*g22+g22t*g11-two*g12*g12t
-        btt=-b_tor*(r0/rm)/x0**2*x0t
-        g2jqt=(g22t/xj-g22/xj**2*xjt)/(g2jq*two)
-        bpt=xmy*(g2jqt*g3v-.5d0*g2jq*g3v/g33*g33t)
-        bat=one/b*(bp*bpt+bt*btt)
+        !g11t=two*(dxdr*dxdrdt+dzdr*dzdrdt)
+        !g22t=two*(dxdt*dxdtdt+dzdt*dzdtdt)
+        !g33t=two*x0*(-pa*sitet-two*xgm*sitet*cotet)
+        !g12t=dxdrdt*dxdt+dxdr*dxdtdt+dzdrdt*dzdt+dzdr*dzdtdt
+        !xjt=g11t*g22+g22t*g11-two*g12*g12t
+        !btt=-b_tor*(r0/rm)/x0**2*x0t
+        !g2jqt=(g22t/xj-g22/xj**2*xjt)/(g2jq*two)
+        !bpt=xmy*(g2jqt*g3v-.5d0*g2jq*g3v/g33*g33t)
+        !bat=one/b*(bp*bpt+bt*btt)
+        !-----
         sit=bpt/b-bp/b**2*bat
         cot=btt/b-bt/b**2*bat
         u1t=c1/ww*bat
