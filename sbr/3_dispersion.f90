@@ -491,15 +491,12 @@ contains
         use plasma
         use rt_parameters            
         use metrics
-        !use trajectory, only: 
-        !use dispersion_module, only: yn3, icall1, icall2, ynz, ynpopq
-        !use dispersion_module, only: disp2, source_new
-        !implicit real*8 (a-h,o-z)
+
         implicit none
-        real(wp), intent(inout) :: pa
-        real(wp), intent(in)    :: yn2
-        real(wp), intent(in)    :: ptet
-        real(wp), intent(inout) :: xnr
+        real(wp), intent(inout) :: pa      ! ro
+        real(wp), intent(in)    :: yn2     ! ???
+        real(wp), intent(in)    :: ptet    ! theta
+        real(wp), intent(inout) :: xnr     ! ???
             
         real(wp) :: pn
         real(wp) :: fnr, fnrr
