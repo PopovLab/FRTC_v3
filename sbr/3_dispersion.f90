@@ -33,6 +33,7 @@ contains
         xlyv=xlyp*pa+xly
         cotet=dcos(ptet)
         sitet=dsin(ptet)
+        !----------------
         dxdr=-xdlp+cotet-xgmp*sitet**2
         dxdt=-(pa+two*xgm*cotet)*sitet
         dzdr=xlyv*sitet
@@ -60,7 +61,7 @@ contains
         !  magnetic field
         !--------------------------------------
         bt=b_tor*(r0/rm)/x0
-        bp=g2jq*g3v*xmy
+        bp=g2jq*g3v*xmy ! dsqrt(g22/xj)/dsqrt(g33)
         b=dsqrt(bp*bp+bt*bt)
         si=bp/b
         co=bt/b
@@ -489,6 +490,7 @@ contains
         use approximation
         use plasma
         use rt_parameters            
+        use metrics
         !use trajectory, only: 
         !use dispersion_module, only: yn3, icall1, icall2, ynz, ynpopq
         !use dispersion_module, only: disp2, source_new
@@ -506,16 +508,16 @@ contains
         real(wp) :: xly, xlyp, xlypp, xlyv
         real(wp) :: xgm, xgmp, xgmpp
         real(wp) :: xmy, xmyp
-        real(wp) :: dxdr, dxrt, dzdr, dzdt
-        real(wp) :: dxdrdr, dxdtdt, dxdtdr, dxdrdt
-        real(wp) :: dzdrdr, dzdtdr, dzdtdt
+        real(wp) :: dxrt
+        real(wp) :: dxdrdr, dxdtdr
+        real(wp) :: dzdrdr, dzdtdr
         real(wp) :: dvdr, du1dr, dudr, du1dt, dudt
         real(wp) :: cotet, sitet
-        real(wp) :: x0, x0t, x0r, xj, xjr, xjt
-        real(wp) :: dxdt, dzdrdt
-        real(wp) :: g2jq, g2gq, g22q, g33q
-        real(wp) :: b, bt, bp, bpt, bpr, btr, btt
-        real(wp) :: bar, bat
+        real(wp) :: x0r, xjr
+        !real(wp) :: dxdt, dzdrdt
+        real(wp) :: g2gq, g22q, g33q
+        real(wp) :: bpr, btr
+        real(wp) :: bar
         real(wp) :: sit, cot, sir, cor
         real(wp) :: v, vt, vpop, vpopr, vpopt, u, u1
         real(wp) :: sl1, pnye, pnyi, tmp
@@ -525,15 +527,15 @@ contains
         real(wp) :: ynzr, ynzt, ynzqr, ynzqt, ynpopqr, ynpopqt
         real(wp) :: whe, wde3dw, wdbsdw, wdcsdw, wdhdw
         real(wp) :: yny, ynzq, ynyr, ynyt
-        real(wp) :: gpr, dgpr, gdop, gprr,  gprt, gdopr, gdopt
+        real(wp) :: gpr, dgpr, gdop, gprr, gdopr, gdopt
         real(wp) :: as, bs, cs 
         real(wp) :: asr, bsr, csr, ast, bst, cst
         real(wp) :: dhdv, dhdu
         real(wp) :: dnx, dny, dnz, ddn2
-        real(wp) :: gr, gt, g11r, g22r, g11t, g22t,  g12r, g12t
+        real(wp) :: gr, gt, g11r, g22r, g12r
         real(wp) :: g22qr, g22qt, g33qr, g33qt
-        real(wp) :: g2jqr, g2jqt
-        real(wp) :: g33r, g33t
+        real(wp) :: g2jqr
+        real(wp) :: g33r
         real(wp) :: g2gqt, g2gqr
         real(wp) :: source
         real(wp) :: aimh
@@ -618,7 +620,7 @@ contains
         !c  magnetic field
         !c--------------------------------------
         bt=b_tor*(r0/rm)/x0
-        bp=g2gq*xmy
+        bp=g2gq*xmy ! dsqrt(g22/(xj*g33))
         b=dsqrt(bp*bp+bt*bt)
         whe=b*c1
         si=bp/b
