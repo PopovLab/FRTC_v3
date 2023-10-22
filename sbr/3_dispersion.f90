@@ -153,12 +153,12 @@ contains
         use rt_parameters
         use metrics
         implicit none
-        real(wp), intent(in) :: pa
-        real(wp), intent(in) :: yn2
-        real(wp), intent(in) :: ptet
-        real(wp), intent(inout) :: xnro
-        real(wp), intent(inout) :: prt
-        real(wp), intent(inout) :: prm        
+        real(wp), intent(in) :: pa      ! ro
+        real(wp), intent(in) :: yn2     ! ???
+        real(wp), intent(in) :: ptet    ! theta
+        real(wp), intent(inout) :: xnro ! ???
+        real(wp), intent(inout) :: prt  ! ???
+        real(wp), intent(inout) :: prm  ! ???       
 
         integer  :: jr
         !real(wp) :: xdl, xdlp, xly, xlyp
@@ -921,7 +921,7 @@ contains
         !common/fj/dhdm,dhdnr,dhdtet,dhdr,ddn,dhdn3,dhdv2v,dhdu2u
         !common/direct/znakstart
         real(wp) :: znak, xxx, ptet, yn2, pa, yn1
-        znak=znaksta 3141rt
+        znak=znakstart
         xxx=x
         ptet=y(1)
         yn2=y(2)
