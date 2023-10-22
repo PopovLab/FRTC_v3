@@ -130,7 +130,8 @@ module dispersion_module
     real(wp) :: ham
     !!common/fjham/ham
 
-    real(wp) :: pdec14,pdec24,pdec34,idec
+    integer  :: idec
+    real(wp) :: pdec14,pdec24,pdec34
     !!common /df/ pdec14,pdec24,pdec34,idec
 
     real(wp) :: rsou(102),sou(102)
@@ -546,7 +547,7 @@ contains
         !common/metrika/g11,g12,g22,g33,gg,g,si,co
         !common/fj/dhdm,dhdnr,dhdtet,dhdr,ddn,dhdn3,dhdv2v,dhdu2u
         !common/fjham/ham
-        !!!!integer :: idec
+
         irefl=0
         iconv=0
         if(pa.eq.zero) pa=1.d-7 ! TODO не хорошо, что изменяется pa
