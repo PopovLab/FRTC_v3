@@ -262,6 +262,10 @@ contains
 20          prt=dls
             prm=666d0
             return
+            ! conversion
+60          iconv=1
+            if (ivar.ne.0) ivar=-1
+            return            
         end if
 30      continue
         dl1=dfloat(iw)*dsqrt(dls)/two/as
@@ -470,10 +474,7 @@ contains
         end if
         return
 
-        ! conversion
-60      iconv=1
-        if (ivar.ne.0) ivar=-1
-        return
+
 
         !  reflection
 70      irefl=1
