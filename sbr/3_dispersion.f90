@@ -253,19 +253,22 @@ contains
         !c      pause
         
         if(dls.lt.zero) then
-            goto (60,20,10) iroot
-10          xnr1=1d+10
-            xnr2=1d+10
-            xnr3=1d+10
-            xnr4=1d+10
+            !goto (60,20,10) iroot
+            select case (iroot)
+            case (3)
+                xnr1=1d+10
+                xnr2=1d+10
+                xnr3=1d+10
+                xnr4=1d+10
+            case (2)
+                prt=dls
+                prm=666d0
+            case (1)
+                ! conversion
+                iconv=1
+                if (ivar.ne.0) ivar=-1
+            end select    
             return
-20          prt=dls
-            prm=666d0
-            return
-            ! conversion
-60          iconv=1
-            if (ivar.ne.0) ivar=-1
-            return            
         end if
 30      continue
         dl1=dfloat(iw)*dsqrt(dls)/two/as
