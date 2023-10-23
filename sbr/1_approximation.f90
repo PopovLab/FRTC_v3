@@ -187,8 +187,13 @@ end
     end
 
 real(wp) function fdfddf(x,c,n,df,ddf)
-    real(wp) x,c(n),df, ddf
-    integer n,j
+    !! вычисление значения полинома и первой и второй производной
+    real(wp), intent(in)   :: x
+    real(wp), intent(in)   :: c(n)
+    integer,  intent(in)   :: n 
+    real(wp), intent(out)  :: df
+    real(wp), intent(out)  :: ddf
+    integer j
     real(wp) p, dp,ddp
     p=c(n)
     dp=0d0
