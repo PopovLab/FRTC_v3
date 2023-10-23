@@ -293,16 +293,16 @@ contains
         use plasma, only: vperp
         use iterator_mod, only: psum4
         use driver_module !, only: jrad, iww, length      
-          
+
         implicit none
 
         real(wp), intent(in)   :: dltpow
         real(wp), intent(in)   :: h
-        real(wp), intent(out)   :: powexit
+        real(wp), intent(out)  :: powexit
         integer, intent(inout) :: ib, ie
         integer, intent(inout) :: iout
 
-        integer :: i, iv,  jr, ifast, jchek
+        integer  :: i, iv,  jr, ifast, jchek
         real(wp) :: pdec1z, pdec3z, pintld, pintal
         real(wp) :: v, refr, dek3, argum, valfa
         real(wp) :: df, dfsr, vsr, pcurr, dcv
@@ -320,10 +320,10 @@ contains
   10    continue
         iout=0
         do i=ib,ie
-            !c-----------------------------------
-            !c restore memorized decrements and
-            !c integrate power equation
-            !c------------------------------------
+            !-----------------------------------
+            ! restore memorized decrements and
+            ! integrate power equation
+            !------------------------------------
             v=vel(i)
             jr=jrad(i)
             refr=perpn(i)
