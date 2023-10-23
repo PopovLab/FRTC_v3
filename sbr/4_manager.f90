@@ -292,7 +292,8 @@ contains
         use current
         use plasma, only: vperp
         use iterator_mod, only: psum4
-        use driver_module !, only: jrad, iww, length      
+        use driver_module, only: jrad, iww, length      
+        use driver_module, only: pow, vel, perpn, dland, dcoll, dalf
 
         implicit none
 
