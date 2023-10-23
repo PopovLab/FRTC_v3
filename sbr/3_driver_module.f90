@@ -45,12 +45,11 @@ module driver_module
 contains
 
     subroutine driver2(ystart,x1,x2,xsav,hmin,h1, pabs) !sav2008
-        use constants
-        use plasma
-        use rt_parameters
-        use dispersion_module
-        !implicit real*8 (a-h,o-z)
-        !external extd2
+        use constants, only: zero, tin
+        use rt_parameters, only : nr, ipri, rbord, maxstep2, hmin1, iw, eps
+        use dispersion_module, only: ipow, jfoundr, iconv, irefl, izn
+        use dispersion_module, only: ynz
+        implicit none
         real(wp), intent(inout) :: ystart(2)
         real(wp), intent(in)    :: x1
         real(wp), intent(inout) :: x2, xsav
@@ -58,12 +57,9 @@ contains
         real(wp), intent(in)    :: pabs
         !common /abc/ rzz,tetzz,xmzz,iznzz,iwzz,irszz
         !common /abcd/ irs
-        !common /abcde/ izn!,iw
         !common /abcdg/ iabsorp
         !common /bcef/ ynz,ynpopq
         !common /bcg/ hrad
-        !common /cefn/ iconv,irefl
-        !common /ceg/ ipow,jfoundr
         !integer :: ind
         !common /cmn/ ind
         integer, parameter :: nvar=2
