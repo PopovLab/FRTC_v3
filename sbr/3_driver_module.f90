@@ -80,13 +80,9 @@ contains
             y(i)=ystart(i)
             yold(i)=y(i)
         end do
-        !c-----------------------------
-        !c            start moving
-        !c-----------------------------
-        do nstp=1,maxstep2
-            !c---------------------------------------
-            !c netpoint control
-            !c---------------------------------------
+        !-------------- start moving -------------
+        do nstp=1, maxstep2
+            !--------- netpoint control -----------
             dstsav=dabs(x-xsav)
             if(dstsav.lt.tin) then
                 ipow=ipow+2
@@ -97,10 +93,10 @@ contains
             call extd2(x,y,dydx)
             irep=0
             if(iconv+irefl.ne.0) then
-                !!       if(iconv+irefl.ne.0.or.ynz.lt.0.d0) then
-                !c---------------------------------------------
-                !c made step to nontransparent zone-return back
-                !c----------------------------------------------
+                ! if(iconv+irefl.ne.0.or.ynz.lt.0.d0) then
+                !---------------------------------------------
+                ! made step to nontransparent zone-return back
+                !----------------------------------------------
                 x=xold
                 do ii=1,nvar
                     y(ii)=yold(ii)
@@ -195,8 +191,8 @@ contains
     subroutine extd2(x, y, dydx)
         use dispersion_module, only: disp2
         implicit none
-        real(wp), intent(in)    :: x
-        real(wp), intent(in)    :: y(:)
+        real(wp), intent(in)    :: x      ! ro
+        real(wp), intent(in)    :: y(:)   ! theta, yn2
         real(wp), intent(inout) :: dydx(:)
         real(wp) :: tt, xm
         real(wp) :: xnr, prt, prm
