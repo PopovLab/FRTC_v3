@@ -292,15 +292,16 @@ contains
         use current
         use plasma, only: vperp
         use iterator_mod, only: psum4
-        use driver_module !, only: jrad, iww, length        
+        use driver_module !, only: jrad, iww, length      
+          
         implicit none
+
         real(wp), intent(in)   :: dltpow
         real(wp), intent(in)   :: h
         real(wp), intent(out)   :: powexit
         integer, intent(inout) :: ib, ie
         integer, intent(inout) :: iout
-        !common /a0ghp/ vlf,vrt,dflf,dfrt
-        !common /vvv2/ psum4
+
         integer :: i, iv,  jr, ifast, jchek
         real(wp) :: pdec1z, pdec3z, pintld, pintal
         real(wp) :: v, refr, dek3, argum, valfa
