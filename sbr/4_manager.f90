@@ -237,13 +237,12 @@ contains
     end    
 
 
-    real(wp) function rini(xm, tet, xnr,point, hr, ifail) !sav2009
+    real(wp) function rini(xm, tet, xnr, point, hr, ifail) !sav2009
         use constants, only : zero
         use rt_parameters, only : inew
-        use spectrum_mod
-        !use trajectory
-        use dispersion_module
-        use metrics
+        use spectrum_mod, only : SpectrumPoint
+        use dispersion_module, only: ivar, iroot, yn3, disp2
+        use metrics, only: g22, g33, co, si
         implicit none
 
         type(SpectrumPoint), intent(in) :: point
@@ -252,14 +251,6 @@ contains
         integer, intent(inout)           :: ifail
 
         integer :: ntry
-        real(wp) :: vgrp(3),vph(3)
-
-        !real(wp) :: ynz,ynpopq
-        !common /bcef/ ynz,ynpopq
-
-        !real(wp) :: g11,g12,g22,g33,gg,g,si,co
-        !common/metrika/g11,g12,g22,g33,gg,g,si,co !sav2009
-
         real(wp) :: pa, prt, prm
         real(wp) :: f1,f2
 
