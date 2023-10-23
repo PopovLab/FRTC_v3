@@ -265,6 +265,7 @@ contains
             pa = rhostart-hr*dble(ntry)-1.d-4
             ntry = ntry+1
             ivar = 1
+            ! вычисление g22 и g33
             call disp2(pa,xm,tet,xnr,prt,prm)
 
             yn3 = point%Ntor*dsqrt(g33)/co 
