@@ -103,11 +103,7 @@ contains
                         inak0 = inak
                         go to 10
                     end if
-                    rbeg(itr) = rin !sav2008
-                    tetbeg(itr) = tetin !sav2008
-                    xnrbeg(itr) = xnr !sav2008
-                    xmbeg(itr) = xmin !sav2008
-                    yn3beg(itr) = yn3 !sav2008
+
                 else
                     if (mbad(itr).ne.0) then
                         plost = plost+point%power

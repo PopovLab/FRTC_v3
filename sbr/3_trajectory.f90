@@ -9,10 +9,7 @@ module trajectory
     !!common/refl/nrefj(mpnt)
 
     integer mbeg(mpnt),mend(mpnt),mbad(mpnt)
-    real(wp) rbeg(mpnt) !sav2008
-    real(wp) tetbeg(mpnt),xnrbeg(mpnt),xmbeg(mpnt),yn3beg(mpnt)
-    !!common/viewdat/mbeg,mend,mbad,rbeg,tetbeg,xnrbeg,xmbeg,yn3beg   
-    !data mbad /mpnt*0/
+
 contains
 
 subroutine init_trajectory
@@ -36,12 +33,6 @@ subroutine init_trajectory
     mend = zero
     mbad = zero
 
-    rbeg = zero
-
-    tetbeg = zero
-    xnrbeg = zero
-    xmbeg = zero
-    yn3beg = zero
 end subroutine 
 
 subroutine view(tview, ispectr,nnz,ntet) !sav2008
