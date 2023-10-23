@@ -9,9 +9,6 @@ module driver_module
     integer izz(length),iww(length),jrad(length)
     !!common/agh/xnpar,vel,dland,dcoll,dalf,perpn,tetai,jrad,iww,izz
 
-    real(wp)    :: an1(length),an2(length)
-    !common /xn1xn2/ an1,an2
-
     integer     :: irs
     !common /abcd/ irs
     integer     :: iabsorp
@@ -213,8 +210,7 @@ contains
         implicit none
         real(wp), intent(in) :: pabs
         real(wp)    :: radth
-        !dimension an1(length),an2(length)
-        !common /xn1xn2/ an1,an2
+
         !common /vth/ vthc(length),poloidn(length)
         !common /a0ghp/ vlf,vrt,dflf,dfrt
         !common /abcdg/ iabsorp
@@ -302,8 +298,6 @@ contains
         iww(inak)=ifast
         izz(inak)=idir
         xnpar(inak)=xparn
-        an1(inak)=xan1
-        an2(inak)=xan2
         if(im4.eq.1) then
             jrad(inak)=-j
             dland(inak)=pintld4
