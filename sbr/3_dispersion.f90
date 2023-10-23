@@ -157,9 +157,9 @@ contains
         real(wp), intent(in) :: pa      ! ro
         real(wp), intent(in) :: yn2     ! ???
         real(wp), intent(in) :: ptet    ! theta
-        real(wp), intent(inout) :: xnro ! ???
-        real(wp), intent(inout) :: prt  ! ???
-        real(wp), intent(inout) :: prm  ! ???       
+        real(wp), intent(out) :: xnro ! ???
+        real(wp), intent(out) :: prt  ! ???
+        real(wp), intent(out) :: prm  ! ???       
 
         integer  :: jr
         !real(wp) :: xdl, xdlp, xly, xlyp
@@ -324,7 +324,7 @@ contains
             end if
             return
         end if
-        
+
         if(dll.lt.zero) goto(70,70,50) iroot
 
 40      dl2=-dfloat(izn)*dsqrt(dll)/al
