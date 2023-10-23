@@ -219,7 +219,7 @@ contains
         ! dispersion equation
         !--------------------------------------
         !sav2008      if(ivar.eq.2) yn2=(ynz-yn3*co*g3v)/(si*g2v1)
-        ynz=yn2*si*g2v1+yn3*co*g3v
+        ynz=yn2*si*g2v1+yn3*co*g3v  
         ynzq=ynz**2
         as=e1
         bs=-(e1**2-e2**2+e1*e3-(e1+e3)*ynzq)
@@ -324,7 +324,9 @@ contains
             end if
             return
         end if
+        
         if(dll.lt.zero) goto(70,70,50) iroot
+
 40      dl2=-dfloat(izn)*dsqrt(dll)/al
         if(izn.eq.1) xnr=-bl/al+dl2
         if(izn.eq.-1) xnr=cl/(-bl-al*dl2)
