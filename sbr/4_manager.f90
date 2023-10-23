@@ -282,14 +282,14 @@ contains
         end do
     end      
 
-    subroutine dqliter(dltpow,ib,ie,h,powexit,iout) !sav2008
+    subroutine dqliter(dltpow, ib, ie, h, powexit, iout) !sav2008
         use constants, only: clt, zero
         use rt_parameters
         use trajectory
         use dispersion_module, only: vlf, vrt, dflf, dfrt
         use dispersion_module, only: pdec1, pdec2, pdec3, pdecv
         use dispersion_module, only: zatukh, distr
-        use current
+        use current, only: dfind
         use plasma, only: vperp
         use iterator_mod, only: psum4
         use driver_module, only: jrad, iww, length      
