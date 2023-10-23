@@ -253,6 +253,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         use dispersion_module
         use runge_kutta_module
         use driver_module
+        implicit none
         real(wp), intent(in)    :: xm0
         real(wp), intent(in)    :: tet0
         real(wp), intent(inout) :: xbeg
@@ -288,10 +289,8 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         real(wp) :: rrange0, hdrob0, tet, xm, hr
         real(wp) :: xsav, xend,hsav, h1
         real(wp) :: ystart(2),yy(4)
-        real(wp) :: rnew2
-        real(wp) :: cotet, sitet
-        real(wp) :: xdl, xly, xgm, xgmp, xx, zz, xxx, zzz
-        real(wp) :: xdlp, xlyp, xnr, prt, prm
+
+        real(wp) :: xnr, prt, prm
         real(wp) :: ynz0, x1, x2, rexi, tetnew
         real(wp) :: xmnew, rnew, xnrnew, xnrv
         real(wp) :: pg1, pg2, pg3, pg4, pg
@@ -336,19 +335,6 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         tet = ystart(1)
         xm = ystart(2)
         ib2 = 0
-            rnew2=ystart(3)
-            cotet=dcos(tet)
-            sitet=dsin(tet)
-            xdl = fdf(rnew2,cdl,ncoef,xdlp)
-            xly = fdf(rnew2,cly,ncoef,xlyp)
-            xgm = fdf(rnew2,cgm,ncoef,xgmp)
-            xx=-xdl+rnew2*cotet-xgm*sitet**2
-            zz=rnew2*xly*sitet
-            xxx=(r0+rm*xx)/1d2
-            zzz=(z0+rm*zz)/1d2 
-            ! open(33,file='lhcd/out/dots.dat',position="append")
-            ! write(33,*)xxx, zzz, nomth, nomnz
-            ! close(33)
 
         !---------------------------------------
         ! absorption
@@ -383,19 +369,6 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         xmnew  = yy(2)
         rnew   = yy(3)
         xnrnew = yy(4)
-
-            cotet = cos(tetnew)
-            sitet = sin(tetnew)
-            xdl = fdf(rnew,cdl,ncoef,xdlp)
-            xly = fdf(rnew,cly,ncoef,xlyp)
-            xgm = fdf(rnew,cgm,ncoef,xgmp)
-            xx = -xdl+rnew*cotet-xgm*sitet**2
-            zz = rnew*xly*sitet
-            xxx = (r0+rm*xx)/1d2
-            zzz = (z0+rm*zz)/1d2 
-            ! open(33,file='lhcd/out/dots.dat',position="append")
-            ! write(33,*)xxx, zzz, nomth, nomnz
-            ! close(33)
 
         if(ipri.gt.2) write (*,*) 'from r=',rexi,'to r=',rnew
   
