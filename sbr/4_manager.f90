@@ -286,12 +286,17 @@ contains
         use constants, only: clt, zero
         use rt_parameters
         use trajectory
-        use dispersion_module
+        use dispersion_module, only: vlf, vrt, dflf, dfrt
+        use dispersion_module, only: pdec1, pdec2, pdec3, pdecv
+        use dispersion_module, only: zatukh, distr
         use current
         use plasma, only: vperp
         use iterator_mod, only: psum4
         use driver_module !, only: jrad, iww, length        
-        implicit real*8 (a-h,o-z)
+        implicit none
+        real(wp), intent(in)   :: dltpow
+        real(wp), intent(in)   :: h
+        real(wp), intent(out)   :: powexit
         integer, intent(inout) :: ib, ie
         integer, intent(inout) :: iout
         !dimension an1(length),an2(length)
@@ -299,6 +304,11 @@ contains
         !common /a0ghp/ vlf,vrt,dflf,dfrt
         !common /vvv2/ psum4
         integer :: i, iv,  jr, ifast, jchek
+        real(wp) :: pdec1z, pdec3z, pintld, pintal
+        real(wp) :: v, refr, dek3, argum, valfa
+        real(wp) :: df, dfsr, vsr, pcurr, dcv
+        real(wp) :: powpr, powd, powcol, powal
+        real(wp) :: pil, pic, pia
 
         pow=powexit
         pdec1=zero
