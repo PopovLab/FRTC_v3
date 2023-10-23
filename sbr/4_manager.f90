@@ -8,7 +8,7 @@ contains
     subroutine manager(iterat,iw0, ntet, spectr)
         use constants            
         use plasma
-        use rt_parameters, only : nr, ipri, iw, nmaxm, pabs0, eps, eps_const            
+        use rt_parameters, only : nr, ipri, iw, wave_mode, nmaxm, pabs0, eps, eps_const            
         use trajectory
         use spectrum_mod
         use iterator_mod,only: plost, pnab
@@ -158,6 +158,7 @@ contains
                 !-------------------------------------
                 ! call ray tracing
                 !-------------------------------------
+                iw = wave_mode
                 call traj(xm,tet,rstart,nmax,nb1,nb2,itet,inz, pabs) !sav2009
                 eps = eps_const 
                 nbad1 = nbad1+nb1

@@ -77,7 +77,7 @@ module rt_parameters
 !!!!!!!!!!!!!  options !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     integer ::  ipri
     !! ipri, printing output monitoring: 0,1,2,3,4
-    integer ::  iw
+    integer ::  iw, wave_mode
     !! iw, initial mode (slow=1, fast=-1)
     integer ::  ismth
     !! ismth, if=0, no smoothing in Ne(rho),Te(rho),Ti(rho)
@@ -176,6 +176,7 @@ module rt_parameters
                read(iunit,*)
                read(iunit,*) ipri
                read(iunit,*) iw
+               wave_mode = iw
                read(iunit,*) ismth
                read(iunit,*) ismthalf
                read(iunit,*) ismthout
