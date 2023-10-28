@@ -13,7 +13,6 @@ cc******************************************************************
       use utils
       use plasma
       use rt_parameters
-      !use spectrum1D      
       use maxwell  
       use spectrum_mod    
       use lhcd_module  

@@ -403,24 +403,3 @@ contains
         end function    
 end module spectrum_mod
 
-module spectrum1D
-    use, intrinsic :: iso_fortran_env, only: sp=>real32, dp=>real64
-    use spectrum_mod
-    implicit none    
-
-
-    integer :: ispl
-    !! size of spectrum
-    real(wp) :: plaun
-    !! power of spectrum
-    real(wp) :: ynzm0(1001)
-    !+
-    real(wp) :: pm0(1001)
-    !+ 
-    real(wp) :: ynzm(1001), pm(1001)
-    !!common /a0a1/ ynzm(1001),pm(1001)     
-    real(wp) :: pabs
-    !!common /a0gh/ pabs
-
-
-end module spectrum1D

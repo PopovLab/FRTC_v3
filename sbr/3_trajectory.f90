@@ -42,10 +42,9 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
     use plasma
     use dispersion_module, only: zatukh
     use rt_parameters, only :  nr, itend0, kv, nmaxm    
-    use spectrum1D, only: ynzm, pm 
     use dispersion_module
     use driver_module !, only: jrad, iww, izz, length
-    #implicit real(wp) (a-h,o-z)
+    !implicit real(wp) (a-h,o-z)
     implicit none
     
     real(wp), intent(in) :: tview
