@@ -41,6 +41,47 @@ module driver_module
     !common /vth/ vthc(length),poloidn(length)
 contains
 
+    subroutine memorize_trajectory_point(vz, j, powccc)
+        !!      memorize trajectory point
+        use plasma, only: fvt
+        use dispersion_module, only: cf1, cf2, cf3, cf6
+        use dispersion_module, only: icf1, icf2, ipow
+        use dispersion_module, only: pdecv, pdecal
+        implicit none
+        real(wp), intent(in)     :: vz, powccc
+        integer, intent(in)      :: j
+        real(wp)    :: radth
+        inak=inak+1
+        if(inak.eq.lenstor) then
+            write(*,*)'storage capacity exceeded !'
+            iabsorp=-1
+            inak=lenstor-1
+            return
+        end if
+        vel(inak)=vz
+        perpn(inak)=cf1 !refr
+        poloidn(inak)=cf6 !npoloid
+        tetai(inak)= cf2 ! tet_i
+        radth=dble(j)/dble(31)
+        vthc(inak)=3.d10/fvt(radth)
+        iww(inak)=icf1 ! было ifast 
+        izz(inak)=icf2 ! было idir
+        xnpar(inak)=cf3 !было xparn
+        if(im4.eq.1) then
+            jrad(inak)=-j
+            dland(inak)=pintld4
+            dcoll(inak)=pintcl4
+            dalf(inak)=pintal4
+            im4=0
+            return
+        end if
+        jrad(inak)=j
+        dland(inak)=pdecv
+        dalf(inak)=pdecal
+        if(ipow.ne.1) dcoll(inak)=powccc
+        if(ipow.eq.1) dcoll(inak)=1d0
+    end subroutine
+
     subroutine driver2(ystart,x1,x2,xsav,hmin,h1, pabs) !sav2008
         use constants, only: zero, tin
         use rt_parameters, only : nr, ipri, rbord, maxstep2, hmin1, iw, eps
@@ -227,9 +268,9 @@ contains
         !common /eg2/ pdec1,pdec2,pdec3,pdecv,pdecal,dfdv,icf1,icf2
         !common /eg3/ cf1,cf2,cf3,cf4,cf5,cf6
         !common /dg/ pintld4,pintcl4,pintal4
-        integer     :: i, j, npoloid, ifast, idir
-        real(wp)    :: powpr,  hdis, vz, refr, tet_i
-        real(wp)    :: xparn, xan1, xan2, dek3, dfsr
+        integer     :: i, j, ifast, idir
+        real(wp)    :: powpr,  hdis, vz, refr
+        real(wp)    :: xan1, xan2, dek3, dfsr
         real(wp)    :: vsr, pintld, pintcl, argum, valfa
         real(wp)    :: pintal, dcv, powd, powccc, powcol, powal
         real(wp)    :: pil, pic, pia
@@ -241,9 +282,9 @@ contains
         if(i.eq.0) i=1
         j=jfoundr
         refr=cf1
-        tet_i=cf2
-        npoloid=cf6
-        xparn=cf3
+        !tet_i=cf2
+        !npoloid=cf6
+        !xparn=cf3
         xan1=cf4
         xan2=cf5
         ifast=icf1
@@ -283,38 +324,11 @@ contains
         pia=pintal
         call dfind(j,i,vz,powpr,pil,pic,pia,dfsr,dcv &
                                 ,refr,vlf,vrt,ifast)
-        !c-----------------------------------
-        !c      memorize trajectory
-        !c----------------------------------
-        inak=inak+1
-        if(inak.eq.lenstor) then
-            write(*,*)'storage capacity exceeded !'
-            iabsorp=-1
-            inak=lenstor-1
-            return
-        end if
-        vel(inak)=vz
-        perpn(inak)=refr
-        poloidn(inak)=npoloid
-        tetai(inak)=tet_i
-        radth=dble(j)/dble(31)
-        vthc(inak)=3.d10/fvt(radth)
-        iww(inak)=ifast
-        izz(inak)=idir
-        xnpar(inak)=xparn
-        if(im4.eq.1) then
-            jrad(inak)=-j
-            dland(inak)=pintld4
-            dcoll(inak)=pintcl4
-            dalf(inak)=pintal4
-            im4=0
-            return
-        end if
-        jrad(inak)=j
-        dland(inak)=pdecv
-        dalf(inak)=pdecal
-        if(ipow.ne.1) dcoll(inak)=powccc
-        if(ipow.eq.1) dcoll(inak)=1d0
+        ! -----------------------------------
+        !      memorize trajectory
+        ! ----------------------------------
+        call memorize_trajectory_point(vz, j, powccc)
+
     end
 
     subroutine difeq(y, dydx, nv,x, htry, eps, yscal, hdid, hnext, derivs)
