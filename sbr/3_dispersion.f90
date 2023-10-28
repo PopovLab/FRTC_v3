@@ -492,7 +492,7 @@ contains
         return
     end
 
-    subroutine disp4(pa,ptet,xnr,yn2)
+    subroutine disp4(in_pa,ptet,xnr,yn2)
         use constants
         use approximation
         use plasma
@@ -500,12 +500,12 @@ contains
         use metrics
 
         implicit none
-        real(wp), intent(inout) :: pa      ! ro
+        real(wp), intent(in)    :: in_pa   ! ro
         real(wp), intent(in)    :: yn2     ! ???
         real(wp), intent(in)    :: ptet    ! theta
         real(wp), intent(inout) :: xnr     ! ???
             
-        real(wp) :: pn
+        real(wp) :: pa, pn
         real(wp) :: fnr, fnrr
         real(wp) :: wpq
         real(wp) :: xdl, xdlp, xdlpp
@@ -553,7 +553,7 @@ contains
         !common/metrika/g11,g12,g22,g33,gg,g,si,co
         !common/fj/dhdm,dhdnr,dhdtet,dhdr,ddn,dhdn3,dhdv2v,dhdu2u
         !common/fjham/ham
-
+        pa = in_pa
         irefl=0
         iconv=0
         if(pa.eq.zero) pa=1.d-7 ! TODO не хорошо, что изменяется pa
@@ -821,22 +821,19 @@ contains
 
 
     subroutine dhdomega(rho,theta,yn1,yn2)
-        !use dispersion_module, only: yn3            
-        !implicit real*8 (a-h,o-z)
         implicit none
         real(wp), intent(in) :: rho
         real(wp), intent(in) :: theta
         real(wp), intent(inout) :: yn1
         real(wp), intent(in) :: yn2
         real(wp) :: wdhdw, znak
-        real(wp) :: tmp_rho
         !common /a0ef2/ ww
         !common /abefo/ yn3
         !common/fj/dhdm,dhdnr,dhdtet,dhdr,ddn,dhdn3,dhdv2v,dhdu2u
         !common/direct/znakstart
         !parameter(zero=0.d0,h=1.d-6)
-        tmp_rho = rho ! пришлось так сделать, потому-что disp4 меняет rho
-        call disp4(tmp_rho,theta,yn1,yn2)
+        
+        call disp4(rho, theta, yn1, yn2)
         
         !!w*dH/dw=wdhdw:
         wdhdw=-(yn1*dhdnr+yn2*dhdm+yn3*dhdn3+dhdv2v+dhdu2u)
