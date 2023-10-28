@@ -56,13 +56,13 @@ subroutine find_achieved_radial_points(nvpt)
     end if
 end subroutine    
 
-subroutine dfind(j,i,v,powpr,pil,pic,pia,df,decv,refr,vlf,vrt,ifast)
+subroutine dfind(j, i, v, powpr, pil,pic,pia,df,decv,refr,vlf,vrt,ifast)
     use constants
     use plasma
     use rt_parameters
     implicit none
-    integer, intent(in) :: i,j, ifast
-    real(wp), intent(in) ::  v,powpr,pil,pic,pia,df,decv,refr,vlf,vrt
+    integer, intent(in)  :: i, j, ifast
+    real(wp), intent(in) :: v, powpr, pil, pic, pia, df, decv, refr, vlf, vrt
     integer k
     real(wp) :: pchgl, pchgc, pchga, denom, powlandau, powdamped
     real(wp) :: fff, dd, domin, parn, dvz, dnpar, weight, addd
