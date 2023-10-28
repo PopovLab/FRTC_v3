@@ -202,11 +202,15 @@ contains
 
     subroutine dql1(pabs) !sav2008
         use constants, only: clt, zero
-        use rt_parameters
-        use plasma, only : fvt, vperp
-        use current
-        use dispersion_module
-        !implicit real*8 (a-h,o-z)
+        use rt_parameters, only: itend0, kv
+        use plasma, only: fvt, vperp
+        use current, only: dfind
+        use dispersion_module, only: vfound, ifound, ipow, jfoundr
+        use dispersion_module, only: cf1, cf2, cf3, cf4, cf5, cf6
+        use dispersion_module, only: icf1,icf2
+        use dispersion_module, only: vlf,vrt,dflf,dfrt
+        use dispersion_module, only: zatukh ! function zatukh(psy,j,u,n)
+        use dispersion_module, only: pdec1,pdec2,pdec3,pdecv,pdecal,dfdv
         implicit none
         real(wp), intent(in) :: pabs
         real(wp)    :: radth
