@@ -270,7 +270,7 @@ contains
         !common /dg/ pintld4,pintcl4,pintal4
         integer     :: i, j, ifast, idir
         real(wp)    :: powpr,  hdis, vz, refr
-        real(wp)    :: xan1, xan2, dek3, dfsr
+        real(wp)    :: dek3, dfsr
         real(wp)    :: vsr, pintld, pintcl, argum, valfa
         real(wp)    :: pintal, dcv, powd, powccc, powcol, powal
         real(wp)    :: pil, pic, pia
@@ -285,8 +285,7 @@ contains
         !tet_i=cf2
         !npoloid=cf6
         !xparn=cf3
-        xan1=cf4
-        xan2=cf5
+
         ifast=icf1
         idir=icf2
         dek3=zero
