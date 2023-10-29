@@ -100,7 +100,9 @@ contains
         real(wp), intent(in) :: pa
 
         real(wp) :: fnrr
-
+        pn = 0
+        fnr = 0
+        fnrr = 0
         if(inew.eq.0) then !vardens
             pn=fn1(pa,fnr)
         else
