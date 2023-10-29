@@ -334,7 +334,7 @@ contains
         dl1=dfloat(iw)*dsqrt(dls)/two/as
         if(iw.eq.-1) ynpopq=-bs/(two*as)+dl1
         if(iw.eq.1)  ynpopq=two*cs/(-bs-two*as*dl1)
-        if(iroot.eq.3) ynpopq1=-bs/(two*as)-dl1
+        
 
         !cc      write(*,*)'iw=',iw,' izn=',izn,' Nperp=',dsqrt(ynpopq)
         !cc      write(*,*)'Nperp2=',ynpopq,' ynpopq1=',-bs/(two*as)-dl1
@@ -344,7 +344,7 @@ contains
         al=g22/xj
         bl=-yn2*g12/xj
         cl=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq
-        if(iroot.eq.3) cl1=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq1
+
         dll=bl*bl-al*cl
         if(iroot.eq.2) then
             prt=dls
@@ -412,6 +412,9 @@ contains
                 xnr1=1d+10
                 xnr2=1d+10
             end if
+
+            ynpopq1=-bs/(two*as)-dl1
+            cl1=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq1
             dll1=bl**2-al*cl1
             if(dll1.lt.zero) then
                 xnr3=1d+10
