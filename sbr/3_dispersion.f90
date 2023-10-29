@@ -121,6 +121,65 @@ contains
     end subroutine
 end module dielectric_tensor
 
+
+module dispersion_equation
+    !! dispersion equation
+    use kind_module    
+    use metrics
+    implicit none
+    real(wp) :: ynz, ynzq
+    real(wp) :: as, bs, cs
+    real(wp) :: pnew, yny, gpr, dls
+contains
+    subroutine calculate_dispersion_equation(yn2 , yn3)
+        use constants, only: zero, one, two
+        use constants, only: c0, c1
+        use dielectric_tensor
+        use rt_parameters, only: inew
+        use plasma, only: ww, xsz
+        implicit none
+        real(wp), intent(in) :: yn2 , yn3
+        !real(wp) :: 
+       
+        ! dispersion equation
+        !--------------------------------------
+        !sav2008      if(ivar.eq.2) yn2=(ynz-yn3*co*g3v)/(si*g2v1)
+        ynz=yn2*si*g2v1+yn3*co*g3v  
+        ynzq=ynz**2
+        as=e1
+        bs=-(e1**2-e2**2+e1*e3-(e1+e3)*ynzq)
+        cs=e3*(e1**2-e2**2-two*e1*ynzq+ynzq**2)
+        !-----------------------------
+        !est !sav2009
+        pnew=zero
+        yny= - (yn2*g2v1*co-yn3*g3v*si)
+        if(inew.gt.0) then
+            if(inew.eq.1) then
+                    yny= - (yn2*g2v1*co-yn3*g3v*si)
+                else if(inew.eq.2) then
+                    yny= - g2jq*(yn2*g2v1*co-yn3*g3v*si)
+            end if
+            gpr=c0**2/ww**2/u1*fnr*xsz
+            pnew=yny*gpr
+            bs=bs+pnew
+            cs=cs+pnew*(ynzq-e3)
+        end if
+        !------------------------------------
+        dls=bs*bs-4d0*as*cs
+
+
+        !c      write(*,*)'rho=',pa,' teta=',ptet
+        !c      write(*,*)'N2=',yn2,' N3=',yn3
+        !c      write(*,*)'Npar=',ynz,' e1=',e1
+        !c      write(*,*)'v=',v,' u=',u
+        !c      write(*,*)'whe=',whe,' ww=',ww
+        !c      write(*,*)'e2=',e2,' e3=',e3
+        !c      write(*,*)'bs=',bs,' as=',as
+        !c      write(*,*)'cs=',cs,' dls=',dls
+        !c      pause
+    end subroutine
+end module dispersion_equation
+
 module dispersion_module
     use kind_module    
     implicit none
@@ -144,7 +203,8 @@ module dispersion_module
     real(wp) :: xnr1,xnr2,xnr3,xnr4
     !!common /be1/ xnr1,xnr2,xnr3,xnr4
 
-    real(wp) ::ynz, ynpopq
+    real(wp) :: ynpopq
+    !real(wp) ::ynz, ynpopq
     !!common /bcef/ ynz,ynpopq
 
     integer iconv, irefl
@@ -197,6 +257,7 @@ contains
         use rt_parameters, only: inew, iw, itend0, kv
         use metrics
         use dielectric_tensor
+        use dispersion_equation
         implicit none
         real(wp), intent(in) :: pa      ! ro
         real(wp), intent(in) :: yn2     ! ???
@@ -217,8 +278,8 @@ contains
         !real(wp) :: pn, fnr, fnrr, wpq, whe, v,u1, u
         !real(wp) :: e1, e2, e3
         
-        real(wp) :: ynzq
-        real(wp) :: as, bs, cs, pnew, yny, gpr, dls
+        !real(wp) :: ynzq
+        !real(wp) :: as, bs, cs, pnew, yny, gpr, dls
         real(wp) :: dl1, ynpopq1, al, bl, cl, cl1, dll
         real(wp) :: s1, p1, p2, p3, ynzt, e2t, u1t, cot, sit
         !real(wp) :: bpt, g2jqt, btt, xjt
@@ -245,42 +306,11 @@ contains
         ! components of dielectric tensor
         !---------------------------------------
         call calculate_dielectric_tensor(pa)
+
         !-------------------------------------
         ! dispersion equation
         !--------------------------------------
-        !sav2008      if(ivar.eq.2) yn2=(ynz-yn3*co*g3v)/(si*g2v1)
-        ynz=yn2*si*g2v1+yn3*co*g3v  
-        ynzq=ynz**2
-        as=e1
-        bs=-(e1**2-e2**2+e1*e3-(e1+e3)*ynzq)
-        cs=e3*(e1**2-e2**2-two*e1*ynzq+ynzq**2)
-        !-----------------------------
-        !est !sav2009
-        pnew=zero
-        yny= - (yn2*g2v1*co-yn3*g3v*si)
-        if(inew.gt.0) then
-            if(inew.eq.1) then
-                    yny= - (yn2*g2v1*co-yn3*g3v*si)
-                else if(inew.eq.2) then
-                    yny= - g2jq*(yn2*g2v1*co-yn3*g3v*si)
-            end if
-            gpr=c0**2/ww**2/u1*fnr*xsz
-            pnew=yny*gpr
-            bs=bs+pnew
-            cs=cs+pnew*(ynzq-e3)
-        end if
-        !------------------------------------
-        dls=bs*bs-4d0*as*cs
-
-        !c      write(*,*)'rho=',pa,' teta=',ptet
-        !c      write(*,*)'N2=',yn2,' N3=',yn3
-        !c      write(*,*)'Npar=',ynz,' e1=',e1
-        !c      write(*,*)'v=',v,' u=',u
-        !c      write(*,*)'whe=',whe,' ww=',ww
-        !c      write(*,*)'e2=',e2,' e3=',e3
-        !c      write(*,*)'bs=',bs,' as=',as
-        !c      write(*,*)'cs=',cs,' dls=',dls
-        !c      pause
+        call calculate_dispersion_equation(yn2 , yn3)
         
         if(dls.lt.zero) then
             !goto (60,20,10) iroot
@@ -528,7 +558,7 @@ contains
         use plasma
         use rt_parameters            
         use metrics
-
+        use dispersion_equation, only: ynz
         implicit none
         real(wp), intent(in)    :: in_pa   ! ro
         real(wp), intent(in)    :: yn2     ! ???

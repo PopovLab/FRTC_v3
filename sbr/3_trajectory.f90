@@ -238,6 +238,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         use dispersion_module
         use runge_kutta_module
         use driver_module
+        use dispersion_equation, only: ynz
         implicit none
         real(wp), intent(in)    :: xm0
         real(wp), intent(in)    :: tet0

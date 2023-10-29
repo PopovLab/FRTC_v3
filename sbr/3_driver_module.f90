@@ -86,7 +86,7 @@ contains
         use constants, only: zero, tin
         use rt_parameters, only : nr, ipri, rbord, maxstep2, hmin1, iw, eps
         use dispersion_module, only: ipow, jfoundr, iconv, irefl, izn
-        use dispersion_module, only: ynz
+        use dispersion_equation, only: ynz
         implicit none
         real(wp), intent(inout) :: ystart(2)
         real(wp), intent(in)    :: x1
