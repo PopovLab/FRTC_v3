@@ -81,6 +81,44 @@ contains
     end subroutine calculate_metrics
 end module metrics
 
+module dielectric_tensor
+    !! components of dielectric tensor
+    use kind_module    
+    use metrics
+    implicit none
+    real(wp) :: e1, e2, e3
+    real(wp) :: pn, fnr, wpq, whe, v, u1, u
+contains
+    subroutine calculate_dielectric_tensor(pa)
+        !! calculate components of dielectric tensor
+        use constants, only: zero, one, two
+        use constants, only: c0, c1, pi        
+        use rt_parameters, only: inew
+        use plasma, only: fn1, fn2
+        use plasma, only: ww, xmi
+        implicit none
+        real(wp), intent(in) :: pa
+
+        real(wp) :: fnrr
+
+        if(inew.eq.0) then !vardens
+            pn=fn1(pa,fnr)
+        else
+            pn=fn2(pa,fnr,fnrr)
+        end if
+        wpq=c0**2*pn
+        whe=b*c1
+        v=wpq/ww**2
+        u1=whe/ww
+        u=u1**2
+        
+        e1=one-v*(one/xmi-one/u)
+        e2=v/u1
+        e3=one-v
+
+    end subroutine
+end module dielectric_tensor
+
 module dispersion_module
     use kind_module    
     implicit none
@@ -156,6 +194,7 @@ contains
         use plasma, only: cnstal, valfa, vperp
         use rt_parameters, only: inew, iw, itend0, kv
         use metrics
+        use dielectric_tensor
         implicit none
         real(wp), intent(in) :: pa      ! ro
         real(wp), intent(in) :: yn2     ! ???
@@ -172,8 +211,10 @@ contains
         !real(wp) :: g2v1, g2jq, g3v
         !real(wp) :: b, bp, bt
         !real(wp) :: dxdrdt, dxdtdt, dzdrdt, dzdtdt
-        real(wp) :: pn, fnr, fnrr, wpq, whe, v,u1, u
-        real(wp) :: e1, e2, e3
+
+        !real(wp) :: pn, fnr, fnrr, wpq, whe, v,u1, u
+        !real(wp) :: e1, e2, e3
+        
         real(wp) :: ynzq
         real(wp) :: as, bs, cs, pnew, yny, gpr, dls
         real(wp) :: dl1, ynpopq1, al, bl, cl, cl1, dll
@@ -201,23 +242,7 @@ contains
         !---------------------------------------
         ! components of dielectric tensor
         !---------------------------------------
-        !sav2008      pn=fn(pa)
-        !var      pn=fn1(pa,fnr)
-        !!      pn=fn1(pa,fnr)
-        !!      pn=fn2(pa,fnr,fnrr) !sav2008
-        if(inew.eq.0) then !vardens
-            pn=fn1(pa,fnr)
-        else
-            pn=fn2(pa,fnr,fnrr)
-        end if
-        wpq=c0**2*pn
-        whe=b*c1
-        v=wpq/ww**2
-        u1=whe/ww
-        u=u1**2
-        e1=one-v*(one/xmi-one/u)
-        e2=v/u1
-        e3=one-v
+        call calculate_dielectric_tensor(pa)
         !-------------------------------------
         ! dispersion equation
         !--------------------------------------
