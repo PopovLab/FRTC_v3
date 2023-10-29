@@ -201,9 +201,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
                     nturn=nturn+1
                     jznak=-jznak
                 end if
-                !mn = nturn + unit_bias
-                !write(mn, 7) x,z,xr,th,parn,npoli,pt,pl,pc,pa,ifast,idir,itr
-                !mm = m + unit_bias
+
                         !   R, Z, rho, theta, N_par, N_pol, P_tot,P_land, P_coll, vth,  'slow=1','out=1', N_traj 
                 write(1, 7) x, z, xr,  th,    parn,  npoli, pt,   pl,     pc,     vthcg, ifast,  idir,    itr
                 
