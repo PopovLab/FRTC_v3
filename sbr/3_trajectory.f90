@@ -44,7 +44,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
     use rt_parameters, only :  nr, itend0, kv, nmaxm    
     use dispersion_module
     use driver_module !, only: jrad, iww, izz, length
-    !implicit real(wp) (a-h,o-z)
+
     implicit none
     
     real(wp), intent(in) :: tview
@@ -69,13 +69,9 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
     real(wp) :: v, refr, dek3, parn, argum
     real(wp) :: df, powpr, powd, powal, pil, pic
     real(wp) :: powcol, pia, pt, denom, powdamped, domin, fff
-    !real(wp) ptt(m),pll(m),pcc(m),paa(m)
-    !real(wp) pt_c(m),pl_c(m),pc_c(m),pa_c(m)
+
     character(40) fname
-    character*40 name(m)
-    !save name !sav#
-    !data name/'lhcd/out/1.dat','lhcd/out/2.dat','lhcd/out/3.dat','lhcd/out/4.dat','lhcd/out/5.dat','lhcd/out/rest.dat','lhcd/out/traj.dat'/
-    !if(iview.eq.0) return
+
     print *, 'view_time=',tview
     !print *, name(m)
     if (ispectr>0) then
