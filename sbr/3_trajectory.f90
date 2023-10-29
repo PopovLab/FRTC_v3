@@ -204,7 +204,8 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
                 !mn = nturn + unit_bias
                 !write(mn, 7) x,z,xr,th,parn,npoli,pt,pl,pc,pa,ifast,idir,itr
                 !mm = m + unit_bias
-                write(1, 7) x,z,xr,th,parn,npoli,pt,pl,pc,vthcg,ifast,idir,itr
+                        !   R, Z, rho, theta, N_par, N_pol, P_tot,P_land, P_coll, vth,  'slow=1','out=1', N_traj 
+                write(1, 7) x, z, xr,  th,    parn,  npoli, pt,   pl,     pc,     vthcg, ifast,  idir,    itr
                 
                 if(pt.ge.1d0-pleft) go to 11 !maximal absorbed power along a ray
             end do
