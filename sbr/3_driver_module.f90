@@ -42,7 +42,7 @@ module driver_module
 contains
 
     subroutine memorize_trajectory_point(vz, j, powccc)
-        !!      memorize trajectory point
+        !!  memorize trajectory point
         use plasma, only: fvt
         use dispersion_module, only: cf1, cf2, cf3, cf6
         use dispersion_module, only: icf1, icf2, ipow
