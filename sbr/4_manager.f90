@@ -242,7 +242,9 @@ contains
         use rt_parameters, only : inew
         use spectrum_mod, only : SpectrumPoint
         use dispersion_module, only: ivar, iroot, yn3, disp2
+        use dispersion_module, only: disp2_iroot2
         use metrics, only: g22, g33, co, si
+        use metrics, only: calculate_metrics
         implicit none
 
         type(SpectrumPoint), intent(in) :: point
@@ -264,16 +266,15 @@ contains
         do while (ntry.lt.ntry_max.and.pa.ge.2d0*hr)
             pa = rhostart-hr*dble(ntry)-1.d-4
             ntry = ntry+1
-            ivar = 1
+
             ! вычисление g22 и g33
-            call disp2(pa,xm,tet,xnr,prt,prm)
+            call calculate_metrics(pa, tet)
 
             yn3 = point%Ntor*dsqrt(g33)/co 
             xm = point%Npol*dsqrt(g22)/si
 
-            ivar = 0
-            iroot = 2
-            call disp2(pa,xm,tet,xnr,f1,f2)
+            call disp2_iroot2(pa,xm,tet,xnr,f1,f2)
+            
             if (f1.ge.zero.and.f2.ge.zero) then
                 rini = pa
                 ifail = 0

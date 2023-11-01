@@ -156,7 +156,7 @@ contains
         if(inew.gt.0) then
             if(inew.eq.1) then
                     yny= - (yn2*g2v1*co-yn3*g3v*si)
-                else if(inew.eq.2) then
+                elseif(inew.eq.2) then
                     yny= - g2jq*(yn2*g2v1*co-yn3*g3v*si)
             end if
             gpr=c0**2/ww**2/u1*fnr*xsz
@@ -294,6 +294,8 @@ contains
         real(wp) :: dek1, dek2, dek3
         !external zatukh
         !real(wp) :: zatukh
+        !print *, 'disp2 ivar=', ivar
+        !print *, 'disp2 iroot=', iroot
         iconv=0
         irefl=0
         if(pa.ge.one.or.pa.le.zero) goto 70
@@ -554,6 +556,124 @@ contains
         if (ivar.eq.10) ivar=-1
         return
     end
+
+    subroutine disp2_iroot2(pa,yn2,ptet,xnro,prt,prm)
+        use constants, only: zero, one, two
+        use constants, only: c0, c1,pi
+        use constants, only: zalfa, xmalfa, xlog, clt
+        use plasma, only: fn1, fn2, fvt, ft, zefff
+        use plasma, only: ww, xmi,xsz, cltn, cnye, cnyi
+        use plasma, only: cnstal, valfa, vperp
+        use rt_parameters, only: inew, iw, itend0, kv
+        use metrics
+        use dielectric_tensor
+        use dispersion_equation
+        implicit none
+        real(wp), intent(in) :: pa      ! ro
+        real(wp), intent(in) :: yn2     ! ???
+        real(wp), intent(in) :: ptet    ! theta
+        real(wp), intent(out) :: xnro ! ???
+        real(wp), intent(out) :: prt  ! ???
+        real(wp), intent(out) :: prm  ! ???       
+
+        integer  :: jr
+
+        real(wp) :: dl1, ynpopq1, al, bl, cl, cl1, dll
+        real(wp) :: s1, p1, p2, p3, ynzt, e2t, u1t, cot, sit
+
+        real(wp) :: dl2, xnr, ynyt, dnym
+        real(wp) :: dnx, dll1,  e1t
+
+        real(wp) :: s2, dnm, v1, v2, vvt, vvm, vz, vt
+        real(wp) :: s21, sjg, s23, s24, s22, sl1
+        real(wp) :: pnewt, fder,  aimh, pnye, pnyi
+        real(wp) :: tmp, fcoll, source, argum
+        real(wp) :: dek1, dek2, dek3
+
+        !print *, 'disp2 ivar=', ivar
+        !print *, 'disp2 iroot=', iroot
+        iconv=0
+        irefl=0
+        if(pa.ge.one.or.pa.le.zero) then
+            irefl=1
+            pause
+            return
+        endif
+        icall1=icall1+1
+        
+        call calculate_metrics(pa, ptet)
+
+        !---------------------------------------
+        ! components of dielectric tensor
+        !---------------------------------------
+        call calculate_dielectric_tensor(pa)
+
+        !-------------------------------------
+        ! dispersion equation
+        !--------------------------------------
+        call calculate_dispersion_equation(yn2 , yn3)
+        
+        if(dls.lt.zero) then
+            prt=dls
+            prm=666d0
+            return
+        end if
+
+        dl1=dfloat(iw)*dsqrt(dls)/two/as
+        if(iw.eq.-1) ynpopq=-bs/(two*as)+dl1
+        if(iw.eq.1)  ynpopq=two*cs/(-bs-two*as*dl1)
+        
+
+        !cc      write(*,*)'iw=',iw,' izn=',izn,' Nperp=',dsqrt(ynpopq)
+        !cc      write(*,*)'Nperp2=',ynpopq,' ynpopq1=',-bs/(two*as)-dl1
+        !cc      pause
+
+        al=g22/xj
+        bl=-yn2*g12/xj
+        cl=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq
+
+        dll=bl*bl-al*cl
+ 
+        prt=dls
+        prm=dll
+        if(dll.ge.zero) then !sav2008
+            !!old variant:
+            !cc        dl2=-dfloat(izn)*dsqrt(dll)/al
+            !cc        if(izn.eq.1) xnr=-bl/al+dl2
+            !cc        if(izn.eq.-1) xnr=cl/(-bl-al*dl2)
+            !cc        xnro=xnr
+            !cc       end if
+            !cc       return
+            !cc      end if
+            !!!!!!!!!!!!!!
+
+            !!new variant:
+            izn=1
+            dl2=-dsqrt(dll)/al
+            xnr=-bl/al+dl2
+            call dhdomega(pa,ptet,xnr,yn2)
+            !cc        write(*,*)'#1: izn=',izn,' dl2=',dl2,' xnr=',xnr
+            !cc        write(*,*)'znak=',znakstart,' -znak*dhdnr=',-znakstart*dhdnr
+            if(-znakstart*dhdnr.gt.zero) then
+                izn=-1
+                dl2=dsqrt(dll)/al
+                xnr=cl/(-bl-al*dl2)
+                call dhdomega(pa,ptet,xnr,yn2)
+                !cc         write(*,*)'#2: izn=',izn,' dl2=',dl2,' xnr=',xnr
+                !cc         write(*,*)'znak=',znakstart,' -znak*dhdnr=',-znakstart*dhdnr
+                if(-znakstart*dhdnr.gt.zero) then
+                    write(*,*)'Exception: both modes go outward !!'
+                    stop
+                end if
+            end if
+            xnro=xnr
+        end if
+
+    end subroutine
+
+
+
+
 
     subroutine disp4(in_pa,ptet,xnr,yn2)
         use constants
