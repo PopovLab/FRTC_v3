@@ -348,44 +348,6 @@ contains
         cl=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq
 
         dll=bl*bl-al*cl
-        if(iroot.eq.2) then
-            prt=dls
-            prm=dll
-            if(dll.ge.zero) then !sav2008
-                !!old variant:
-                !cc        dl2=-dfloat(izn)*dsqrt(dll)/al
-                !cc        if(izn.eq.1) xnr=-bl/al+dl2
-                !cc        if(izn.eq.-1) xnr=cl/(-bl-al*dl2)
-                !cc        xnro=xnr
-                !cc       end if
-                !cc       return
-                !cc      end if
-                !!!!!!!!!!!!!!
-
-                !!new variant:
-                izn=1
-                dl2=-dsqrt(dll)/al
-                xnr=-bl/al+dl2
-                call dhdomega(pa,ptet,xnr,yn2)
-                !cc        write(*,*)'#1: izn=',izn,' dl2=',dl2,' xnr=',xnr
-                !cc        write(*,*)'znak=',znakstart,' -znak*dhdnr=',-znakstart*dhdnr
-                if(-znakstart*dhdnr.gt.zero) then
-                    izn=-1
-                    dl2=dsqrt(dll)/al
-                    xnr=cl/(-bl-al*dl2)
-                    call dhdomega(pa,ptet,xnr,yn2)
-                    !cc         write(*,*)'#2: izn=',izn,' dl2=',dl2,' xnr=',xnr
-                    !cc         write(*,*)'znak=',znakstart,' -znak*dhdnr=',-znakstart*dhdnr
-                    if(-znakstart*dhdnr.gt.zero) then
-                        write(*,*)'Exception: both modes go outward !!'
-                        stop
-                    end if
-                end if
-                xnro=xnr
-                !cc        pause
-            end if
-            return
-        end if
 
         if(dll.lt.zero) goto(70,70,50) iroot
 
