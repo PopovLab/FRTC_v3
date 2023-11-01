@@ -349,7 +349,7 @@ contains
 
         dll=bl*bl-al*cl
 
-        if(dll.lt.zero) goto(70,70,50) iroot
+        if(dll.lt.zero) goto 70,70,50) iroot
 
 40      dl2=-dfloat(izn)*dsqrt(dll)/al
         if(izn.eq.1) xnr=-bl/al+dl2
@@ -518,6 +518,130 @@ contains
         if (ivar.eq.10) ivar=-1
         return
     end
+
+    subroutine disp2_iroot3(pa,yn2,ptet,xnro,prt,prm)
+        use constants, only: zero, one, two
+        use constants, only: c0, c1,pi
+        use constants, only: zalfa, xmalfa, xlog, clt
+        use plasma, only: fn1, fn2, fvt, ft, zefff
+        use plasma, only: ww, xmi,xsz, cltn, cnye, cnyi
+        use plasma, only: cnstal, valfa, vperp
+        use rt_parameters, only: inew, iw, itend0, kv
+        use metrics
+        use dielectric_tensor
+        use dispersion_equation
+        implicit none
+        real(wp), intent(in) :: pa      ! ro
+        real(wp), intent(in) :: yn2     ! ???
+        real(wp), intent(in) :: ptet    ! theta
+        real(wp), intent(out) :: xnro ! ???
+        real(wp), intent(out) :: prt  ! ???
+        real(wp), intent(out) :: prm  ! ???       
+
+        integer  :: jr
+        real(wp) :: dl1, ynpopq1, al, bl, cl, cl1, dll
+        real(wp) :: s1, p1, p2, p3, ynzt, e2t, u1t, cot, sit
+        real(wp) :: dl2, xnr, ynyt, dnym
+        real(wp) :: dnx, dll1,  e1t
+
+        real(wp) :: s2, dnm, v1, v2, vvt, vvm, vz, vt
+        real(wp) :: s21, sjg, s23, s24, s22, sl1
+        real(wp) :: pnewt, fder,  aimh, pnye, pnyi
+        real(wp) :: tmp, fcoll, source, argum
+        real(wp) :: dek1, dek2, dek3
+        !print *, 'disp2 ivar=', ivar
+        !print *, 'disp2 iroot=', iroot
+        iconv=0
+        irefl=0
+        if(pa.ge.one.or.pa.le.zero) then
+            print *, 'disp2_iroot3 ivar=', ivar
+            pause
+            return
+        endif
+
+        icall1=icall1+1
+        
+        call calculate_metrics(pa, ptet)
+
+        !---------------------------------------
+        ! components of dielectric tensor
+        !---------------------------------------
+        call calculate_dielectric_tensor(pa)
+
+        !-------------------------------------
+        ! dispersion equation
+        !--------------------------------------
+        call calculate_dispersion_equation(yn2 , yn3)
+        
+        if(dls.lt.zero) then
+            xnr1=1d+10
+            xnr2=1d+10
+            xnr3=1d+10
+            xnr4=1d+10
+            return
+        end if
+30      continue
+        dl1=dfloat(iw)*dsqrt(dls)/two/as
+        if(iw.eq.-1) ynpopq=-bs/(two*as)+dl1
+        if(iw.eq.1)  ynpopq=two*cs/(-bs-two*as*dl1)
+        
+
+        !cc      write(*,*)'iw=',iw,' izn=',izn,' Nperp=',dsqrt(ynpopq)
+        !cc      write(*,*)'Nperp2=',ynpopq,' ynpopq1=',-bs/(two*as)-dl1
+        !cc      pause
+
+        al=g22/xj
+        bl=-yn2*g12/xj
+        cl=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq
+
+        dll=bl*bl-al*cl
+
+        if(dll.lt.zero) goto 50
+
+40      dl2=-dfloat(izn)*dsqrt(dll)/al
+        if(izn.eq.1) xnr=-bl/al+dl2
+        if(izn.eq.-1) xnr=cl/(-bl-al*dl2)
+        xnro=xnr
+        if(ivar.gt.1) then
+            !cccccc  find Nr of reflected wave
+            dnx=two*as*ynpopq+bs
+            dhdnr=dnx*(two*g22*xnr-two*g12*yn2)/xj
+            if(-znakstart*dhdnr.gt.zero) then
+                izn=-izn
+                goto 40
+            end if
+            return
+        end if
+50      continue
+        !---------------------------
+        !  find all roots
+        !----------------------------
+        if(dll.ge.zero) then
+            xnr1=xnr
+            xnr2=-bl/al-dl2
+        else
+            xnr1=1d+10
+            xnr2=1d+10
+        end if
+
+        ynpopq1=-bs/(two*as)-dl1
+        cl1=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq1
+        dll1=bl**2-al*cl1
+        if(dll1.lt.zero) then
+            xnr3=1d+10
+            xnr4=1d+10
+        else
+            xnr3=-bl/al-izn*dsqrt(dll1)/al
+            xnr4=-bl/al+izn*dsqrt(dll1)/al
+        end if
+
+        prt=0d0
+        prm=0d0
+
+    end
+
+
+
 
     subroutine disp2_iroot2(pa,yn2,ptet,xnro,prt,prm)
         use constants, only: zero, one, two

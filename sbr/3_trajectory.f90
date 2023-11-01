@@ -359,7 +359,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         iroot=3
         ider=0
         xnrv=xnrnew
-        call disp2(rnew,xmnew,tetnew,xnrv,prt,prm)
+        call disp2_iroot3(rnew,xmnew,tetnew,xnrv,prt,prm)
         ider=1
         iroot=1
         !ipric      if (ipri.gt.2) then
