@@ -83,7 +83,7 @@ contains
     end subroutine
 
     subroutine driver2(ystart,x1,x2,xsav,hmin,h1, pabs) !sav2008
-        use constants, only: zero, tin
+        use constants, only: zero, tiny1
         use rt_parameters, only : nr, ipri, rbord, maxstep2, hmin1, iw, eps
         use dispersion_module, only: ipow, jfoundr, iconv, irefl, izn
         use dispersion_equation, only: ynz
@@ -122,7 +122,7 @@ contains
         do nstp=1, maxstep2
             !--------- netpoint control -----------
             dstsav=dabs(x-xsav)
-            if(dstsav.lt.tin) then
+            if(dstsav.lt.tiny1) then
                 ipow=ipow+2
                 jfoundr=idnint(x/hrad)
                 if(jfoundr.le.0) jfoundr=1
@@ -236,7 +236,10 @@ contains
         real(wp) :: xnr, prt, prm
         tt=y(1)
         xm=y(2)
+        !print *,'extd2'
         call disp2(x, xm, tt, xnr, prt, prm)
+        !print *,'extd2 after'
+        !pause
         dydx(1)=-prm
         dydx(2)=prt
     end

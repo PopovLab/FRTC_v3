@@ -10,7 +10,7 @@ module constants
     real(wp), parameter :: one_third = 1.0_wp/3.0_wp
 
     real(wp), parameter :: tiny = 1.e-100_wp
-    real(wp), parameter :: tin  = 1e-7_wp
+    real(wp), parameter :: tiny1  = 1e-7_wp
     
 
     real(wp), parameter :: pi = acos(-one) !! число Пи = 3.1415....
@@ -51,7 +51,7 @@ contains
         print *, "two        = ", two
         print *, "one_third  = ", one_third
         print *, "tiny       = ", tiny     
-        print *, "tin        = ", tin     
+        print *, "tiny1      = ", tiny1     
         print *
         print *, "4*ATAN     = ", 4.d0*datan(1.d0)
         print *, "pi         = ", pi

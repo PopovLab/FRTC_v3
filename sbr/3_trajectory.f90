@@ -296,14 +296,14 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         !---------------------------------------
   
   10    irf1=idnint(xbeg/hr)
-        if (dabs(irf1*hr-xbeg).lt.tin)  then
+        if (dabs(irf1*hr-xbeg).lt.tiny1)  then
             xsav=hr*irf1
         else
             irf=int(xbeg/hr)
             if (irs.eq.1)  xsav=hr*irf
             if (irs.eq.-1) xsav=hr*(irf+1)
         end if
-        xend= 0.5d0 - 0.5d0*irs + tin*irs
+        xend= 0.5d0 - 0.5d0*irs + tiny1*irs
         if (ipri.gt.2) write (*,*) 'xbeg-xend',xbeg,xend
         hsav = -hr*irs
         h1 = hsav
