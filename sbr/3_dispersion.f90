@@ -349,7 +349,7 @@ contains
 
         dll=bl*bl-al*cl
 
-        if(dll.lt.zero) goto 70,70,50) iroot
+        if(dll.lt.zero) goto (70,70,50) iroot
 
 40      dl2=-dfloat(izn)*dsqrt(dll)/al
         if(izn.eq.1) xnr=-bl/al+dl2
