@@ -248,6 +248,7 @@ module dispersion_module
     !common /a0ghp/ vlf,vrt,dflf,dfrt
 contains
     subroutine disp2(pa,yn2,ptet,xnro,prt,prm)
+        ! case iroot == 1
         use constants, only: zero, one, two
         use constants, only: c0, c1,pi
         use constants, only: zalfa, xmalfa, xlog, clt
@@ -315,21 +316,9 @@ contains
         call calculate_dispersion_equation(yn2 , yn3)
         
         if(dls.lt.zero) then
-            !goto (60,20,10) iroot
-            select case (iroot)
-            case (3)
-                xnr1=1d+10
-                xnr2=1d+10
-                xnr3=1d+10
-                xnr4=1d+10
-            case (2)
-                prt=dls
-                prm=666d0
-            case (1)
-                ! conversion
-                iconv=1
-                if (ivar.ne.0) ivar=-1
-            end select    
+            ! conversion
+            iconv=1
+            if (ivar.ne.0) ivar=-1
             return
         end if
 30      continue
@@ -342,14 +331,14 @@ contains
         !cc      write(*,*)'Nperp2=',ynpopq,' ynpopq1=',-bs/(two*as)-dl1
         !cc      pause
 
-        if(ynpopq.lt.zero.and.iroot.eq.1) goto 70
+        if (ynpopq.lt.zero) goto 70
         al=g22/xj
         bl=-yn2*g12/xj
         cl=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq
 
         dll=bl*bl-al*cl
 
-        if(dll.lt.zero) goto (70,70,50) iroot
+        if(dll.lt.zero) goto 70
 
 40      dl2=-dfloat(izn)*dsqrt(dll)/al
         if(izn.eq.1) xnr=-bl/al+dl2
@@ -365,29 +354,7 @@ contains
             end if
             return
         end if
-50      if(iroot.eq.3) then
-            !---------------------------
-            !  find all roots
-            !----------------------------
-            if(dll.ge.zero) then
-                xnr1=xnr
-                xnr2=-bl/al-dl2
-            else
-                xnr1=1d+10
-                xnr2=1d+10
-            end if
 
-            ynpopq1=-bs/(two*as)-dl1
-            cl1=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq1
-            dll1=bl**2-al*cl1
-            if(dll1.lt.zero) then
-                xnr3=1d+10
-                xnr4=1d+10
-            else
-                xnr3=-bl/al-izn*dsqrt(dll1)/al
-                xnr4=-bl/al+izn*dsqrt(dll1)/al
-            end if
-        end if
         if(ider.eq.0) then
             prt=0d0
             prm=0d0
