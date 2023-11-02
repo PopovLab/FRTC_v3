@@ -51,7 +51,7 @@ ZMAIN = ZMJ;
 AIM1 = 12;
 ZIM1 = 6;
 
-ZEF = 2.5d0+0.5d0*FRAMP(TSTART,TEND);
+ZEF = 2.5d0 !+0.5d0*FRAMP(TSTART,TEND);
 
 !Its densities
 
