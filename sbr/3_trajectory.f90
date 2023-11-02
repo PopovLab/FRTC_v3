@@ -232,13 +232,10 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
 
     subroutine traj(xm0, tet0, xbeg, nmax, nb1, nb2, nomth, nomnz, pabs) !sav2009
         use constants, only : tiny1
-        ! use approximation
-        !use plasma
         use rt_parameters, only: eps, rrange, hdrob, nr, ipri, iw
         use dispersion_module, only: iroot, ider, izn
         use dispersion_module, only: xnr1, xnr2, xnr3, xnr4
         use dispersion_module, only: extd4, disp2, disp2_iroot3
-        !use runge_kutta_module
         use driver_module, only: im4, hrad, irs, iabsorp, iznzz, iwzz, irszz, rzz
         use driver_module, only: tetzz, xmzz
         use driver_module, only: driver2, driver4
@@ -251,16 +248,6 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         integer,  intent(inout) :: nmax        
         integer,  intent(inout) :: nb1, nb2        
         integer,  intent(in)    :: nomth, nomnz
-
-        !common /abc/ rzz,tetzz,xmzz,iznzz,iwzz,irszz
-        !common /abcd/ irs
-        !common /abcde/ izn!,iw
-        !common /abcdg/ iabsorp
-        !common /bcg/ hrad
-        !common /bcef/ ynz,ynpopq
-        !common /be1/ xnr1,xnr2,xnr3,xnr4
-        !common /be2/ ider
-        !common /bg/ im4
 
         integer :: nrefl
         integer :: irep
