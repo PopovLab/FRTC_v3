@@ -282,13 +282,15 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         xm=xm0
         hr=1.d0/dble(nr+1) !sav2008
         hrad=hr
-        print *, 'hr=', hr, 'irs=', irs
+
         !---------------------------------------
         ! find saving point and define
         ! parameters, depending on direction
         !---------------------------------------
   
   10    print *, '---------- label 10 ----------'
+        print *, '  hr=', hr, 'irs=', irs
+        print *, 'xbeg=', xbeg
         irf1=idnint(xbeg/hr)
         if (dabs(irf1*hr-xbeg).lt.tiny1)  then
             xsav=hr*irf1
@@ -312,6 +314,8 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         ystart(2) = xm
         
         print *, '   h1=', h1
+        print *, ' xbeg=', xbeg
+        print *, ' xend=', xend
         print *, ' xsav=', xsav
         print *, '------'
         call driver2(ystart,xbeg,xend,xsav,hmin,h1, pabs)
@@ -357,7 +361,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
 
         if(ipri.gt.2) write (*,*) 'from r=',rexi,'to r=',rnew
         print *, 'from r=',rexi,'to r=',rnew
-        print *, '   tet ', 'tetnew'
+        print *, '   tet ', '     tetnew'
         print *,    tet, tetnew
         !---------------------------------------
         ! find mode
