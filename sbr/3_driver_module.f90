@@ -114,6 +114,7 @@ contains
         integer  :: i, ii, irep, nstp
         x=x1
         h=dsign(h1,x2-x1)
+        print *, 'driver2 h=', h
         ind=0
         ipow=-1
         xold=x
@@ -146,6 +147,7 @@ contains
                     dydx(ii)=dyold(ii)
                 end do
                 irep=1
+                print *,'h/2'
                 h=hdid/2
                 hdid=h
                 ipow=0
@@ -186,19 +188,28 @@ contains
             !c choose step size
             !c--------------------------------------
             dst3=(x-xsav)*(x+h-xsav)
-            if(dst3.lt.zero.and.irep.eq.0) h=xsav-x
+            if(dst3.lt.zero.and.irep.eq.0) then 
+                print *, '   x=', x
+                print *, 'xsav=', xsav
+                h=xsav-x
+            end if
             if(x.gt.rbord.and.h.gt.zero) then
                 ind=2
                 go to 20
             end if
 10          dst1=(x-rbord)*(x+h-rbord)
             dst2=x*(x+h)
+            print *, '    h=', h
             if((dst1.lt.zero.and.irs.eq.-1).or.dst2.lt.zero) then
+                print *, dst1, dst2, h
+                pause
                 h=h/2.d0
                 if(dabs(h).lt.hmin1) then
                     ind=4
+                    print *,'goto 20'
                     go to 20
                 end if
+                print *,'goto 10'
                 go to 10
             end if
             !c--------------------------------------
@@ -221,7 +232,9 @@ contains
                 if(ipri.gt.1) write(*,*) 'exit driver2: step is too small'
                 go to 40
             end if
+            print *, 'hnext=', hnext
             h=hnext
+
         end do
             !c---------------------------------------
         if (ipri.gt.1) write (*,*) 'error in driver2: too many steps'
@@ -271,7 +284,7 @@ contains
         real(wp)    :: vsr, pintld, pintcl, argum, valfa
         real(wp)    :: pintal, dcv, powd, powccc, powcol, powal
         real(wp)    :: pil, pic, pia
-        
+
         powpr=pow
         iabsorp=0
         hdis=hrad

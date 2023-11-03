@@ -267,6 +267,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         real(wp) :: xmnew, rnew, xnrnew, xnrv
         real(wp) :: pg1, pg2, pg3, pg4, pg
 
+        print *, '----------------- traj ----------------'
         eps0=eps
         rrange0=rrange
         hdrob0=hdrob
@@ -281,16 +282,22 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         xm=xm0
         hr=1.d0/dble(nr+1) !sav2008
         hrad=hr
+        print *, 'hr=', hr, 'irs=', irs
         !---------------------------------------
         ! find saving point and define
         ! parameters, depending on direction
         !---------------------------------------
   
-  10    irf1=idnint(xbeg/hr)
+  10    print *, '---------- label 10 ----------'
+        irf1=idnint(xbeg/hr)
         if (dabs(irf1*hr-xbeg).lt.tiny1)  then
             xsav=hr*irf1
+            print *, 'xxxx'
         else
+            print *, 'yyyy irs=', irs
             irf=int(xbeg/hr)
+            print *, 'xsav= ', xsav
+            print *, 'irf= ', irf
             if (irs.eq.1)  xsav=hr*irf
             if (irs.eq.-1) xsav=hr*(irf+1)
         end if
@@ -303,6 +310,10 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         !---------------------------------------
         ystart(1) = tet
         ystart(2) = xm
+        
+        print *, '   h1=', h1
+        print *, ' xsav=', xsav
+        print *, '------'
         call driver2(ystart,xbeg,xend,xsav,hmin,h1, pabs)
         tet = ystart(1)
         xm = ystart(2)
@@ -324,6 +335,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         !--------------------------------------------------------
         irs0=irs
         ider=0
+        print *, '--- pass turning point ---'
         call disp2(xend,xm,tet,xnr,prt,prm)
         ider=1
         ynz0 = ynz
@@ -334,6 +346,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         x1=0d0
         x2=1d+10
         rexi=xend
+        print *, '---- driver4 -----'
         call driver4(yy,x1,x2,rexi,hmin, extd4)
         if(iabsorp.eq.-1) return !failed to turn
 
@@ -343,7 +356,9 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         xnrnew = yy(4)
 
         if(ipri.gt.2) write (*,*) 'from r=',rexi,'to r=',rnew
-  
+        print *, 'from r=',rexi,'to r=',rnew
+        print *, '   tet ', 'tetnew'
+        print *,    tet, tetnew
         !---------------------------------------
         ! find mode
         !---------------------------------------
@@ -399,6 +414,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         eps=eps0
         rrange=rrange0
         hdrob=hdrob0
+        print *, '---- goto 10 '
         if(nrefl.lt.nmax) goto 10
         rzz=xbeg
         tetzz=tet
