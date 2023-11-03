@@ -6,6 +6,7 @@ module driver_module
     real(wp) dland(length),dcoll(length),perpn(length),dalf(length)
     real(wp) vel(length),tetai(length)
     real(wp) xnpar(length)
+    real(wp) :: rho(length)
     integer izz(length),iww(length),jrad(length)
     !!common/agh/xnpar,vel,dland,dcoll,dalf,perpn,tetai,jrad,iww,izz
 
@@ -41,14 +42,14 @@ module driver_module
     !common /vth/ vthc(length),poloidn(length)
 contains
 
-    subroutine memorize_trajectory_point(vz, j, powccc)
+    subroutine memorize_trajectory_point(vz, j, ro, powccc)
         !!  memorize trajectory point
         use plasma, only: fvt
         use dispersion_module, only: cf1, cf2, cf3, cf6
         use dispersion_module, only: icf1, icf2, ipow
         use dispersion_module, only: pdecv, pdecal
         implicit none
-        real(wp), intent(in)     :: vz, powccc
+        real(wp), intent(in)     :: vz, ro, powccc
         integer, intent(in)      :: j
         real(wp)    :: radth
         inak=inak+1
@@ -59,6 +60,7 @@ contains
             return
         end if
         vel(inak)=vz
+        rho(inak)=ro
         perpn(inak)=cf1 !refr
         poloidn(inak)=cf6 !npoloid
         tetai(inak)= cf2 ! tet_i
@@ -174,7 +176,7 @@ contains
                 ! -----------------------------------
                 !      memorize trajectory
                 ! ----------------------------------
-                call memorize_trajectory_point(vfound, jfoundr, powccc)
+                call memorize_trajectory_point(vfound, jfoundr, x, powccc)
                 if(iabsorp.eq.1) then !absorption
                     rzz=x
                     tetzz=y(1)

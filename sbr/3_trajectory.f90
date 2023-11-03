@@ -181,7 +181,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
                     pc=pc+dabs(pic*fff)  !el. collisions absorbed power
                     pa=pa+dabs(pia*fff)  !alpha Landau absorbed power
                 end if
-                xr=h*dble(jr)
+                xr= rho(i)!h*dble(jr)
                 cotet=dcos(th)
                 sitet=dsin(th)
                 xdl=fdf(xr,cdl,ncoef,xdlp)
