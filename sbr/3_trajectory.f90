@@ -362,7 +362,12 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         if(ipri.gt.2) write (*,*) 'from r=',rexi,'to r=',rnew
         print *, 'from r=',rexi,'to r=',rnew
         print *, '   tet ', '     tetnew'
-        print *,    tet, tetnew
+        print *, '   tet =', tet
+        print *, 'tetnew =', tetnew
+        print *, ' dteta =',  tetnew - tet
+        if (abs(tetnew - tet)> 1.0) then
+            pause 'bug dt'
+        endif
         !---------------------------------------
         ! find mode
         !---------------------------------------
