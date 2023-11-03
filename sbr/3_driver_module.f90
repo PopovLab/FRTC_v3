@@ -90,7 +90,7 @@ contains
         !! x2 = xend 
         use constants, only: zero, tiny1
         use rt_parameters, only : nr, ipri, rbord, maxstep2, hmin1, iw, eps
-        use dispersion_module, only: ipow, ifound, jfoundr, iconv, irefl, izn
+        use dispersion_module, only: ipow, ifound, jfoundr, vfound, iconv, irefl, izn
         use dispersion_equation, only: ynz
         implicit none
         real(wp), intent(inout) :: ystart(2)
@@ -111,6 +111,7 @@ contains
         real(wp) :: h, hsav, hdid, hnext
         real(wp) :: dstsav, dyd, dst3, dst2, dst1
         real(wp) :: ynz0 !!!!!! проверить значение
+        real(wp) :: powccc
         integer  :: i, ii, irep, nstp
         x=x1
         h=dsign(h1,x2-x1)
@@ -169,7 +170,11 @@ contains
             ynz0=ynz
             print *, 'ipow=',ipow
             if(ipow.gt.0) then !integrate power equation
-                call dql1(ifound, jfoundr, pabs)
+                powccc = dql1(ifound, jfoundr, pabs)
+                ! -----------------------------------
+                !      memorize trajectory
+                ! ----------------------------------
+                call memorize_trajectory_point(vfound, jfoundr, powccc)
                 if(iabsorp.eq.1) then !absorption
                     rzz=x
                     tetzz=y(1)
@@ -252,7 +257,7 @@ contains
         dydx(2)=prt
     end
 
-    subroutine dql1(ifound, jfoundr, pabs) !sav2008
+    function dql1(ifound, jfoundr, pabs) result(powccc)
         use constants, only: clt, zero
         use rt_parameters, only: itend0, kv
         use plasma, only: fvt, vperp
@@ -324,12 +329,8 @@ contains
         pia=pintal
         call dfind(j,i,vz,powpr,pil,pic,pia,dfsr,dcv &
                                 ,refr,vlf,vrt,ifast)
-        ! -----------------------------------
-        !      memorize trajectory
-        ! ----------------------------------
-        call memorize_trajectory_point(vz, j, powccc)
 
-    end
+    end function
 
     subroutine difeq(y, dydx, nv,x, htry, eps, yscal, hdid, hnext, derivs)
         use rt_parameters, only : hmin1
