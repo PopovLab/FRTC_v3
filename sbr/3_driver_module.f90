@@ -263,26 +263,15 @@ contains
         implicit none
         integer, intent(in)  :: ifound, jfoundr
         real(wp), intent(in) :: pabs
-        real(wp)    :: radth
 
-        !common /vth/ vthc(length),poloidn(length)
-        !common /a0ghp/ vlf,vrt,dflf,dfrt
-        !common /abcdg/ iabsorp
-        !common /acg/ pow
-        !common /ag/ inak,lenstor,lfree
-        !common /bcg/ hrad
-        !common /bg/ im4
-        !common /ceg/ ipow,jfoundr
-        !common /eg1/ vfound,ifound
-        !common /eg2/ pdec1,pdec2,pdec3,pdecv,pdecal,dfdv,icf1,icf2
-        !common /eg3/ cf1,cf2,cf3,cf4,cf5,cf6
-        !common /dg/ pintld4,pintcl4,pintal4
+        real(wp)    :: radth
         integer     :: i, j, ifast, idir
         real(wp)    :: powpr,  hdis, vz, refr
         real(wp)    :: dek3, dfsr
         real(wp)    :: vsr, pintld, pintcl, argum, valfa
         real(wp)    :: pintal, dcv, powd, powccc, powcol, powal
         real(wp)    :: pil, pic, pia
+        
         powpr=pow
         iabsorp=0
         hdis=hrad
