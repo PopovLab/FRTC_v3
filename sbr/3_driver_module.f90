@@ -225,6 +225,7 @@ contains
                     ystart(i)=y(i)
                 end do
                 ynz=ynz0
+                print *, 'exit xsav=',xsav
                 return
             end if
             !c---------------------------------------
@@ -232,7 +233,7 @@ contains
                 if(ipri.gt.1) write(*,*) 'exit driver2: step is too small'
                 go to 40
             end if
-            print *, 'hnext=', hnext
+            print *, 'hnext=', hnext, '   nstp=', nstp
             h=hnext
 
         end do
@@ -703,6 +704,7 @@ contains
         !c start integration
         !c--------------------------------------
         do nstp=1,maxstep4
+            print *,'--- nstp=', nstp
             idec=iturns
             call derivs(x,y,dydx)
             idec=0
@@ -722,6 +724,7 @@ contains
                 !c--------------------------------------
                 !c forced reflection from periphery
                 !c--------------------------------------
+                print *, 'forced reflection from periphery'
                 ivar=3
                 izn=-izn
                 call disp2(y(3),y(2),y(1),xnr,prt,prm)
@@ -751,6 +754,7 @@ contains
             end if
             !sav2008       if((y(3).gt.rexi1.or.y(3).lt.rexi2)) then  ! exit
             !!    if(dabs(y(3)-rexi).gt.rrange.or.nstp.eq.maxstep4) then  ! exit !sav2008
+            print *, y(3), rexi, rrange
             if(dabs(y(3)-rexi).gt.rrange) then  ! exit !sav2008
                 if(dydx(3).gt.zero) irs=-1
                 if(dydx(3).lt.zero) irs=1
@@ -759,6 +763,7 @@ contains
                     pause 'zmi na pedal'
                     go to 1
                 end if
+                print *, 'dydx(3)=', dydx(3), irs
                 x2=x
                 x1=rmm
                 do i=1,nvar
