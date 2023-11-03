@@ -115,7 +115,7 @@ contains
         x=x1
         h=dsign(h1,x2-x1)
         ind=0
-        ipow=-1
+        ipow=1
         xold=x
         hsav=hrad*irs
         hdid=zero
@@ -126,7 +126,7 @@ contains
         !-------------- start moving -------------
         do nstp=1, maxstep2
             !--------- netpoint control -----------
-            dstsav=dabs(x-xsav)
+            dstsav= 0 !dabs(x-xsav)
             if(dstsav.lt.tiny1) then
                 ipow=ipow+2
                 jfoundr=idnint(x/hrad)
@@ -167,6 +167,7 @@ contains
                 dyold(i)=dydx(i)
             end do
             ynz0=ynz
+            print *, 'ipow=',ipow
             if(ipow.gt.0) then !integrate power equation
                 call dql1(ifound, jfoundr, pabs)
                 if(iabsorp.eq.1) then !absorption
@@ -194,6 +195,8 @@ contains
 10          dst1=(x-rbord)*(x+h-rbord)
             dst2=x*(x+h)
             if((dst1.lt.zero.and.irs.eq.-1).or.dst2.lt.zero) then
+                print *, dst1, dst2, h
+                pause
                 h=h/2.d0
                 if(dabs(h).lt.hmin1) then
                     ind=4
