@@ -83,9 +83,14 @@ contains
     end subroutine
 
     subroutine driver2(ystart,x1,x2,xsav,hmin,h1, pabs) !sav2008
+        !! solve eqs. starting from xbeg
+        !! ystart(1) = tet
+        !! ystart(2) = xm
+        !! x1 = xbeg rini
+        !! x2 = xend 
         use constants, only: zero, tiny1
         use rt_parameters, only : nr, ipri, rbord, maxstep2, hmin1, iw, eps
-        use dispersion_module, only: ipow, jfoundr, iconv, irefl, izn
+        use dispersion_module, only: ipow, ifound, jfoundr, iconv, irefl, izn
         use dispersion_equation, only: ynz
         implicit none
         real(wp), intent(inout) :: ystart(2)
@@ -163,7 +168,7 @@ contains
             end do
             ynz0=ynz
             if(ipow.gt.0) then !integrate power equation
-                call dql1(pabs)
+                call dql1(ifound, jfoundr, pabs)
                 if(iabsorp.eq.1) then !absorption
                     rzz=x
                     tetzz=y(1)
@@ -244,18 +249,19 @@ contains
         dydx(2)=prt
     end
 
-    subroutine dql1(pabs) !sav2008
+    subroutine dql1(ifound, jfoundr, pabs) !sav2008
         use constants, only: clt, zero
         use rt_parameters, only: itend0, kv
         use plasma, only: fvt, vperp
         use current, only: dfind
-        use dispersion_module, only: vfound, ifound, ipow, jfoundr
+        use dispersion_module, only: vfound, ipow
         use dispersion_module, only: cf1, cf2, cf3, cf4, cf5, cf6
         use dispersion_module, only: icf1,icf2
         use dispersion_module, only: vlf,vrt,dflf,dfrt
         use dispersion_module, only: zatukh ! function zatukh(psy,j,u,n)
         use dispersion_module, only: pdec1,pdec2,pdec3,pdecv,pdecal,dfdv
         implicit none
+        integer, intent(in)  :: ifound, jfoundr
         real(wp), intent(in) :: pabs
         real(wp)    :: radth
 
