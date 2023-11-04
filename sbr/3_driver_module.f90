@@ -42,6 +42,18 @@ module driver_module
     !common /vth/ vthc(length),poloidn(length)
 contains
 
+    subroutine memorize_trajectory_point4(ro)
+        use dispersion_module, only: vfound
+        use rt_parameters, only : nr
+        implicit none
+        real(wp), intent(in) :: ro
+        integer jf
+        jf=idnint(ro/hrad)
+        if(jf.le.0) jf=1
+        if(jf.gt.nr) jf=nr
+        call memorize_trajectory_point(vfound, jf, ro, 1d0)
+    end subroutine
+
     subroutine memorize_trajectory_point(vz, j, ro, powccc)
         !!  memorize trajectory point
         use plasma, only: fvt
@@ -719,6 +731,7 @@ contains
                 izn=-izn
                 call disp2(y(3),y(2),y(1),xnr,prt,prm)
                 if(ivar.eq.-1) then !out of dispersion curve - restart
+                    print *, 'out of dispersion curve - restart'
                     do i=1,nvar
                         y(i)=ystart(i)
                     end do
@@ -744,6 +757,8 @@ contains
             end if
             !sav2008       if((y(3).gt.rexi1.or.y(3).lt.rexi2)) then  ! exit
             !!    if(dabs(y(3)-rexi).gt.rrange.or.nstp.eq.maxstep4) then  ! exit !sav2008
+            print *, y(3), rexi, rrange
+            call memorize_trajectory_point4(y(3))
             if(dabs(y(3)-rexi).gt.rrange) then  ! exit !sav2008
                 if(dydx(3).gt.zero) irs=-1
                 if(dydx(3).lt.zero) irs=1
