@@ -42,13 +42,15 @@ module driver_module
     !common /vth/ vthc(length),poloidn(length)
 contains
 
-    subroutine memorize_trajectory_point4(ro)
+    subroutine memorize_trajectory_point4(ro, theta)
         use dispersion_module, only: vfound
+        use dispersion_module, only: cf2
         use rt_parameters, only : nr
         implicit none
-        real(wp), intent(in) :: ro
+        real(wp), intent(in) :: ro, theta
         integer jf
         jf=idnint(ro/hrad)
+        cf2 = theta
         if(jf.le.0) jf=1
         if(jf.gt.nr) jf=nr
         call memorize_trajectory_point(vfound, jf, ro, 1d0)
@@ -687,7 +689,7 @@ contains
         real(wp), parameter :: hbeg=1.d-4 !sav2008
         real(wp)  :: x, xnr, prt, prm, dyd, hnext
         real(wp)  :: yscal(nvar),y(nvar),dydx(nvar),yold(nvar)
-        real(wp)  :: eps1, rbord1, hdid, xold, rmm, h
+        real(wp)  :: eps1, rbord1, hdid, xold, h ,rmm
         real(wp)  :: hdrob1, pdec14zz, pdec24zz, pdec34zz
         integer   :: ipr1, iat, i, ii, nstp
         ipr1=0
@@ -720,7 +722,8 @@ contains
         !c start integration
         !c--------------------------------------
         do nstp=1,maxstep4
-            print *,'--- nstp=', nstp
+            print *, '---------------------'
+            print *,'nstp=', nstp
             idec=iturns
             call derivs(x,y,dydx)
             idec=0
@@ -772,7 +775,9 @@ contains
             !sav2008       if((y(3).gt.rexi1.or.y(3).lt.rexi2)) then  ! exit
             !!    if(dabs(y(3)-rexi).gt.rrange.or.nstp.eq.maxstep4) then  ! exit !sav2008
             print *, y(3), rexi, rrange
-            call memorize_trajectory_point4(y(3))
+            print *,'theta =', y(1)
+            print *,'  rho =', y(3)
+            call memorize_trajectory_point4(y(3), y(1))
             if(dabs(y(3)-rexi).gt.rrange) then  ! exit !sav2008
                 if(dydx(3).gt.zero) irs=-1
                 if(dydx(3).lt.zero) irs=1
