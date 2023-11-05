@@ -184,7 +184,6 @@ contains
                 dyold(i)=dydx(i)
             end do
             ynz0=ynz
-            print *, 'ipow=',ipow
             if(ipow.gt.0) then !integrate power equation
                 powccc = dql1(ifound, jfoundr, pabs)
                 ! -----------------------------------
@@ -216,8 +215,6 @@ contains
 10          dst1=(x-rbord)*(x+h-rbord)
             dst2=x*(x+h)
             if((dst1.lt.zero.and.irs.eq.-1).or.dst2.lt.zero) then
-                print *, dst1, dst2, h
-                pause
                 h=h/2.d0
                 if(dabs(h).lt.hmin1) then
                     ind=4
@@ -710,8 +707,6 @@ contains
         !c start integration
         !c--------------------------------------
         do nstp=1,maxstep4
-            print *, '---------------------'
-            print *,'nstp=', nstp
             idec=iturns
             call derivs(x,y,dydx)
             idec=0
@@ -761,9 +756,6 @@ contains
             end if
             !sav2008       if((y(3).gt.rexi1.or.y(3).lt.rexi2)) then  ! exit
             !!    if(dabs(y(3)-rexi).gt.rrange.or.nstp.eq.maxstep4) then  ! exit !sav2008
-            print *, y(3), rexi, rrange
-            print *,'theta =', y(1)
-            print *,'  rho =', y(3)
             call memorize_trajectory_point4(y(3), y(1))
             if(dabs(y(3)-rexi).gt.rrange) then  ! exit !sav2008
                 if(dydx(3).gt.zero) irs=-1
