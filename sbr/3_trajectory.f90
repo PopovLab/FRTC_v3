@@ -236,7 +236,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         use dispersion_module, only: iroot, ider, izn
         use dispersion_module, only: xnr1, xnr2, xnr3, xnr4
         use dispersion_module, only: extd4, disp2, disp2_iroot3
-        use driver_module, only: im4, hrad, irs, iabsorp, iznzz, iwzz, irszz, rzz
+        use driver_module, only: inak, im4, hrad, irs, iabsorp, iznzz, iwzz, irszz, rzz
         use driver_module, only: tetzz, xmzz
         use driver_module, only: driver2, driver4
         use dispersion_equation, only: ynz
@@ -254,7 +254,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         integer :: irf, irf1
         integer :: ib2
         integer :: irs0        
-
+        integer :: inak_saved 
         real(wp), parameter :: pgdop=0.02d0
         real(wp), parameter :: hmin=0.d-7 !sav2008, old hmin=1.d-7
         real(wp) :: eps0
@@ -350,6 +350,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         x1=0d0
         x2=1d+10
         rexi=xend
+        inak_saved = inak
         print *, '---- driver4 -----'
         call driver4(yy,x1,x2,rexi,hmin, extd4)
         if(iabsorp.eq.-1) return !failed to turn
@@ -361,7 +362,6 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
 
         if(ipri.gt.2) write (*,*) 'from r=',rexi,'to r=',rnew
         print *, 'from r=',rexi,'to r=',rnew
-        print *, '   tet ', '     tetnew'
         print *, '   tet =', tet
         print *, 'tetnew =', tetnew
         print *, ' dteta =',  tetnew - tet
@@ -404,6 +404,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
             eps=eps/5d0
             rrange=rrange*2d0
             hdrob=hdrob*2d0
+            inak = inak_saved ! костыль - восстанавливаю занчение счетчика точек траектории
             goto 40
         end if
         !-------------------------------------
