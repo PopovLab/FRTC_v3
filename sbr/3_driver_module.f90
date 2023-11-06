@@ -651,11 +651,12 @@ contains
 
 !------------------------------------------------------------------------------------------------
     subroutine driver4(ystart,x1,x2,rexi,hmin, derivs)
-        use constants
+        use constants, only : zero
         use runge_kutta_module
-        use plasma
-        use rt_parameters
-        use dispersion_module
+        use rt_parameters, only: ipri, eps, hdrob, rbord, maxstep4, rrange
+        use dispersion_module, only: idec, ivar, izn
+        use dispersion_module, only: pdec14, pdec24, pdec34
+        use dispersion_module, only: disp2
         implicit none
         real(wp), intent(inout)  :: ystart(:)
         real(wp), intent(inout)  :: x1,x2
