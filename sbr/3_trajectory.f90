@@ -233,9 +233,9 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
     subroutine traj(xm0, tet0, xbeg, nmax, nb1, nb2, nomth, nomnz, pabs) !sav2009
         use constants, only : tiny1
         use rt_parameters, only: eps, rrange, hdrob, nr, ipri, iw
-        use dispersion_module, only: ider, izn
+        use dispersion_module, only: izn
         use dispersion_module, only: xnr1, xnr2, xnr3, xnr4
-        use dispersion_module, only: extd4, disp2, disp2_iroot3
+        use dispersion_module, only: extd4, disp2, disp2_iroot3, disp2_ider0
         use driver_module, only: inak, im4, hrad, irs, iabsorp, iznzz, iwzz, irszz, rzz
         use driver_module, only: tetzz, xmzz
         use driver_module, only: driver2, driver4
@@ -271,7 +271,6 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         rrange0=rrange
         hdrob0=hdrob
         nrefl=0
-        ider=1
         im4=0
         nb1=0
         nb2=0
@@ -322,9 +321,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         !  pass turning point
         !--------------------------------------------------------
         irs0=irs
-        ider=0
-        call disp2(xend,xm,tet,xnr,prt,prm)
-        ider=1
+        call disp2_ider0(xend,xm,tet,xnr,prt,prm)
         ynz0 = ynz
   40    yy(1)=tet 
         yy(2)=xm

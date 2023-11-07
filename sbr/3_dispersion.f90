@@ -195,8 +195,6 @@ module dispersion_module
 
     integer  :: izn
     !!common /abcde/ izn
-    integer  :: ider
-    !!common /be2/ ider
 
     real(wp) :: xnr1,xnr2,xnr3,xnr4
     !!common /be1/ xnr1,xnr2,xnr3,xnr4
@@ -245,6 +243,116 @@ module dispersion_module
     real(wp) :: vlf,vrt,dflf,dfrt
     !common /a0ghp/ vlf,vrt,dflf,dfrt
 contains
+    subroutine disp2_ider0(pa,yn2,ptet,xnro,prt,prm)
+        ! case iroot == 1 ider == 0
+        use constants, only: zero, one, two
+        use constants, only: c0, c1,pi
+        use constants, only: zalfa, xmalfa, xlog, clt
+        use plasma, only: fn1, fn2, fvt, ft, zefff
+        use plasma, only: ww, xmi,xsz, cltn, cnye, cnyi
+        use plasma, only: cnstal, valfa, vperp
+        use rt_parameters, only: inew, iw, itend0, kv
+        use metrics
+        use dielectric_tensor
+        use dispersion_equation
+        implicit none
+        real(wp), intent(in) :: pa      ! ro
+        real(wp), intent(in) :: yn2     ! ???
+        real(wp), intent(in) :: ptet    ! theta
+        real(wp), intent(out) :: xnro ! ???
+        real(wp), intent(out) :: prt  ! ???
+        real(wp), intent(out) :: prm  ! ???       
+
+        integer  :: jr
+
+        real(wp) :: dl1, ynpopq1, al, bl, cl, cl1, dll
+        real(wp) :: s1, p1, p2, p3, ynzt, e2t, u1t, cot, sit
+
+        real(wp) :: dl2, xnr, ynyt, dnym
+        real(wp) :: dnx, dll1,  e1t
+
+        real(wp) :: s2, dnm, v1, v2, vvt, vvm, vz, vt
+        real(wp) :: s21, sjg, s23, s24, s22, sl1
+        real(wp) :: pnewt, fder,  aimh, pnye, pnyi
+        real(wp) :: tmp, fcoll, source, argum
+        real(wp) :: dek1, dek2, dek3
+
+        !print *, 'disp2 ivar=', ivar
+
+        iconv=0
+        irefl=0
+        if(pa.ge.one.or.pa.le.zero) goto 70
+        icall1=icall1+1
+        
+        call calculate_metrics(pa, ptet)
+
+        if(ivar.eq.1) return
+        !---------------------------------------
+        ! components of dielectric tensor
+        !---------------------------------------
+        call calculate_dielectric_tensor(pa)
+
+        !-------------------------------------
+        ! dispersion equation
+        !--------------------------------------
+        call calculate_dispersion_equation(yn2 , yn3)
+        
+        if(dls.lt.zero) then
+            ! conversion
+            iconv=1
+            if (ivar.ne.0) ivar=-1
+            return
+        end if
+30      continue
+        dl1=dfloat(iw)*dsqrt(dls)/two/as
+        if(iw.eq.-1) ynpopq=-bs/(two*as)+dl1
+        if(iw.eq.1)  ynpopq=two*cs/(-bs-two*as*dl1)
+        
+
+        !cc      write(*,*)'iw=',iw,' izn=',izn,' Nperp=',dsqrt(ynpopq)
+        !cc      write(*,*)'Nperp2=',ynpopq,' ynpopq1=',-bs/(two*as)-dl1
+        !cc      pause
+
+        if (ynpopq.lt.zero) goto 70
+        al=g22/xj
+        bl=-yn2*g12/xj
+        cl=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq
+
+        dll=bl*bl-al*cl
+
+        if(dll.lt.zero) goto 70
+
+40      dl2=-dfloat(izn)*dsqrt(dll)/al
+        if(izn.eq.1) xnr=-bl/al+dl2
+        if(izn.eq.-1) xnr=cl/(-bl-al*dl2)
+        xnro=xnr
+        if(ivar.gt.1) then
+            !cccccc  find Nr of reflected wave
+            dnx=two*as*ynpopq+bs
+            dhdnr=dnx*(two*g22*xnr-two*g12*yn2)/xj
+            if(-znakstart*dhdnr.gt.zero) then
+                izn=-izn
+                goto 40
+            end if
+            return
+        end if
+
+        prt=0d0
+        prm=0d0
+
+        return
+
+        !  reflection 
+70      irefl=1
+        if (ivar.gt.1.and.ivar.ne.10) then
+            iw=-iw
+            ivar=10
+            goto 30
+        end if
+        if (ivar.eq.10) ivar=-1
+        return
+    end subroutine
+
     subroutine disp2(pa,yn2,ptet,xnro,prt,prm)
         ! case iroot == 1
         use constants, only: zero, one, two
@@ -339,11 +447,6 @@ contains
             return
         end if
 
-        if(ider.eq.0) then
-            prt=0d0
-            prm=0d0
-            return
-        end if
         !--------------------------------------
         !   calculation of derivatives
         !--------------------------------------
