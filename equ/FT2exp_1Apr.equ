@@ -47,7 +47,7 @@ ZMAIN = ZMJ;
 AIM1 = 16;
 ZIM1 = 8;
 
-ZEF = 3.5d0
+ZEF = 4.0d0
 
 !Its densities
 
