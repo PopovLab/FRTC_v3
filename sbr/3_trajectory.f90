@@ -233,7 +233,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
     subroutine traj(xm0, tet0, xbeg, nmax, nb1, nb2, nomth, nomnz, pabs) !sav2009
         use constants, only : tiny1
         use rt_parameters, only: eps, rrange, hdrob, nr, ipri, iw
-        use dispersion_module, only: iroot, ider, izn
+        use dispersion_module, only: ider, izn
         use dispersion_module, only: xnr1, xnr2, xnr3, xnr4
         use dispersion_module, only: extd4, disp2, disp2_iroot3
         use driver_module, only: inak, im4, hrad, irs, iabsorp, iznzz, iwzz, irszz, rzz
@@ -270,7 +270,6 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         eps0=eps
         rrange0=rrange
         hdrob0=hdrob
-        iroot=1
         nrefl=0
         ider=1
         im4=0
@@ -348,12 +347,10 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         !---------------------------------------
         ! find mode
         !---------------------------------------
-        iroot=3
         ider=0
         xnrv=xnrnew
         call disp2_iroot3(rnew,xmnew,tetnew,xnrv,prt,prm)
         ider=1
-        iroot=1
         !ipric      if (ipri.gt.2) then
         !ipric       write (*,*)'nr check, r=',rnew,' tet=',tetnew
         !ipric       write (*,*)'iw=',iw,' izn=',izn

@@ -193,8 +193,6 @@ module dispersion_module
     integer :: icall1, icall2
     !common /aef2/ icall1,icall2        
 
-    integer  :: iroot
-    !!common /beo/ iroot
     integer  :: izn
     !!common /abcde/ izn
     integer  :: ider
@@ -473,6 +471,7 @@ contains
     end
 
     subroutine disp2_iroot3(pa,yn2,ptet,xnro,prt,prm)
+        ! case iroot == 3
         use constants, only: zero, one, two
         use constants, only: c0, c1,pi
         use constants, only: zalfa, xmalfa, xlog, clt
@@ -503,7 +502,6 @@ contains
         real(wp) :: tmp, fcoll, source, argum
         real(wp) :: dek1, dek2, dek3
         !print *, 'disp2 ivar=', ivar
-        !print *, 'disp2 iroot=', iroot
         iconv=0
         irefl=0
         if(pa.ge.one.or.pa.le.zero) then
@@ -597,6 +595,7 @@ contains
 
 
     subroutine disp2_iroot2(pa,yn2,ptet,xnro,prt,prm)
+        ! case iroot == 2
         use constants, only: zero, one, two
         use constants, only: c0, c1,pi
         use constants, only: zalfa, xmalfa, xlog, clt
@@ -630,7 +629,6 @@ contains
         real(wp) :: dek1, dek2, dek3
 
         !print *, 'disp2 ivar=', ivar
-        !print *, 'disp2 iroot=', iroot
         iconv=0
         irefl=0
         if(pa.ge.one.or.pa.le.zero) then
