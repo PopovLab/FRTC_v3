@@ -713,10 +713,13 @@ contains
 
 
     subroutine disp4(in_pa,ptet,xnr,yn2)
-        use constants
+        use constants, only: zero, one, two, c0, c1,pi, zalfa, xlog, xmalfa
         use approximation
-        use plasma
-        use rt_parameters            
+        use plasma, only: fn1, fn2, fvt, zefff, ft
+        use plasma, only: cdl, cly, cgm, cmy, ncoef
+        use plasma, only: r0, rm, b_tor, ww, xmi, xsz
+        use plasma, only: cltn, cnye, cnyi, cnstal
+        use rt_parameters, only: inew, itend0
         use metrics
         use dispersion_equation, only: ynz
         implicit none
