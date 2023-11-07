@@ -268,23 +268,10 @@ contains
         real(wp), intent(out) :: prm  ! ???       
 
         integer  :: jr
-        !real(wp) :: xdl, xdlp, xly, xlyp
-        !real(wp) :: xgm, xgmp, xmy, xmyp, xlyv, cotet, sitet
-        !real(wp) :: dxdr, dxdt, dzdr, dzdt
-        !real(wp) :: x0, x0t, xj
-        !real(wp) :: g2v1, g2jq, g3v
-        !real(wp) :: b, bp, bt
-        !real(wp) :: dxdrdt, dxdtdt, dzdrdt, dzdtdt
 
-        !real(wp) :: pn, fnr, fnrr, wpq, whe, v,u1, u
-        !real(wp) :: e1, e2, e3
-        
-        !real(wp) :: ynzq
-        !real(wp) :: as, bs, cs, pnew, yny, gpr, dls
         real(wp) :: dl1, ynpopq1, al, bl, cl, cl1, dll
         real(wp) :: s1, p1, p2, p3, ynzt, e2t, u1t, cot, sit
-        !real(wp) :: bpt, g2jqt, btt, xjt
-        !real(wp) :: g11t, g22t, g33t, g12t, gprt
+
         real(wp) :: dl2, xnr, ynyt, dnym
         real(wp) :: dnx, dll1,  e1t
 
@@ -293,10 +280,9 @@ contains
         real(wp) :: pnewt, fder,  aimh, pnye, pnyi
         real(wp) :: tmp, fcoll, source, argum
         real(wp) :: dek1, dek2, dek3
-        !external zatukh
-        !real(wp) :: zatukh
+
         !print *, 'disp2 ivar=', ivar
-        !print *, 'disp2 iroot=', iroot
+
         iconv=0
         irefl=0
         if(pa.ge.one.or.pa.le.zero) goto 70
