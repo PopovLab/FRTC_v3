@@ -553,7 +553,7 @@ contains
         if(izn.eq.1) xnr=-bl/al+dl2
         if(izn.eq.-1) xnr=cl/(-bl-al*dl2)
         xnro=xnr
-        if(ivar.gt.1) then
+        if(ivar.gt.1) then ! код никода не исполняется всегда ivar=0
             !cccccc  find Nr of reflected wave
             dnx=two*as*ynpopq+bs
             dhdnr=dnx*(two*g22*xnr-two*g12*yn2)/xj
