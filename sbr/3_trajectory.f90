@@ -347,10 +347,10 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         !---------------------------------------
         ! find mode
         !---------------------------------------
-        ider=0
+
         xnrv=xnrnew
         call disp2_iroot3(rnew,xmnew,tetnew,xnrv,prt,prm)
-        ider=1
+
         !ipric      if (ipri.gt.2) then
         !ipric       write (*,*)'nr check, r=',rnew,' tet=',tetnew
         !ipric       write (*,*)'iw=',iw,' izn=',izn
