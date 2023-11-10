@@ -567,7 +567,7 @@ contains
         return
     end
 
-    subroutine disp2_iroot3(pa,yn2,ptet,xnro,prt,prm)
+    subroutine disp2_iroot3(pa,yn2,ptet,xnro)
         ! case iroot == 3
         use constants, only: zero, one, two
         use constants, only: c0, c1,pi
@@ -584,8 +584,7 @@ contains
         real(wp), intent(in) :: yn2     ! ???
         real(wp), intent(in) :: ptet    ! theta
         real(wp), intent(out) :: xnro ! ???
-        real(wp), intent(out) :: prt  ! ???
-        real(wp), intent(out) :: prm  ! ???       
+    
 
         integer  :: jr
         real(wp) :: dl1, ynpopq1, al, bl, cl, cl1, dll
@@ -682,9 +681,6 @@ contains
             xnr3=-bl/al-izn*dsqrt(dll1)/al
             xnr4=-bl/al+izn*dsqrt(dll1)/al
         end if
-
-        prt=0d0
-        prm=0d0
 
     end
 

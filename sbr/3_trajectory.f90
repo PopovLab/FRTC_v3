@@ -262,7 +262,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         real(wp) :: xsav, xend,hsav, h1
         real(wp) :: ystart(2),yy(4)
 
-        real(wp) :: xnr, prt, prm
+        real(wp) :: xnr
         real(wp) :: ynz0, x1, x2, rexi, tetnew
         real(wp) :: xmnew, rnew, xnrnew, xnrv
         real(wp) :: pg1, pg2, pg3, pg4, pg
@@ -346,7 +346,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         !---------------------------------------
 
         xnrv=xnrnew
-        call disp2_iroot3(rnew,xmnew,tetnew,xnrv,prt,prm)
+        call disp2_iroot3(rnew,xmnew,tetnew,xnrv)
 
         !ipric      if (ipri.gt.2) then
         !ipric       write (*,*)'nr check, r=',rnew,' tet=',tetnew
