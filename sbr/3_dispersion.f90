@@ -774,14 +774,14 @@ contains
             izn=1
             dl2=-dsqrt(dll)/al
             xnr=-bl/al+dl2
-            call dhdomega(pa,ptet,xnr,yn2)
+            znakstart = dhdomega(pa,ptet,xnr,yn2)
             !cc        write(*,*)'#1: izn=',izn,' dl2=',dl2,' xnr=',xnr
             !cc        write(*,*)'znak=',znakstart,' -znak*dhdnr=',-znakstart*dhdnr
             if(-znakstart*dhdnr.gt.zero) then
                 izn=-1
                 dl2=dsqrt(dll)/al
                 xnr=cl/(-bl-al*dl2)
-                call dhdomega(pa,ptet,xnr,yn2)
+                znakstart = dhdomega(pa,ptet,xnr,yn2)
                 !cc         write(*,*)'#2: izn=',izn,' dl2=',dl2,' xnr=',xnr
                 !cc         write(*,*)'znak=',znakstart,' -znak*dhdnr=',-znakstart*dhdnr
                 if(-znakstart*dhdnr.gt.zero) then
@@ -1129,7 +1129,7 @@ contains
     end
 
 
-    subroutine dhdomega(rho,theta,yn1,yn2)
+    function dhdomega(rho,theta,yn1,yn2) result(znak) 
         implicit none
         real(wp), intent(in) :: rho
         real(wp), intent(in) :: theta
@@ -1147,7 +1147,7 @@ contains
         !!w*dH/dw=wdhdw:
         wdhdw=-(yn1*dhdnr+yn2*dhdm+yn3*dhdn3+dhdv2v+dhdu2u)
         znak=dsign(1.d0,wdhdw)
-        znakstart=znak
+        !znakstart=znak
         !c      write(*,*)'formula: znak=',znak
         !c      write(*,*)'wdhdw=',wdhdw,' H=',ham
         !c      write(*,*)'rho=',rho,' teta=',theta
