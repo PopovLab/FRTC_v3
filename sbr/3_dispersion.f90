@@ -1130,6 +1130,7 @@ contains
 
 
     function dhdomega(rho,theta,yn1,yn2) result(znak) 
+        !! вычисляет znakstart
         implicit none
         real(wp), intent(in) :: rho
         real(wp), intent(in) :: theta
