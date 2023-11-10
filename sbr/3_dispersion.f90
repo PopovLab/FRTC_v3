@@ -710,16 +710,9 @@ contains
         integer  :: jr
 
         real(wp) :: dl1, ynpopq1, al, bl, cl, cl1, dll
-        real(wp) :: s1, p1, p2, p3, ynzt, e2t, u1t, cot, sit
 
         real(wp) :: dl2, xnr, ynyt, dnym
         real(wp) :: dnx, dll1,  e1t
-
-        real(wp) :: s2, dnm, v1, v2, vvt, vvm, vz, vt
-        real(wp) :: s21, sjg, s23, s24, s22, sl1
-        real(wp) :: pnewt, fder,  aimh, pnye, pnyi
-        real(wp) :: tmp, fcoll, source, argum
-        real(wp) :: dek1, dek2, dek3
 
         !print *, 'disp2 ivar=', ivar
         iconv=0

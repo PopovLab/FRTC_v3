@@ -241,7 +241,7 @@ contains
         use constants, only : zero
         use rt_parameters, only : inew
         use spectrum_mod, only : SpectrumPoint
-        use dispersion_module, only: ivar, yn3, disp2
+        use dispersion_module, only: ivar, yn3
         use dispersion_module, only: disp2_iroot2
         use metrics, only: g22, g33, co, si
         use metrics, only: calculate_metrics
