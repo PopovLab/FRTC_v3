@@ -321,7 +321,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         !  pass turning point
         !--------------------------------------------------------
         irs0=irs
-        call disp2_ider0(xend,xm,tet,xnr,prt,prm)
+        call disp2_ider0(xend,xm,tet,xnr)
         ynz0 = ynz
   40    yy(1)=tet 
         yy(2)=xm

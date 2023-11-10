@@ -243,7 +243,7 @@ module dispersion_module
     real(wp) :: vlf,vrt,dflf,dfrt
     !common /a0ghp/ vlf,vrt,dflf,dfrt
 contains
-    subroutine disp2_ider0(pa,yn2,ptet,xnro,prt,prm)
+    subroutine disp2_ider0(pa,yn2,ptet,xnro)
         ! case iroot == 1 ider == 0
         use constants, only: zero, one, two
         use constants, only: c0, c1,pi
@@ -260,28 +260,30 @@ contains
         real(wp), intent(in) :: yn2     ! ???
         real(wp), intent(in) :: ptet    ! theta
         real(wp), intent(out) :: xnro ! ???
-        real(wp), intent(out) :: prt  ! ???
-        real(wp), intent(out) :: prm  ! ???       
+        !real(wp), intent(out) :: prt  ! ???
+        !real(wp), intent(out) :: prm  ! ???       
 
         integer  :: jr
 
         real(wp) :: dl1, ynpopq1, al, bl, cl, cl1, dll
-        real(wp) :: s1, p1, p2, p3, ynzt, e2t, u1t, cot, sit
+        !real(wp) :: s1, p1, p2, p3, ynzt, e2t, u1t, cot, sit
 
         real(wp) :: dl2, xnr, ynyt, dnym
         real(wp) :: dnx, dll1,  e1t
 
-        real(wp) :: s2, dnm, v1, v2, vvt, vvm, vz, vt
-        real(wp) :: s21, sjg, s23, s24, s22, sl1
-        real(wp) :: pnewt, fder,  aimh, pnye, pnyi
-        real(wp) :: tmp, fcoll, source, argum
-        real(wp) :: dek1, dek2, dek3
+        !real(wp) :: s2, dnm, v1, v2, vvt, vvm, vz, vt
+        !real(wp) :: s21, sjg, s23, s24, s22, sl1
+        !real(wp) :: pnewt, fder,  aimh, pnye, pnyi
+        !real(wp) :: tmp, fcoll, source, argum
+        !real(wp) :: dek1, dek2, dek3
 
         !print *, 'disp2 ivar=', ivar
 
         iconv=0
         irefl=0
-        if(pa.ge.one.or.pa.le.zero) goto 70
+        if(pa.ge.one.or.pa.le.zero) then
+            pause
+        endif
         icall1=icall1+1
         
         call calculate_metrics(pa, ptet)
@@ -299,6 +301,7 @@ contains
         
         if(dls.lt.zero) then
             ! conversion
+            pause
             iconv=1
             if (ivar.ne.0) ivar=-1
             return
@@ -313,14 +316,18 @@ contains
         !cc      write(*,*)'Nperp2=',ynpopq,' ynpopq1=',-bs/(two*as)-dl1
         !cc      pause
 
-        if (ynpopq.lt.zero) goto 70
+        if (ynpopq.lt.zero) then
+            pause
+        endif
         al=g22/xj
         bl=-yn2*g12/xj
         cl=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq
 
         dll=bl*bl-al*cl
 
-        if(dll.lt.zero) goto 70
+        if(dll.lt.zero) then
+            pause
+        endif
 
 40      dl2=-dfloat(izn)*dsqrt(dll)/al
         if(izn.eq.1) xnr=-bl/al+dl2
@@ -328,6 +335,7 @@ contains
         xnro=xnr
         if(ivar.gt.1) then
             !cccccc  find Nr of reflected wave
+            pause
             dnx=two*as*ynpopq+bs
             dhdnr=dnx*(two*g22*xnr-two*g12*yn2)/xj
             if(-znakstart*dhdnr.gt.zero) then
@@ -337,20 +345,6 @@ contains
             return
         end if
 
-        prt=0d0
-        prm=0d0
-
-        return
-
-        !  reflection 
-70      irefl=1
-        if (ivar.gt.1.and.ivar.ne.10) then
-            iw=-iw
-            ivar=10
-            goto 30
-        end if
-        if (ivar.eq.10) ivar=-1
-        return
     end subroutine
 
     subroutine disp2(pa,yn2,ptet,xnro,prt,prm)
