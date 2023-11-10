@@ -42,7 +42,7 @@ contains
         integer nmax, i, nb1,nb2
         !integer iznzz, iwzz, irszz
         real(wp) htet, hr, yn, rin, xmin, rstart
-        real(wp) xnr, powexit, dltpow,  pow1, pgamma, xm
+        real(wp) powexit, dltpow,  pow1, pgamma, xm
         real(wp) tetin0, tetin, tet
 
         pabs = spectr%max_power*pabs0/1.d2
@@ -96,7 +96,7 @@ contains
                     !pow=pm(inz)
                     irs = 1
                     iw = iw0
-                    rin = rini(xmin,tetin,xnr,point,hr,ifail)
+                    rin = rini(xmin,tetin,point,hr,ifail)
                     if (ifail.eq.1) then
                         if (ipri.gt.1) write (*,*) 'error: no roots'
                         iabsorp = -1
@@ -237,7 +237,7 @@ contains
     end    
 
 
-    real(wp) function rini(xm, tet, xnr, point, hr, ifail) !sav2009
+    real(wp) function rini(xm, tet, point, hr, ifail) !sav2009
         use constants, only : zero
         use rt_parameters, only : inew
         use spectrum_mod, only : SpectrumPoint
@@ -248,7 +248,7 @@ contains
         implicit none
 
         type(SpectrumPoint), intent(in) :: point
-        real(wp), intent(inout)          :: xm, xnr
+        real(wp), intent(inout)          :: xm
         real(wp), intent(in)             :: tet,  hr
         integer, intent(inout)           :: ifail
 
@@ -273,7 +273,7 @@ contains
             yn3 = point%Ntor*dsqrt(g33)/co 
             xm = point%Npol*dsqrt(g22)/si
 
-            call disp2_iroot2(pa,xm,tet,xnr,f1,f2)
+            call disp2_iroot2(pa,xm,tet,f1,f2)
             
             if (f1.ge.zero.and.f2.ge.zero) then
                 rini = pa

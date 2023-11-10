@@ -687,7 +687,7 @@ contains
 
 
 
-    subroutine disp2_iroot2(pa,yn2,ptet,xnro,prt,prm)
+    subroutine disp2_iroot2(pa,yn2,ptet,prt,prm)
         ! case iroot == 2
         use constants, only: zero, one, two
         use constants, only: c0, c1,pi
@@ -703,7 +703,7 @@ contains
         real(wp), intent(in) :: pa      ! ro
         real(wp), intent(in) :: yn2     ! ???
         real(wp), intent(in) :: ptet    ! theta
-        real(wp), intent(out) :: xnro ! ???
+        !real(wp), intent(out) :: xnro ! ???
         real(wp), intent(out) :: prt  ! ???
         real(wp), intent(out) :: prm  ! ???       
 
@@ -759,7 +759,7 @@ contains
  
         prt=dls
         prm=dll
-        if(dll.ge.zero) then !sav2008
+        if(dll.ge.zero) then !эта ветка нужна для определения znakstart
             !!old variant:
             !cc        dl2=-dfloat(izn)*dsqrt(dll)/al
             !cc        if(izn.eq.1) xnr=-bl/al+dl2
@@ -789,7 +789,7 @@ contains
                     stop
                 end if
             end if
-            xnro=xnr
+            !xnro=xnr
         end if
 
     end subroutine
