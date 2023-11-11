@@ -311,7 +311,6 @@ contains
         if(iw.eq.-1) ynpopq=-bs/(two*as)+dl1
         if(iw.eq.1)  ynpopq=two*cs/(-bs-two*as*dl1)
         
-
         !cc      write(*,*)'iw=',iw,' izn=',izn,' Nperp=',dsqrt(ynpopq)
         !cc      write(*,*)'Nperp2=',ynpopq,' ynpopq1=',-bs/(two*as)-dl1
         !cc      pause
@@ -391,14 +390,9 @@ contains
         call calculate_metrics(pa, ptet)
 
         if(ivar.eq.1) return
-        !---------------------------------------
-        ! components of dielectric tensor
-        !---------------------------------------
+
         call calculate_dielectric_tensor(pa)
 
-        !-------------------------------------
-        ! dispersion equation
-        !--------------------------------------
         call calculate_dispersion_equation(yn2 , yn3)
         
         if(dls.lt.zero) then
@@ -554,8 +548,6 @@ contains
         end if
         return
 
-
-
         !  reflection
 70      irefl=1
         if (ivar.gt.1.and.ivar.ne.10) then
@@ -610,14 +602,8 @@ contains
         
         call calculate_metrics(pa, ptet)
 
-        !---------------------------------------
-        ! components of dielectric tensor
-        !---------------------------------------
         call calculate_dielectric_tensor(pa)
 
-        !-------------------------------------
-        ! dispersion equation
-        !--------------------------------------
         call calculate_dispersion_equation(yn2 , yn3)
         
         if(dls.lt.zero) then
@@ -684,9 +670,6 @@ contains
 
     end
 
-
-
-
     subroutine disp2_iroot2(pa,yn2,ptet,prt,prm)
         ! case iroot == 2
         use constants, only: zero, one, two
@@ -726,14 +709,8 @@ contains
         
         call calculate_metrics(pa, ptet)
 
-        !---------------------------------------
-        ! components of dielectric tensor
-        !---------------------------------------
         call calculate_dielectric_tensor(pa)
 
-        !-------------------------------------
-        ! dispersion equation
-        !--------------------------------------
         call calculate_dispersion_equation(yn2 , yn3)
         
         if(dls.lt.zero) then
@@ -746,7 +723,6 @@ contains
         if(iw.eq.-1) ynpopq=-bs/(two*as)+dl1
         if(iw.eq.1)  ynpopq=two*cs/(-bs-two*as*dl1)
         
-
         !cc      write(*,*)'iw=',iw,' izn=',izn,' Nperp=',dsqrt(ynpopq)
         !cc      write(*,*)'Nperp2=',ynpopq,' ynpopq1=',-bs/(two*as)-dl1
         !cc      pause
@@ -1180,11 +1156,12 @@ contains
 
     real(wp) function zatukh(psy,j,u,n)
         use constants
-        implicit real*8 (a-h,o-z)
+        !implicit real*8 (a-h,o-z)
+        implicit none
         real(wp), intent(in) :: psy
         real(wp), intent(in) :: u(:,:)
         integer,  intent(in) :: j, n
-        dimension x(50),y(50),a(50),b(50)
+        real(wp) :: x(50),y(50),a(50),b(50)
         !common /a0befr/ pi,pi2
         !common /arr/ dgdu(50,100),kzero(100)
         integer :: km, k, i, l
