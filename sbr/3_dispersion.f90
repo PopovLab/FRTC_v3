@@ -196,9 +196,6 @@ module dispersion_module
     integer  :: izn
     !!common /abcde/ izn
 
-    real(wp) :: xnr1,xnr2,xnr3,xnr4
-    !!common /be1/ xnr1,xnr2,xnr3,xnr4
-
     real(wp) :: ynpopq
     !real(wp) ::ynz, ynpopq
     !!common /bcef/ ynz,ynpopq
@@ -559,7 +556,7 @@ contains
         return
     end
 
-    subroutine disp2_iroot3(pa,yn2,ptet,xnro)
+    subroutine disp2_iroot3(pa, yn2, ptet, xnro, pg1, pg2, pg3, pg4)
         ! case iroot == 3  ivar=0
         use constants, only: zero, one, two
         use constants, only: c0, c1,pi
@@ -575,21 +572,16 @@ contains
         real(wp), intent(in) :: pa      ! ro
         real(wp), intent(in) :: yn2     ! ???
         real(wp), intent(in) :: ptet    ! theta
-        real(wp), intent(out) :: xnro ! ???
+        real(wp), intent(in) :: xnro ! ???
+        real(wp), intent(out) :: pg1, pg2, pg3, pg4 
     
-
         integer  :: jr
+        real(wp) :: xnr1, xnr2, xnr3, xnr4
         real(wp) :: dl1, ynpopq1, al, bl, cl, cl1, dll
-        real(wp) :: s1, p1, p2, p3, ynzt, e2t, u1t, cot, sit
-        real(wp) :: dl2, xnr, ynyt, dnym
-        real(wp) :: dnx, dll1,  e1t
 
-        real(wp) :: s2, dnm, v1, v2, vvt, vvm, vz, vt
-        real(wp) :: s21, sjg, s23, s24, s22, sl1
-        real(wp) :: pnewt, fder,  aimh, pnye, pnyi
-        real(wp) :: tmp, fcoll, source, argum
-        real(wp) :: dek1, dek2, dek3
-        !print *, 'disp2 ivar=', ivar
+        real(wp) :: dl2, xnr
+        real(wp) :: dll1
+
         iconv=0
         irefl=0
         if(pa.ge.one.or.pa.le.zero) then
@@ -611,54 +603,58 @@ contains
             xnr2=1d+10
             xnr3=1d+10
             xnr4=1d+10
-            return
-        end if
-
-        dl1=dfloat(iw)*dsqrt(dls)/two/as
-        if(iw.eq.-1) ynpopq=-bs/(two*as)+dl1
-        if(iw.eq.1)  ynpopq=two*cs/(-bs-two*as*dl1)
-        
-
-        !cc      write(*,*)'iw=',iw,' izn=',izn,' Nperp=',dsqrt(ynpopq)
-        !cc      write(*,*)'Nperp2=',ynpopq,' ynpopq1=',-bs/(two*as)-dl1
-        !cc      pause
-
-        al=g22/xj
-        bl=-yn2*g12/xj
-        cl=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq
-
-        dll=bl*bl-al*cl
-
-        if (dll.ge.zero) then
-            dl2=-dfloat(izn)*dsqrt(dll)/al
-            if(izn.eq.1) xnr=-bl/al+dl2
-            if(izn.eq.-1) xnr=cl/(-bl-al*dl2)
-            xnro=xnr
-        endif
-
-        !---------------------------
-        !  find all roots
-        !----------------------------
-        if(dll.ge.zero) then
-            xnr1=xnr
-            xnr2=-bl/al-dl2
         else
-            xnr1=1d+10
-            xnr2=1d+10
+            dl1=dfloat(iw)*dsqrt(dls)/two/as
+            if (iw.eq.-1) ynpopq=-bs/(two*as)+dl1
+            if (iw.eq.1)  ynpopq=two*cs/(-bs-two*as*dl1)
+            !cc      write(*,*)'iw=',iw,' izn=',izn,' Nperp=',dsqrt(ynpopq)
+            !cc      write(*,*)'Nperp2=',ynpopq,' ynpopq1=',-bs/(two*as)-dl1
+            !cc      pause
+            al=g22/xj
+            bl=-yn2*g12/xj
+            cl=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq
+            dll=bl*bl-al*cl
+
+            !---------------------------
+            !  find all roots
+            !----------------------------
+            if (dll.ge.zero) then
+                dl2=-dfloat(izn)*dsqrt(dll)/al
+                if (izn.eq.1) xnr=-bl/al+dl2
+                if (izn.eq.-1) xnr=cl/(-bl-al*dl2)
+                !xnro=xnr            
+                xnr1=xnr
+                xnr2=-bl/al-dl2
+            else
+                xnr1=1d+10
+                xnr2=1d+10
+            end if
+
+            ynpopq1=-bs/(two*as)-dl1
+            cl1=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq1
+            dll1=bl**2-al*cl1
+
+            if (dll1.lt.zero) then
+                xnr3=1d+10
+                xnr4=1d+10
+            else
+                xnr3=-bl/al-izn*dsqrt(dll1)/al
+                xnr4=-bl/al+izn*dsqrt(dll1)/al
+            end if
+
         end if
 
-        ynpopq1=-bs/(two*as)-dl1
-        cl1=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq1
-        dll1=bl**2-al*cl1
-        
-        if (dll1.lt.zero) then
-            xnr3=1d+10
-            xnr4=1d+10
-        else
-            xnr3=-bl/al-izn*dsqrt(dll1)/al
-            xnr4=-bl/al+izn*dsqrt(dll1)/al
-        end if
-
+        !ipric      if (ipri.gt.2) then
+        !ipric       write (*,*)'nr check, r=',rnew,' tet=',tetnew
+        !ipric       write (*,*)'iw=',iw,' izn=',izn
+        !ipric       write (*,*) xnrnew,xnr1
+        !ipric       write (*,*) xnr2,xnr3,xnr4
+        !ipric       pause
+        !ipric      end if
+        pg1 = abs(xnro-xnr1)
+        pg2 = abs(xnro-xnr2)
+        pg3 = abs(xnro-xnr3)
+        pg4 = abs(xnro-xnr4)
     end
 
     subroutine disp2_iroot2(pa,yn2,ptet,prt,prm)

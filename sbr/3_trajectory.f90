@@ -234,7 +234,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         use constants, only : tiny1
         use rt_parameters, only: eps, rrange, hdrob, nr, ipri, iw
         use dispersion_module, only: izn
-        use dispersion_module, only: xnr1, xnr2, xnr3, xnr4
+        !use dispersion_module, only: xnr1, xnr2, xnr3, xnr4
         use dispersion_module, only: extd4, disp2, disp2_iroot3, disp2_ider0
         use driver_module, only: inak, im4, hrad, irs, iabsorp, iznzz, iwzz, irszz, rzz
         use driver_module, only: tetzz, xmzz
@@ -264,7 +264,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
 
         real(wp) :: xnr
         real(wp) :: ynz0, x1, x2, rexi, tetnew
-        real(wp) :: xmnew, rnew, xnrnew, xnrv
+        real(wp) :: xmnew, rnew, xnrnew
         real(wp) :: pg1, pg2, pg3, pg4, pg
 
         eps0=eps
@@ -345,20 +345,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         ! find mode
         !---------------------------------------
 
-        xnrv=xnrnew
-        call disp2_iroot3(rnew,xmnew,tetnew,xnrv)
-
-        !ipric      if (ipri.gt.2) then
-        !ipric       write (*,*)'nr check, r=',rnew,' tet=',tetnew
-        !ipric       write (*,*)'iw=',iw,' izn=',izn
-        !ipric       write (*,*) xnrnew,xnr1
-        !ipric       write (*,*) xnr2,xnr3,xnr4
-        !ipric       pause
-        !ipric      end if
-        pg1 = abs(xnrnew-xnr1)
-        pg2 = abs(xnrnew-xnr2)
-        pg3 = abs(xnrnew-xnr3)
-        pg4 = abs(xnrnew-xnr4)
+        call disp2_iroot3(rnew, xmnew, tetnew, xnrnew, pg1, pg2, pg3, pg4)
 
         pg = dmin1(pg1,pg2,pg3,pg4)
         if (dabs(pg/xnrnew).gt.pgdop) then
