@@ -559,11 +559,6 @@ contains
     subroutine disp2_iroot3(pa, yn2, ptet, xnro, pg1, pg2, pg3, pg4)
         ! case iroot == 3  ivar=0
         use constants, only: zero, one, two
-        use constants, only: c0, c1,pi
-        use constants, only: zalfa, xmalfa, xlog, clt
-        use plasma, only: fn1, fn2, fvt, ft, zefff
-        use plasma, only: ww, xmi,xsz, cltn, cnye, cnyi
-        use plasma, only: cnstal, valfa, vperp
         use rt_parameters, only: inew, iw, itend0, kv
         use metrics
         use dielectric_tensor
