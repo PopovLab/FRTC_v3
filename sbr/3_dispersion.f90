@@ -560,7 +560,7 @@ contains
     end
 
     subroutine disp2_iroot3(pa,yn2,ptet,xnro)
-        ! case iroot == 3
+        ! case iroot == 3  ivar=0
         use constants, only: zero, one, two
         use constants, only: c0, c1,pi
         use constants, only: zalfa, xmalfa, xlog, clt
@@ -613,7 +613,7 @@ contains
             xnr4=1d+10
             return
         end if
-30      continue
+
         dl1=dfloat(iw)*dsqrt(dls)/two/as
         if(iw.eq.-1) ynpopq=-bs/(two*as)+dl1
         if(iw.eq.1)  ynpopq=two*cs/(-bs-two*as*dl1)
@@ -629,23 +629,13 @@ contains
 
         dll=bl*bl-al*cl
 
-        if(dll.lt.zero) goto 50
+        if (dll.ge.zero) then
+            dl2=-dfloat(izn)*dsqrt(dll)/al
+            if(izn.eq.1) xnr=-bl/al+dl2
+            if(izn.eq.-1) xnr=cl/(-bl-al*dl2)
+            xnro=xnr
+        endif
 
-40      dl2=-dfloat(izn)*dsqrt(dll)/al
-        if(izn.eq.1) xnr=-bl/al+dl2
-        if(izn.eq.-1) xnr=cl/(-bl-al*dl2)
-        xnro=xnr
-        if(ivar.gt.1) then ! код никода не исполняется всегда ivar=0
-            !cccccc  find Nr of reflected wave
-            dnx=two*as*ynpopq+bs
-            dhdnr=dnx*(two*g22*xnr-two*g12*yn2)/xj
-            if(-znakstart*dhdnr.gt.zero) then
-                izn=-izn
-                goto 40
-            end if
-            return
-        end if
-50      continue
         !---------------------------
         !  find all roots
         !----------------------------
@@ -660,7 +650,8 @@ contains
         ynpopq1=-bs/(two*as)-dl1
         cl1=g11*yn2**2/xj+yn3**2/g33-ynzq-ynpopq1
         dll1=bl**2-al*cl1
-        if(dll1.lt.zero) then
+        
+        if (dll1.lt.zero) then
             xnr3=1d+10
             xnr4=1d+10
         else
@@ -769,9 +760,6 @@ contains
         end if
 
     end subroutine
-
-
-
 
 
     subroutine disp4(in_pa,ptet,xnr,yn2)
