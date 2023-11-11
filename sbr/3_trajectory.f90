@@ -234,7 +234,6 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         use constants, only : tiny1
         use rt_parameters, only: eps, rrange, hdrob, nr, ipri, iw
         use dispersion_module, only: izn
-        !use dispersion_module, only: xnr1, xnr2, xnr3, xnr4
         use dispersion_module, only: extd4, disp2, disp2_iroot3, disp2_ider0
         use driver_module, only: inak, im4, hrad, irs, iabsorp, iznzz, iwzz, irszz, rzz
         use driver_module, only: tetzz, xmzz
