@@ -1162,6 +1162,7 @@ contains
         real(wp), intent(in) :: u(:,:)
         integer,  intent(in) :: j, n
         real(wp) :: x(50),y(50),a(50),b(50)
+        real(wp) :: um, s1, s2, ss1, ss2, sum
         !common /a0befr/ pi,pi2
         !common /arr/ dgdu(50,100),kzero(100)
         integer :: km, k, i, l
