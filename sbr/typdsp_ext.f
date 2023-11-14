@@ -3,7 +3,7 @@ C >>> SETFRM, AFRAME, DNSTR, UPSTR,  TIMEDT, PUTXY,  NEGA,   SETFNA <<<
 C >>> SKIPM  <<< 
 C======================================================================|
 	subroutine	TYPDSP_EXT(NCH,YN,ITIMES,TTOUT,TOUT)
-C NCH= 5 - terminal, 0 - file (old format), 1 - file (new format)
+	! NCH= 5 - terminal, 0 - file (old format), 1 - file (new format)
 	implicit none
 	include	'for/parameter.inc'
 	include 'for/const.inc'
@@ -20,83 +20,83 @@ C NCH= 5 - terminal, 0 - file (old format), 1 - file (new format)
 	data	STRMN/' R=     a=     B=     I=     q=     <n>='/
      +	CONN/' CF   ',' CV   ',' CH   ',' CCD  ',' CBND ',' CRAD '/
      +	JN0/0/ NLINSC /50/ WarningColor/30/
-C NLINSC - maximum line number 
+	! NLINSC - maximum line number 
 	MODEX = XOUT+.49
-C MODEX = 0	[0,AB]  against "a"
-C MODEX = 1	[0,ABC] against "a"
-C MODEX = 2	[0,ROC] against "rho"
-C MODEX = 3	[FP(1),FP(NA1)] against "psi"
-C otherwise	Unknown option => MODEX=0
+	! MODEX = 0	[0,AB]  against "a"
+	! MODEX = 1	[0,ABC] against "a"
+	! MODEX = 2	[0,ROC] against "rho"
+	! MODEX = 3	[FP(1),FP(NA1)] against "psi"
+	! otherwise	Unknown option => MODEX=0
 	NP1 = NAB
 	if (MODEX .ge. 1 .and. MODEX .le. 3 .or. MOD10 .eq. 3)
      +	NP1 = NA1
 
 	if(NCH.eq.5)	goto	300
 	if(NCH.ne.0 .and. NCH.ne.1)	return
-C Write output to a file:
+	! Write output to a file:
 	J = length(RDNAME)
 	J1 = length(EQNAME)
-	!FNAME=AWD(1:length(AWD))//'dat/XData'
-	!JEND = KILLBL(FNAME,132)
-	!call	SETFNA_EXT(FNAME,JEND)
-	!FNAME=REPEAT('*',132)
+	! FNAME=AWD(1:length(AWD))//'dat/XData'
+	! JEND = KILLBL(FNAME,132)
+	! call	SETFNA_EXT(FNAME,JEND)
+	! FNAME=REPEAT('*',132)
 	write(FNAME,'("dat/XData/", f9.7,".dat")')  time
-C	write(*,*)'Returned:  "',FNAME(1:JEND),'"',JEND
+	!	write(*,*)'Returned:  "',FNAME(1:JEND),'"',JEND
 	call colovm(WarningColor)
 	JEND = KILLBL(FNAME,132)
 	print '(">>>  XData are written into the file: ", A)', FNAME(1:JEND)
 	JLR = XWH-125
-C	call textvm(JN0,JLR,STRI,37+JEND)
+	!	call textvm(JN0,JLR,STRI,37+JEND)
 	call	OPENWT(7,FNAME,0,IERR)
 	if(IERR.gt.0)	then
 	   write(*,*)'>>> TYPDSP: Output file error'
 	   stop
 	endif
-C Creating UPSTRI
+	! Creating UPSTRI
 	STRI=XLINE1(2:17)
 	STRI(17:)=STRMN
 	call FMTF4(STRI(20:23),RTOR)
 	call FMTF4(STRI(27:30),ABC)
 	call FMTF4(STRI(34:37),BTOR)
 	call FMTF4(STRI(41:44),IPL)
-C Triangularity corrected MHD q (accoding to ITER guidelines)
-C	YQ	=ELON(NA)**2
-C	YD	=TRIA(NA)
-C	YQ=(1.+YQ*(1.+YD**2*(2.-1.2*YD)))/(MU(NA)*(1.+YQ))
-	YQ=1./MU(NA)
-	call FMTF4(STRI(48:51),YQ)
-	call FMTF4(STRI(57:60),YN)
-	write(STRI(62:78),103)TIME
-	call FMTF4(STRI(79:82),1000.*TAU)
- 102	format('   Time',16(3X,1A4))
- 103	format('Time=',1F6.5,' dt=')
- 104	format(1X,1A120)
- 	 write(7,*) 'Ext format'
-	 write(7,104)STRI
-	 if(NCH.eq.1)	goto	400
+		! Triangularity corrected MHD q (accoding to ITER guidelines)
+		!	YQ	=ELON(NA)**2
+		!	YD	=TRIA(NA)
+		!	YQ=(1.+YQ*(1.+YD**2*(2.-1.2*YD)))/(MU(NA)*(1.+YQ))
+		YQ=1./MU(NA)
+		call FMTF4(STRI(48:51),YQ)
+		call FMTF4(STRI(57:60),YN)
+		write(STRI(62:78),103)TIME
+		call FMTF4(STRI(79:82),1000.*TAU)
+102		format('   Time',16(3X,1A4))
+103		format('Time=',1F6.5,' dt=')
+104		format(1X,1A120)
+		write(7,*) 'Ext format'
+	 	write(7,104)STRI
+	 	if(NCH.eq.1)	goto	400
 
-!C Writing radial data
+		!C Writing radial data
 	  write(7,*)
 	  write(7,*) 'Writing radial data'
       print *, 'MOD10', MOD10
-	 if (MOD10.le.5)			then
+	  if (MOD10.le.5) then
 	    JBE=1
 	    JEND=16
- 3	    JEN=MIN0(NTOUT,JEND)
- 		write(7,'(100A10)'), "Time", (NAMET(J),J=JBE,JEN)
- 		write(7,'(100f10.1)') TIME, (TOUT(LTOUT,j), j=JBE,JEN )
+3	    JEN=MIN0(NTOUT,JEND)
+		write(7,'(100A10)'), "Time", (NAMET(J),J=JBE,JEN)
+		write(7,'(100f10.1)') TIME, (TOUT(LTOUT,j), j=JBE,JEN )
 
 	    if(JEN.eq.NTOUT)	go to 4
 	    JBE=JEN+1
 	    JEND=JEN+16
 		go to 3
 
- 4	    write(7,*)
- 		JBE=1
+4	    write(7,*)
+		JBE=1
 	    JEND=16
- 1	    JEN=MIN0(NROUT,JEND)
+1	    JEN=MIN0(NROUT,JEND)
 
- 		 write(7,'(99A22))') 'a',(NAMER(J),J=1,NROUT)
+		write(7,'(99A22))') 'a',(NAMER(J),J=1,NROUT)
 
 		do  j=1, NP1 
 			SELECT CASE (MODEX) 
