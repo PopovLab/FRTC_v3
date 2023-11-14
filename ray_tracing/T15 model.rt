@@ -2,7 +2,7 @@
   "name": "T15 model",
   "setting": {
     "Comments": {
-      "value": "Comments about ....",
+      "value": "Comments about ....\n\n\n",
       "title": "Comments",
       "type": "text"
     },
@@ -16,7 +16,7 @@
       },
       "xmi1": {
         "title": "xmi1",
-        "value": 2.0,
+        "value": 1.0,
         "type": "float",
         "description": "Mi1/Mp,  relative mass of ions 1"
       },
@@ -257,19 +257,19 @@
       },
       "inew": {
         "title": "inew",
-        "value": 1,
+        "value": 0,
         "type": "int",
         "description": "inew=0 for usual tokamak&Ntor_grill; 1 or 2 for g' in ST&Npol_grill"
       },
       "itor": {
         "title": "itor",
-        "value": 1,
+        "value": -1,
         "type": "int",
         "description": "+-1, Btor direction in right coord{drho,dteta,dfi}"
       },
       "ipol": {
         "title": "ipol",
-        "value": 1,
+        "value": -1,
         "type": "int",
         "description": "+-1, Bpol direction in right coord{drho,dteta,dfi}"
       }
@@ -305,10 +305,10 @@
     "spectrum": {
       "spectrum_type": "gaussian",
       "options": {
-        "x_min": -3.0,
-        "x_max": -0.8,
-        "step": 0.01,
-        "bias": -1.9,
+        "x_min": -3.5,
+        "x_max": -0.5,
+        "step": 0.005,
+        "bias": -2.0,
         "sigma": 0.2
       },
       "parameters": {
