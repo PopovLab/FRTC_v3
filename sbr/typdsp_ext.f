@@ -31,27 +31,27 @@ C======================================================================|
 	if (MODEX .ge. 1 .and. MODEX .le. 3 .or. MOD10 .eq. 3)
      +	NP1 = NA1
 
-	if(NCH.eq.5)	goto	300
-	if(NCH.ne.0 .and. NCH.ne.1)	return
-	! Write output to a file:
-	J = length(RDNAME)
-	J1 = length(EQNAME)
-	! FNAME=AWD(1:length(AWD))//'dat/XData'
-	! JEND = KILLBL(FNAME,132)
-	! call	SETFNA_EXT(FNAME,JEND)
-	! FNAME=REPEAT('*',132)
-	write(FNAME,'("dat/XData/", f9.7,".dat")')  time
-	!	write(*,*)'Returned:  "',FNAME(1:JEND),'"',JEND
-	call colovm(WarningColor)
-	JEND = KILLBL(FNAME,132)
-	print '(">>>  XData are written into the file: ", A)', FNAME(1:JEND)
-	JLR = XWH-125
-	!	call textvm(JN0,JLR,STRI,37+JEND)
-	call	OPENWT(7,FNAME,0,IERR)
-	if(IERR.gt.0)	then
-	   write(*,*)'>>> TYPDSP: Output file error'
-	   stop
-	endif
+		if(NCH.eq.5)	goto	300
+		if(NCH.ne.0 .and. NCH.ne.1)	return
+		! Write output to a file:
+		J = length(RDNAME)
+		J1 = length(EQNAME)
+		! FNAME=AWD(1:length(AWD))//'dat/XData'
+		! JEND = KILLBL(FNAME,132)
+		! call	SETFNA_EXT(FNAME,JEND)
+		! FNAME=REPEAT('*',132)
+		write(FNAME,'("dat/XData/", f9.7,".dat")')  time
+		!	write(*,*)'Returned:  "',FNAME(1:JEND),'"',JEND
+		call colovm(WarningColor)
+		JEND = KILLBL(FNAME,132)
+		print '(">>>  XData are written into the file: ", A)', FNAME(1:JEND)
+		JLR = XWH-125
+		!	call textvm(JN0,JLR,STRI,37+JEND)
+		call	OPENWT(7,FNAME,0,IERR)
+		if(IERR.gt.0)	then
+		write(*,*)'>>> TYPDSP: Output file error'
+		stop
+		endif
 		! Creating UPSTRI
 
 		! Triangularity corrected MHD q (accoding to ITER guidelines)
@@ -72,41 +72,40 @@ C======================================================================|
 	 	if(NCH.eq.1)	goto	400
 
 		!C Writing radial data
-	  write(7,*)
-	  write(7,*) 'Writing radial data'
-      print *, 'MOD10', MOD10
-	  if (MOD10.le.5) then
-	    JBE=1
-	    JEND=16
-3	    JEN=MIN0(NTOUT,JEND)
-		write(7,'(100A10)'), "Time", (NAMET(J),J=JBE,JEN)
-		write(7,'(100f10.1)') TIME, (TOUT(LTOUT,j), j=JBE,JEN )
+		write(7,*)
+		write(7,*) 'Writing radial data'
+		print *, 'MOD10', MOD10
+		if (MOD10.le.5) then
+			JBE=1
+			JEND=16
+3	    	JEN=MIN0(NTOUT,JEND)
+			write(7,'(100A10)'), "Time", (NAMET(J),J=JBE,JEN)
+			write(7,'(100f10.1)') TIME, (TOUT(LTOUT,j), j=JBE,JEN )
 
-	    if(JEN.eq.NTOUT)	go to 4
-	    JBE=JEN+1
-	    JEND=JEN+16
-		go to 3
+			if(JEN.eq.NTOUT)	go to 4
+			JBE=JEN+1
+			JEND=JEN+16
+			go to 3
 
-4	    write(7,*)
-		JBE=1
-	    JEND=16
-1	    JEN=MIN0(NROUT,JEND)
+4	    	write(7,*)
+			JBE=1
+	    	JEND=16
+1	    	JEN=MIN0(NROUT,JEND)
 
-		write(7,'(99A22))') 'a',(NAMER(J),J=1,NROUT)
+			write(7,'(99A22))') 'a',(NAMER(J),J=1,NROUT)
 
-		do  j=1, NP1 
-			SELECT CASE (MODEX) 
-			CASE (0:1)		
-				write(7,'(100ES22.14)') AMETR(j), (ROUT(j,jj), jj=1,NROUT )
-			CASE (2)
-				write(7,'(100ES22.14)') RHO(j), (ROUT(j,jj), jj=1,NROUT )				
-			CASE (3)
-				write(7,'(100ES22.14)') FP(j), (ROUT(j,jj), jj=1,NROUT )					
-			CASE DEFAULT
-				write(7,'(100ES22.14)') AMETR(j), (ROUT(j,jj), jj=1,NROUT )
-		    END SELECT
-			
-		enddo
+			do  j=1, NP1 
+				SELECT CASE (MODEX) 
+				CASE (0:1)		
+					write(7,'(100ES22.14)') AMETR(j), (ROUT(j,jj), jj=1,NROUT)
+				CASE (2)
+					write(7,'(100ES22.14)') RHO(j), (ROUT(j,jj), jj=1,NROUT)
+				CASE (3)
+					write(7,'(100ES22.14)') FP(j), (ROUT(j,jj), jj=1,NROUT)		
+				CASE DEFAULT
+					write(7,'(100ES22.14)') AMETR(j), (ROUT(j,jj), jj=1,NROUT)
+				END SELECT
+			enddo
 		write(7,*)
 	endif
 
