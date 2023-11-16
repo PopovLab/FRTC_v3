@@ -52,29 +52,19 @@ C======================================================================|
 	   write(*,*)'>>> TYPDSP: Output file error'
 	   stop
 	endif
-	! Creating UPSTRI
-	STRI=XLINE1(2:17)
-	STRI(17:)=STRMN
-	call FMTF4(STRI(20:23),RTOR)
-	call FMTF4(STRI(27:30),ABC)
-	call FMTF4(STRI(34:37),BTOR)
-	call FMTF4(STRI(41:44),IPL)
+		! Creating UPSTRI
+
 		! Triangularity corrected MHD q (accoding to ITER guidelines)
 		!	YQ	=ELON(NA)**2
 		!	YD	=TRIA(NA)
 		!	YQ=(1.+YQ*(1.+YD**2*(2.-1.2*YD)))/(MU(NA)*(1.+YQ))
 		YQ=1./MU(NA)
-		call FMTF4(STRI(48:51),YQ)
-		call FMTF4(STRI(57:60),YN)
-		write(STRI(62:78),103) TIME
-		call FMTF4(STRI(79:82),1000.*TAU)
+
 102		format('   Time',16(3X,1A4))
-103		format('Time=',1F6.5,' dt=')
 104		format(1X,1A120)
 105		format(' R=',1F4.2,' a=',1F4.2, ' B=', 1F4.2, ' I=', 1F4.2, 
      & ' q=',1F4.2,' <n>=',1F7.4, ' Time=',1F7.4,' dt=', 1F7.5)
-		!write (7,*) 'Ext format'
-	 	!write (7,104) STRI
+
 		write (7,*) XLINE1(2:17)
 		write (7,105) RTOR, ABC, BTOR, IPL, YQ, YN, TIME, TAU
 
