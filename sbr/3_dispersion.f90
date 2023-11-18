@@ -443,14 +443,11 @@ module dispersion_module
     integer ipow, jfoundr
     !!common /ceg/ ipow,jfoundr
 
-
-
-
     real(wp) :: dhdm,dhdtet,dhdr,ddn,dhdn3,dhdv2v,dhdu2u
     !!common/fj/dhdm,dhdnr,dhdtet,dhdr,ddn,dhdn3,dhdv2v,dhdu2u
+
     real(wp) :: znakstart
     !!common/direct/znakstart
-
 
     real(wp) :: ham
     !!common/fjham/ham
