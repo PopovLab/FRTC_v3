@@ -362,8 +362,8 @@ contains
         end if
 30      continue
         dl1=dfloat(iw)*dsqrt(dls)/two/as
-        if(iw.eq.-1) ynpopq=-bs/(two*as)+dl1        !?? = (-bs - sqrt(dls))/(2*as)
-        if(iw.eq.1)  ynpopq=two*cs/(-bs-two*as*dl1) !?? = (-bs - sqrt(dls))*2*cs
+        if(iw.eq.-1) ynpopq=-bs/(two*as)+dl1        ! = (-bs + sqrt(dls)) / (2*as)
+        if(iw.eq.1)  ynpopq=two*cs/(-bs-two*as*dl1) ! = (-bs - sqrt(dls)) * (2*cs)
         
 
         !cc      write(*,*)'iw=',iw,' izn=',izn,' Nperp=',dsqrt(ynpopq)
@@ -380,8 +380,8 @@ contains
         if(dll.lt.zero) goto 70
 
 40      dl2=-dfloat(izn)*dsqrt(dll)/al
-        if(izn.eq.1) xnr=-bl/al+dl2
-        if(izn.eq.-1) xnr=cl/(-bl-al*dl2)
+        if(izn.eq.1) xnr=-bl/al+dl2         ! =      (-bl - sqrt(dll)) / al
+        if(izn.eq.-1) xnr=cl/(-bl-al*dl2)   ! = cl / (-bl + sqrt(dll))
         xnro=xnr
         if(ivar.gt.1) then
             !cccccc  find Nr of reflected wave
