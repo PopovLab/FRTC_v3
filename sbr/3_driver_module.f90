@@ -281,7 +281,7 @@ contains
         use decrements, only: vfound
         use decrements, only: cf1, cf2, cf3, cf4, cf5, cf6
         use decrements, only: icf1,icf2
-        use dispersion_module, only: vlf,vrt,dflf,dfrt
+        use iterator_mod, only: vlf,vrt,dflf,dfrt
         use decrements, only: zatukh ! function zatukh(psy,j,u,n)
         use decrements, only: pdec1,pdec2,pdec3,pdecv,pdecal,dfdv
         implicit none

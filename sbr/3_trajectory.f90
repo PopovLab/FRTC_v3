@@ -43,7 +43,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
     use decrements, only: pdec1,pdec2,pdec3,pdecv,pdecal,dfdv
     use decrements, only: zatukh
     use rt_parameters, only :  nr, itend0, kv, nmaxm    
-    use dispersion_module, only : dflf, dfrt
+    use iterator_mod, only : dflf, dfrt, distr
     use driver_module !, only: jrad, iww, izz, length
 
     implicit none

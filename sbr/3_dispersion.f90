@@ -304,6 +304,7 @@ contains
         use metrics
         use dielectric_tensor
         use dispersion_equation, only : as, bs, yny, ynz, ynzq
+        use iterator_mod
         !use rt_parameters, only: inew
         !use plasma, only: ww, xsz
         implicit none
@@ -464,8 +465,7 @@ module dispersion_module
 
 
 
-    real(wp) :: vlf,vrt,dflf,dfrt
-    !common /a0ghp/ vlf,vrt,dflf,dfrt
+
 contains
     subroutine disp2_ider0(pa,yn2,ptet,xnro)
         ! case iroot == 1 ider == 0 ivar =0 
@@ -1270,49 +1270,5 @@ contains
         !      dydx(5)=dhdn3/ddn
     end
 
-    subroutine distr(vz,j,ifound,fder)
-        use iterator_mod
-        use lock_module      
-        implicit none
-        integer, intent(in) :: j
-        integer, intent(inout) :: ifound
-        real*8 vz,fder
-        integer i,klo,khi,ierr,nvp
-        real*8,dimension(:),allocatable:: vzj,dfdvj
-        real(wp) :: dfout
-        !real*8 vlf,vrt,dflf,dfrt
-        !common /a0ghp/ vlf,vrt,dflf,dfrt
-        !common/gridv/vgrid(101,100),dfundv(101,100),nvpt
-
-        nvp=nvpt
-        allocate(vzj(nvp),dfdvj(nvp))
-        do i=1, nvp
-            vzj(i)=vgrid(i,j)
-            dfdvj(i)=dfundv(i,j)
-        end do
-        call lock2(vzj,nvp,vz,klo,khi,ierr)
-        if(ierr.eq.0) then !vgrid(1,j) <= vz <= vgrid(nvpt,j)
-            call linf(vzj,dfdvj,vz,dfout,klo,khi)
-            ifound=klo
-            vlf=vzj(klo)
-            vrt=vzj(khi)
-            fder=dfout
-            dflf=dfdvj(klo)
-            dfrt=dfdvj(khi)
-        else if(ierr.eq.1) then !vz < vgrid(1,j)
-            write(*,*)'exception: ierr=1 in distr()'
-            pause'next key = stop'
-            stop
-        else if(ierr.eq.2) then !vz > vgrid(nvpt,j)
-            write(*,*)'exception: ierr=2 in distr()'
-            pause'next key = stop'
-            stop
-        else if(ierr.eq.3) then
-            write(*,*)'exception in distr, klo=khi=',klo,' j=',j,' nvp=',nvp
-            write(*,*)'vz=',vz,' v1=',vzj(1),' v2=',vzj(nvp)
-            pause'next key = stop'
-            stop
-        end if
-        deallocate(vzj,dfdvj)
-    end    
+ 
 end module dispersion_module

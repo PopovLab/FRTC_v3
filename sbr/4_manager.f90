@@ -286,8 +286,8 @@ contains
     subroutine dqliter(dltpow, ib, ie, h, powexit, iout) !sav2008
         use constants, only: clt, zero
         use rt_parameters, only: itend0, kv
-        use dispersion_module, only: vlf, vrt, dflf, dfrt
-        use dispersion_module, only: distr
+        use iterator_mod, only: vlf, vrt, dflf, dfrt
+        use iterator_mod, only: distr
         use decrements, only: pdec1, pdec2, pdec3, pdecv
         use decrements, only: zatukh
         use current, only: dfind
