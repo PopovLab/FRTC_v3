@@ -180,6 +180,100 @@ contains
     end subroutine
 end module dispersion_equation
 
+
+module partial_derivatives
+    !! calculation of partial derivatives
+    use kind_module    
+    
+    implicit none
+contains
+    subroutine calculate_partial_derivatives(yn2 , yn3, dl1, ynpopq, al, bl, dl2, prt, prm)
+        use constants, only: zero, one, two
+        use constants, only: c0, c1
+        use metrics
+        use dielectric_tensor
+        use dispersion_equation
+        use rt_parameters, only: inew
+        use plasma, only: ww, xsz
+        implicit none
+        real(wp), intent(in) :: yn2 , yn3, dl1, ynpopq, al, bl, dl2
+        real(wp), intent(out) :: prt, prm
+
+        real(wp) :: s1, p1, p2, p3, ynzt, e1t, e2t, u1t, cot, sit
+        real(wp) :: s2, dnm, v1, v2, vvt, vvm
+        real(wp) :: ynyt, dnym
+        real(wp) :: pnewt
+        real(wp) :: s21, sjg, s23, s24, s22
+        !--------------------------------------
+        !   calculation of derivatives
+        !--------------------------------------
+
+        !g11t=two*(dxdr*dxdrdt+dzdr*dzdrdt)
+        !g22t=two*(dxdt*dxdtdt+dzdt*dzdtdt)
+        !g33t=two*x0*(-pa*sitet-two*xgm*sitet*cotet)
+        !g12t=dxdrdt*dxdt+dxdr*dxdtdt+dzdrdt*dzdt+dzdr*dzdtdt
+        !xjt=g11t*g22+g22t*g11-two*g12*g12t
+        !btt=-b_tor*(r0/rm)/x0**2*x0t
+        !g2jqt=(g22t/xj-g22/xj**2*xjt)/(g2jq*two)
+        !bpt=xmy*(g2jqt*g3v-.5d0*g2jq*g3v/g33*g33t)
+        !bat=one/b*(bp*bpt+bt*btt)
+        !-----
+        sit=bpt/b-bp/b**2*bat
+        cot=btt/b-bt/b**2*bat
+        u1t=c1/ww*bat
+        e1t=-v/u**2*two*u1*u1t
+        e2t=-v/u*u1t
+        ynzt=yn2*sit*g2v1-yn2*si*g2v1**3/two*g22t + yn3*cot*g3v-yn3*co*g3v**3/two*g33t
+        p1=two*ynz*ynzt
+        p2=e1t
+        p3=(e2*e2t)/e1-e2**2/(two*e1**2)*e1t
+
+        s1=-p2/(two*e1**2)*e3*(ynzq-e1) + (e3+e1)/(two*e1)*(p1-p2)+p3
+        s2=two*e3/e1*(ynzq-e1)*(p1-p2) - p2*e3/(e1**2)*(ynzq-e1)**2-two*e3*p3
+        dnm=two*ynz*si*g2v1
+        v1=(e3+e1)/(two*e1)*dnm
+        v2=two*e3/e1*(ynzq-e1)*dnm
+        !-----------------------------------
+        !est !sav2009
+        if(inew.gt.0) then
+            gprt=-c0**2/ww**2*fnr/u*u1t*xsz
+            if(inew.eq.1) then
+                ynyt= - (yn2*cot*g2v1-yn2*co*g2v1**3/two*g22t - (yn3*sit*g3v-yn3*si*g3v**3/two*g33t))
+                dnym= - co*g2v1
+            else if(inew.eq.2) then
+                ynyt= - g2jq*(yn2*cot*g2v1-yn2*co*g2v1**3/two*g22t - (yn3*sit*g3v-yn3*si*g3v**3/two*g33t))
+                ynyt=ynyt - g2jqt*(yn2*g2v1*co-yn3*g3v*si)
+                dnym= - g2jq*co*g2v1
+            end if
+            pnewt=(ynyt*gpr+yny*gprt)
+            s1=s1+pnewt/(two*e1)-pnew/(two*e1**2)*e1t
+            s2=s2+(pnewt*(ynzq-e3)+pnew*p1)/e1-pnew*(ynzq-e3)/e1**2*e1t
+            v1=v1+dnym*gpr/(two*e1)
+            v2=v2+gpr*(dnym*(ynzq-e3)+yny*dnm)/e1
+        end if
+        !---------------------------------------------
+        vvt=-s1+(bs/as*s1-s2)/(two*dl1)
+        vvm=-v1+(bs/as*v1-v2)/(two*dl1)
+        s1=-yn2*(g12t/g22-g12/g22**2*g22t)
+        s21=yn2**2*(g11t/g22-g11/g22**2*g22t)
+        s22=yn3**2*( xjt/(g33*g22)-xj/(g33*g22)**2*(g33t*g22+g22t*g33) )
+        sjg=(xjt*g22-xj*g22t)/g22**2
+        s23=two*ynz*ynzt*xj/g22+sjg*ynzq
+        s24=vvt*xj/g22+ynpopq*sjg
+        s2=s21+s22-s23-s24
+        prt=-s1+(two*(bl/al)*s1-s2)/(two*dl2)
+        s1=-g12/g22
+        s21=two*yn2*g11/g22
+        s22=dnm*xj/g22
+        s23=vvm*xj/g22
+        s2=s21-s22-s23
+        prm=-s1+(two*(bl/al)*s1-s2)/(two*dl2)
+
+    end subroutine
+end module partial_derivatives
+
+
+
 module dispersion_module
     use kind_module    
     implicit none
@@ -317,6 +411,7 @@ contains
         use metrics
         use dielectric_tensor
         use dispersion_equation
+        use partial_derivatives
         implicit none
         real(wp), intent(in) :: pa      ! ro
         real(wp), intent(in) :: yn2     ! ???
@@ -328,14 +423,15 @@ contains
         integer  :: jr
 
         real(wp) :: dl1, ynpopq1, al, bl, cl, cl1, dll
-        real(wp) :: s1, p1, p2, p3, ynzt, e2t, u1t, cot, sit
+        !real(wp) :: s1, p1, p2, p3, ynzt, e2t, u1t, cot, sit
 
-        real(wp) :: dl2, xnr, ynyt, dnym
-        real(wp) :: dnx, dll1,  e1t
+        real(wp) :: dl2, xnr !, ynyt, dnym
+        real(wp) :: dnx, dll1
 
-        real(wp) :: s2, dnm, v1, v2, vvt, vvm, vz, vt
-        real(wp) :: s21, sjg, s23, s24, s22, sl1
-        real(wp) :: pnewt, fder,  aimh, pnye, pnyi
+        !real(wp) :: s2, dnm, v1, v2, vvt, vvm
+        !real(wp) :: s21, sjg, s23, s24, s22
+        !real(wp) :: pnewt,  
+        real(wp) :: sl1, vz, vt, fder, aimh, pnye, pnyi
         real(wp) :: tmp, fcoll, source, argum
         real(wp) :: dek1, dek2, dek3
 
@@ -397,66 +493,8 @@ contains
         !--------------------------------------
         !   calculation of derivatives
         !--------------------------------------
-        !g11t=two*(dxdr*dxdrdt+dzdr*dzdrdt)
-        !g22t=two*(dxdt*dxdtdt+dzdt*dzdtdt)
-        !g33t=two*x0*(-pa*sitet-two*xgm*sitet*cotet)
-        !g12t=dxdrdt*dxdt+dxdr*dxdtdt+dzdrdt*dzdt+dzdr*dzdtdt
-        !xjt=g11t*g22+g22t*g11-two*g12*g12t
-        !btt=-b_tor*(r0/rm)/x0**2*x0t
-        !g2jqt=(g22t/xj-g22/xj**2*xjt)/(g2jq*two)
-        !bpt=xmy*(g2jqt*g3v-.5d0*g2jq*g3v/g33*g33t)
-        !bat=one/b*(bp*bpt+bt*btt)
-        !-----
-        sit=bpt/b-bp/b**2*bat
-        cot=btt/b-bt/b**2*bat
-        u1t=c1/ww*bat
-        e1t=-v/u**2*two*u1*u1t
-        e2t=-v/u*u1t
-        ynzt=yn2*sit*g2v1-yn2*si*g2v1**3/two*g22t + yn3*cot*g3v-yn3*co*g3v**3/two*g33t
-        p1=two*ynz*ynzt
-        p2=e1t
-        p3=(e2*e2t)/e1-e2**2/(two*e1**2)*e1t
+        call calculate_partial_derivatives(yn2, yn3, dl1, ynpopq, al, bl, dl2, prt, prm)
 
-        s1=-p2/(two*e1**2)*e3*(ynzq-e1) + (e3+e1)/(two*e1)*(p1-p2)+p3
-        s2=two*e3/e1*(ynzq-e1)*(p1-p2) - p2*e3/(e1**2)*(ynzq-e1)**2-two*e3*p3
-        dnm=two*ynz*si*g2v1
-        v1=(e3+e1)/(two*e1)*dnm
-        v2=two*e3/e1*(ynzq-e1)*dnm
-        !-----------------------------------
-        !est !sav2009
-        if(inew.gt.0) then
-            gprt=-c0**2/ww**2*fnr/u*u1t*xsz
-            if(inew.eq.1) then
-                ynyt= - (yn2*cot*g2v1-yn2*co*g2v1**3/two*g22t - (yn3*sit*g3v-yn3*si*g3v**3/two*g33t))
-                dnym= - co*g2v1
-            else if(inew.eq.2) then
-                ynyt= - g2jq*(yn2*cot*g2v1-yn2*co*g2v1**3/two*g22t - (yn3*sit*g3v-yn3*si*g3v**3/two*g33t))
-                ynyt=ynyt - g2jqt*(yn2*g2v1*co-yn3*g3v*si)
-                dnym= - g2jq*co*g2v1
-            end if
-            pnewt=(ynyt*gpr+yny*gprt)
-            s1=s1+pnewt/(two*e1)-pnew/(two*e1**2)*e1t
-            s2=s2+(pnewt*(ynzq-e3)+pnew*p1)/e1-pnew*(ynzq-e3)/e1**2*e1t
-            v1=v1+dnym*gpr/(two*e1)
-            v2=v2+gpr*(dnym*(ynzq-e3)+yny*dnm)/e1
-        end if
-        !---------------------------------------------
-        vvt=-s1+(bs/as*s1-s2)/(two*dl1)
-        vvm=-v1+(bs/as*v1-v2)/(two*dl1)
-        s1=-yn2*(g12t/g22-g12/g22**2*g22t)
-        s21=yn2**2*(g11t/g22-g11/g22**2*g22t)
-        s22=yn3**2*( xjt/(g33*g22)-xj/(g33*g22)**2*(g33t*g22+g22t*g33) )
-        sjg=(xjt*g22-xj*g22t)/g22**2
-        s23=two*ynz*ynzt*xj/g22+sjg*ynzq
-        s24=vvt*xj/g22+ynpopq*sjg
-        s2=s21+s22-s23-s24
-        prt=-s1+(two*(bl/al)*s1-s2)/(two*dl2)
-        s1=-g12/g22
-        s21=two*yn2*g11/g22
-        s22=dnm*xj/g22
-        s23=vvm*xj/g22
-        s2=s21-s22-s23
-        prm=-s1+(two*(bl/al)*s1-s2)/(two*dl2)
         if(ipow.gt.0) then
             !--------------------------------------
             !  calculation of decrements
