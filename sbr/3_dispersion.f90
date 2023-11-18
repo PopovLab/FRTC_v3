@@ -550,17 +550,7 @@ contains
         integer  :: jr
 
         real(wp) :: dl1, ynpopq1, al, bl, cl, cl1, dll
-        !real(wp) :: s1, p1, p2, p3, ynzt, e2t, u1t, cot, sit
-
-        real(wp) :: dl2, xnr !, ynyt, dnym
-        !real(wp) :: dnx, dll1
-
-        !real(wp) :: s2, dnm, v1, v2, vvt, vvm
-        !real(wp) :: s21, sjg, s23, s24, s22
-        !real(wp) :: pnewt,  
-        !real(wp) :: sl1, vz, vt, fder, aimh, pnye, pnyi
-        !real(wp) :: tmp, fcoll, source, argum
-        !real(wp) :: dek1, dek2, dek3
+        real(wp) :: dl2, xnr 
 
         !print *, 'disp2 ivar=', ivar
 
