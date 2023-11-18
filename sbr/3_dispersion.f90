@@ -362,8 +362,8 @@ contains
         end if
 30      continue
         dl1=dfloat(iw)*dsqrt(dls)/two/as
-        if(iw.eq.-1) ynpopq=-bs/(two*as)+dl1
-        if(iw.eq.1)  ynpopq=two*cs/(-bs-two*as*dl1)
+        if(iw.eq.-1) ynpopq=-bs/(two*as)+dl1        !?? = (-bs - sqrt(dls))/(2*as)
+        if(iw.eq.1)  ynpopq=two*cs/(-bs-two*as*dl1) !?? = (-bs - sqrt(dls))*2*cs
         
 
         !cc      write(*,*)'iw=',iw,' izn=',izn,' Nperp=',dsqrt(ynpopq)
