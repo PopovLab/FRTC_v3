@@ -31,6 +31,7 @@ contains
         use math_module
         use driver_module, only : lfree
         use driven_current_module, only : zv1, zv2
+        use decrements, only: kzero
         implicit real*8 (a-h,o-z)
         type(Spectrum) spectr
         real*8 outpe,pe_out 
@@ -568,7 +569,7 @@ contains
     end subroutine    
 
     subroutine alphas(d,u,j,kmax,g)
-        use dispersion_module, only: dgdu, kzero
+        use decrements, only: dgdu, kzero
         use constants, only : zero, one
         implicit real*8 (a-h,o-z)
         integer, intent(in) :: j, kmax

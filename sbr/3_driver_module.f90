@@ -43,8 +43,8 @@ module driver_module
 contains
 
     subroutine memorize_trajectory_point4(ro, theta)
-        use dispersion_module, only: vfound
-        use dispersion_module, only: cf2
+        use decrements, only: vfound
+        use decrements, only: cf2
         use rt_parameters, only : nr
         implicit none
         real(wp), intent(in) :: ro, theta
@@ -59,9 +59,10 @@ contains
     subroutine memorize_trajectory_point(vz, j, ro, powccc)
         !!  memorize trajectory point
         use plasma, only: fvt
-        use dispersion_module, only: cf1, cf2, cf3, cf6
-        use dispersion_module, only: icf1, icf2, ipow
-        use dispersion_module, only: pdecv, pdecal
+        use decrements, only: cf1, cf2, cf3, cf6
+        use decrements, only: icf1, icf2
+        use dispersion_module, only: ipow
+        use decrements, only: pdecv, pdecal
         implicit none
         real(wp), intent(in)     :: vz, ro, powccc
         integer, intent(in)      :: j
@@ -106,7 +107,8 @@ contains
         !! x2 = xend 
         use constants, only: zero, tiny1
         use rt_parameters, only : nr, ipri, rbord, maxstep2, hmin1, iw, eps
-        use dispersion_module, only: ipow, ifound, jfoundr, vfound, iconv, irefl, izn
+        use decrements, only: ifound, vfound
+        use dispersion_module, only: ipow,  jfoundr, iconv, irefl, izn
         use dispersion_equation, only: ynz
         implicit none
         real(wp), intent(inout) :: ystart(2)
@@ -275,12 +277,13 @@ contains
         use rt_parameters, only: itend0, kv
         use plasma, only: fvt, vperp
         use current, only: dfind
-        use dispersion_module, only: vfound, ipow
-        use dispersion_module, only: cf1, cf2, cf3, cf4, cf5, cf6
-        use dispersion_module, only: icf1,icf2
+        use dispersion_module, only: ipow
+        use decrements, only: vfound
+        use decrements, only: cf1, cf2, cf3, cf4, cf5, cf6
+        use decrements, only: icf1,icf2
         use dispersion_module, only: vlf,vrt,dflf,dfrt
-        use dispersion_module, only: zatukh ! function zatukh(psy,j,u,n)
-        use dispersion_module, only: pdec1,pdec2,pdec3,pdecv,pdecal,dfdv
+        use decrements, only: zatukh ! function zatukh(psy,j,u,n)
+        use decrements, only: pdec1,pdec2,pdec3,pdecv,pdecal,dfdv
         implicit none
         integer, intent(in)  :: ifound, jfoundr
         real(wp), intent(in) :: pabs

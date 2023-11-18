@@ -272,7 +272,148 @@ contains
     end subroutine
 end module partial_derivatives
 
+module decrements
+    use kind_module
+    implicit none
+    real(wp) :: dnx
+    real(wp) :: dhdnr
 
+    integer  :: ifound
+    real(wp) :: vfound
+    !!common /eg1/ vfound,ifound
+    integer  :: icf1,icf2
+    real(wp) :: pdec1,pdec2,pdec3,pdecv,pdecal,dfdv
+    !!common /eg2/ pdec1,pdec2,pdec3,pdecv,pdecal,dfdv,icf1,icf2
+    real(wp) :: cf1,cf2,cf3,cf4,cf5,cf6
+    !!common /eg3/ cf1,cf2,cf3,cf4,cf5,cf6
+
+    real(wp) :: dgdu(50,100)
+    integer  :: kzero(100)
+    !!common /arr/ dgdu(50,100),kzero(100)
+    !! используется в zatukh, ourlhcd2017 и alphas
+
+contains
+    subroutine calculate_decrements(pa, yn2, ptet, yn3, ynpopq,  xnr, jr, izn)
+        use constants, only: zero, one, two
+        use constants, only: c0, c1, pi
+        use constants, only: zalfa, xmalfa, xlog, clt
+        use plasma, only: fn1, fn2, fvt, ft, zefff
+        use plasma, only: ww, xmi,xsz, cltn, cnye, cnyi
+        use plasma, only: cnstal, valfa, vperp
+        use rt_parameters, only: inew, iw, itend0, kv        
+        use metrics
+        use dielectric_tensor
+        use dispersion_equation, only : as, bs, yny, ynz, ynzq
+        !use rt_parameters, only: inew
+        !use plasma, only: ww, xsz
+        implicit none
+        real(wp), intent(in) :: pa, yn2, ptet, yn3, ynpopq, xnr
+        integer, intent(in)  :: jr, izn
+
+
+        real(wp) :: sl1, vz, vt, fder, aimh, pnye, pnyi
+        real(wp) :: tmp, fcoll, source, argum
+        real(wp) :: dek1, dek2, dek3
+        
+        !real(wp), intent(out) :: prt, prm
+        !--------------------------------------
+        !  calculation of decrements
+        !--------------------------------------
+        dnx=two*as*ynpopq+bs
+        dhdnr=dnx*(two*g22*xnr-two*g12*yn2)/xj
+        sl1=(ynzq-e1)*(ynzq+ynpopq-e1)-e2**2
+        cf3=ynz
+        cf4=xnr
+        cf5=yn2
+        vz=cltn/dabs(ynz)
+        if(vz.gt.cltn) vz=cltn !sav2010
+        vt=fvt(pa)
+        !jr=jfoundr
+        icf1=iw
+        icf2=izn
+        call distr(vz,jr,ifound,fder)
+        dfdv=fder
+        vfound=vz
+        cf2=ptet
+        cf6=yny
+        aimh=wpq/ww**2*pi*sl1*cltn**2/ynzq
+        pdecv=dabs(aimh/dhdnr/xsz)
+        !!        pdec1=-pdecv*dfdv
+        pdec1=dabs(pdecv*dfdv)
+        pnye=cnye*wpq**2/(pn*vt**3)
+        pnyi=cnyi*pnye*zefff(pa)
+        pdec2=dabs(pnyi/ww*(wpq/whe**2*ynpopq+wpq/ww**2*ynzq)*ynpopq/dhdnr/xsz)
+        cf1=dsqrt(ynpopq)
+        if(itend0.gt.0) then
+            tmp=ft(pa)/0.16d-8
+            fcoll=.5d-13*pn*zalfa**2*xlog/xmalfa/tmp**1.5d0
+            !cc          ddens=dn1*pn
+            !cc          tdens=dn2*pn
+            !cc          tt=fti(pa)**0.33333d0    ! (ti, kev)^1/3
+            !cc          source=4d-12*factor*ddens*tdens*dexp(-20d0/tt)/tt**2
+            call source_new(pa,source)
+            dek1=cnstal*pdecv*(1.d0-e3/ynpopq)**2/cf1
+            dek2=source/(fcoll*pn)
+            pdecal=dek1*dek2
+            pdec3=zero
+            if(itend0.gt.0) then
+                argum=clt/(cf1*valfa)
+                dek3=zatukh(argum,jr,vperp,kv)
+                pdec3=pdecal*dek3
+            end if
+        end if
+    end subroutine
+
+    real(wp) function zatukh(psy,j,u,n)
+        use constants
+        !implicit real*8 (a-h,o-z)
+        implicit none
+        real(wp), intent(in) :: psy
+        real(wp), intent(in) :: u(:,:)
+        integer,  intent(in) :: j, n
+        real(wp) :: x(50),y(50),a(50),b(50)
+        real(wp) :: um, s1, s2, ss1, ss2, sum
+        !common /a0befr/ pi,pi2
+        !common /arr/ dgdu(50,100),kzero(100)
+        integer :: km, k, i, l
+        km = kzero(j)
+        um = u(km,j)
+        if(um.ge.one) then
+            zatukh = zero
+            if(psy.lt.one) zatukh = .5d0*pi/psy**3
+            return
+        end if
+        if(psy-um.le.zero.or.u(n,j)-psy.le.zero) then
+            zatukh = zero
+            return
+        end if
+        do k=1,n
+            x(k) = u(k,j)
+            y(k) = dgdu(k,j)
+        end do
+        i=n-1
+        do l=1,n-1
+            if (x(l+1)-psy.gt.zero.and.psy-x(l).ge.zero) i=l
+        end do
+        do k=i,n-1
+            b(k) = (y(k+1)-y(k))/(x(k+1)-x(k))
+            a(k) = y(k) - b(k)*x(k)
+        end do
+        s2  = sqrt((x(i+1)-psy)*(x(i+1)+psy))
+        ss2 = x(i+1) + s2
+        sum = a(i)*log(psy/ss2) - b(i)*s2
+        do k=2,n-i
+            s1  = sqrt((x(i+k-1)-psy)*(x(i+k-1)+psy))
+            ss1 = x(i+k-1) + s1
+            s2  = sqrt((x(i+k)-psy)*(x(i+k)+psy))
+            ss2 = x(i+k) + s2
+            sum = sum + a(i+k-1)*log(ss1/ss2) + b(i+k-1)*(s1-s2)
+        end do
+        zatukh=sum
+        return
+    end   
+
+end module decrements
 
 module dispersion_module
     use kind_module    
@@ -299,16 +440,11 @@ module dispersion_module
 
     integer ipow, jfoundr
     !!common /ceg/ ipow,jfoundr
-    integer  :: ifound
-    real(wp) :: vfound
-    !!common /eg1/ vfound,ifound
-    real(wp) :: pdec1,pdec2,pdec3,pdecv,pdecal,dfdv
-    integer  :: icf1,icf2
-    !!common /eg2/ pdec1,pdec2,pdec3,pdecv,pdecal,dfdv,icf1,icf2
-    real(wp) :: cf1,cf2,cf3,cf4,cf5,cf6
-    !!common /eg3/ cf1,cf2,cf3,cf4,cf5,cf6
 
-    real(wp) :: dhdm,dhdnr,dhdtet,dhdr,ddn,dhdn3,dhdv2v,dhdu2u
+
+
+
+    real(wp) :: dhdm,dhdtet,dhdr,ddn,dhdn3,dhdv2v,dhdu2u
     !!common/fj/dhdm,dhdnr,dhdtet,dhdr,ddn,dhdn3,dhdv2v,dhdu2u
     real(wp) :: znakstart
     !!common/direct/znakstart
@@ -326,10 +462,7 @@ module dispersion_module
     !!common /asou/ rsou(102),sou(102),npta
     !! используется в source_new и ourlhcd2017
 
-    real(wp) :: dgdu(50,100)
-    integer  :: kzero(100)
-    !!common /arr/ dgdu(50,100),kzero(100)
-    !! используется в zatukh, ourlhcd2017 и alphas
+
 
     real(wp) :: vlf,vrt,dflf,dfrt
     !common /a0ghp/ vlf,vrt,dflf,dfrt
@@ -412,6 +545,7 @@ contains
         use dielectric_tensor
         use dispersion_equation
         use partial_derivatives
+        use decrements
         implicit none
         real(wp), intent(in) :: pa      ! ro
         real(wp), intent(in) :: yn2     ! ???
@@ -426,14 +560,14 @@ contains
         !real(wp) :: s1, p1, p2, p3, ynzt, e2t, u1t, cot, sit
 
         real(wp) :: dl2, xnr !, ynyt, dnym
-        real(wp) :: dnx, dll1
+        !real(wp) :: dnx, dll1
 
         !real(wp) :: s2, dnm, v1, v2, vvt, vvm
         !real(wp) :: s21, sjg, s23, s24, s22
         !real(wp) :: pnewt,  
-        real(wp) :: sl1, vz, vt, fder, aimh, pnye, pnyi
-        real(wp) :: tmp, fcoll, source, argum
-        real(wp) :: dek1, dek2, dek3
+        !real(wp) :: sl1, vz, vt, fder, aimh, pnye, pnyi
+        !real(wp) :: tmp, fcoll, source, argum
+        !real(wp) :: dek1, dek2, dek3
 
         !print *, 'disp2 ivar=', ivar
 
@@ -499,49 +633,8 @@ contains
             !--------------------------------------
             !  calculation of decrements
             !--------------------------------------
-            dnx=two*as*ynpopq+bs
-            dhdnr=dnx*(two*g22*xnr-two*g12*yn2)/xj
-            sl1=(ynzq-e1)*(ynzq+ynpopq-e1)-e2**2
-            cf3=ynz
-            cf4=xnr
-            cf5=yn2
-            vz=cltn/dabs(ynz)
-            if(vz.gt.cltn) vz=cltn !sav2010
-            vt=fvt(pa)
-            jr=jfoundr
-            icf1=iw
-            icf2=izn
-            call distr(vz,jr,ifound,fder)
-            dfdv=fder
-            vfound=vz
-            cf2=ptet
-            cf6=yny
-            aimh=wpq/ww**2*pi*sl1*cltn**2/ynzq
-            pdecv=dabs(aimh/dhdnr/xsz)
-            !!        pdec1=-pdecv*dfdv
-            pdec1=dabs(pdecv*dfdv)
-            pnye=cnye*wpq**2/(pn*vt**3)
-            pnyi=cnyi*pnye*zefff(pa)
-            pdec2=dabs(pnyi/ww*(wpq/whe**2*ynpopq+wpq/ww**2*ynzq)*ynpopq/dhdnr/xsz)
-            cf1=dsqrt(ynpopq)
-            if(itend0.gt.0) then
-                tmp=ft(pa)/0.16d-8
-                fcoll=.5d-13*pn*zalfa**2*xlog/xmalfa/tmp**1.5d0
-                !cc          ddens=dn1*pn
-                !cc          tdens=dn2*pn
-                !cc          tt=fti(pa)**0.33333d0    ! (ti, kev)^1/3
-                !cc          source=4d-12*factor*ddens*tdens*dexp(-20d0/tt)/tt**2
-                call source_new(pa,source)
-                dek1=cnstal*pdecv*(1.d0-e3/ynpopq)**2/cf1
-                dek2=source/(fcoll*pn)
-                pdecal=dek1*dek2
-                pdec3=zero
-                if(itend0.gt.0) then
-                    argum=clt/(cf1*valfa)
-                    dek3=zatukh(argum,jr,vperp,kv)
-                    pdec3=pdecal*dek3
-                end if
-            end if
+            call calculate_decrements(pa, yn2, ptet, yn3, ynpopq, xnr, jfoundr, izn)
+
         end if
         return
 
@@ -664,6 +757,7 @@ contains
         use metrics
         use dielectric_tensor
         use dispersion_equation
+        use decrements, only : dhdnr !!!!!
         implicit none
         real(wp), intent(in) :: pa      ! ro
         real(wp), intent(in) :: yn2     ! ???
@@ -763,6 +857,7 @@ contains
         use rt_parameters, only: inew, itend0
         use metrics
         use dispersion_equation, only: ynz
+        use decrements, only : dhdnr !!!!!
         implicit none
         real(wp), intent(in)    :: in_pa   ! ro
         real(wp), intent(in)    :: yn2     ! ???
@@ -1086,6 +1181,7 @@ contains
 
     function dhdomega(rho,theta,yn1,yn2) result(znak) 
         !! вычисляет znakstart
+        use decrements, only : dhdnr !!!!!
         implicit none
         real(wp), intent(in) :: rho
         real(wp), intent(in) :: theta
@@ -1133,57 +1229,11 @@ contains
         end if
     end        
 
-    real(wp) function zatukh(psy,j,u,n)
-        use constants
-        !implicit real*8 (a-h,o-z)
-        implicit none
-        real(wp), intent(in) :: psy
-        real(wp), intent(in) :: u(:,:)
-        integer,  intent(in) :: j, n
-        real(wp) :: x(50),y(50),a(50),b(50)
-        real(wp) :: um, s1, s2, ss1, ss2, sum
-        !common /a0befr/ pi,pi2
-        !common /arr/ dgdu(50,100),kzero(100)
-        integer :: km, k, i, l
-        km = kzero(j)
-        um = u(km,j)
-        if(um.ge.one) then
-            zatukh = zero
-            if(psy.lt.one) zatukh = .5d0*pi/psy**3
-            return
-        end if
-        if(psy-um.le.zero.or.u(n,j)-psy.le.zero) then
-            zatukh = zero
-            return
-        end if
-        do k=1,n
-            x(k) = u(k,j)
-            y(k) = dgdu(k,j)
-        end do
-        i=n-1
-        do l=1,n-1
-            if (x(l+1)-psy.gt.zero.and.psy-x(l).ge.zero) i=l
-        end do
-        do k=i,n-1
-            b(k) = (y(k+1)-y(k))/(x(k+1)-x(k))
-            a(k) = y(k) - b(k)*x(k)
-        end do
-        s2  = sqrt((x(i+1)-psy)*(x(i+1)+psy))
-        ss2 = x(i+1) + s2
-        sum = a(i)*log(psy/ss2) - b(i)*s2
-        do k=2,n-i
-            s1  = sqrt((x(i+k-1)-psy)*(x(i+k-1)+psy))
-            ss1 = x(i+k-1) + s1
-            s2  = sqrt((x(i+k)-psy)*(x(i+k)+psy))
-            ss2 = x(i+k) + s2
-            sum = sum + a(i+k-1)*log(ss1/ss2) + b(i+k-1)*(s1-s2)
-        end do
-        zatukh=sum
-        return
-    end    
+ 
     
     subroutine extd4(x,y,dydx)
         !use dispersion_module
+        use decrements, only : dhdnr !!!!!
         implicit none
         !implicit real(wp) (a-h,o-z)
         real(wp), intent(in)    :: x

@@ -287,8 +287,9 @@ contains
         use constants, only: clt, zero
         use rt_parameters, only: itend0, kv
         use dispersion_module, only: vlf, vrt, dflf, dfrt
-        use dispersion_module, only: pdec1, pdec2, pdec3, pdecv
-        use dispersion_module, only: zatukh, distr
+        use dispersion_module, only: distr
+        use decrements, only: pdec1, pdec2, pdec3, pdecv
+        use decrements, only: zatukh
         use current, only: dfind
         use plasma, only: vperp
         use iterator_mod, only: psum4
