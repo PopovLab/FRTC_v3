@@ -306,8 +306,6 @@ contains
         use dispersion_equation, only : as, bs, yny, ynz, ynzq
         use iterator_mod
         use source_new_mod, only: source_new
-        !use rt_parameters, only: inew
-        !use plasma, only: ww, xsz
         implicit none
         real(wp), intent(in) :: pa, yn2, ptet, yn3, ynpopq, xnr
         integer, intent(in)  :: jr, izn
@@ -317,7 +315,6 @@ contains
         real(wp) :: tmp, fcoll, source, argum
         real(wp) :: dek1, dek2, dek3
         
-        !real(wp), intent(out) :: prt, prm
         !--------------------------------------
         !  calculation of decrements
         !--------------------------------------
