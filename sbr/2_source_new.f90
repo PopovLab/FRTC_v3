@@ -11,7 +11,7 @@ contains
     subroutine source_new(r,out)
         use lock_module
         implicit real*8 (a-h,o-z)
-        integer npta, klo, khi, ierr
+        integer klo, khi, ierr
         !common /asou/ rsou(102),sou(102),npta
         call lock2(rsou,npta,r,klo,khi,ierr)
         if(ierr.ne.0) then
