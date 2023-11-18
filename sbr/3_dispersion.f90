@@ -305,6 +305,7 @@ contains
         use dielectric_tensor
         use dispersion_equation, only : as, bs, yny, ynz, ynzq
         use iterator_mod
+        use source_new_mod, only: source_new
         !use rt_parameters, only: inew
         !use plasma, only: ww, xsz
         implicit none
@@ -457,14 +458,6 @@ module dispersion_module
     integer  :: idec
     real(wp) :: pdec14,pdec24,pdec34
     !!common /df/ pdec14,pdec24,pdec34,idec
-
-    real(wp) :: rsou(102),sou(102)
-    integer  :: npta
-    !!common /asou/ rsou(102),sou(102),npta
-    !! используется в source_new и ourlhcd2017
-
-
-
 
 contains
     subroutine disp2_ider0(pa,yn2,ptet,xnro)
@@ -858,6 +851,7 @@ contains
         use metrics
         use dispersion_equation, only: ynz
         use decrements, only : dhdnr !!!!!
+        use source_new_mod, only: source_new
         implicit none
         real(wp), intent(in)    :: in_pa   ! ro
         real(wp), intent(in)    :: yn2     ! ???
@@ -1213,23 +1207,6 @@ contains
   
         end    
 
-    subroutine source_new(r,out)
-        use lock_module
-        implicit real*8 (a-h,o-z)
-        integer npta, klo, khi, ierr
-        !common /asou/ rsou(102),sou(102),npta
-        call lock2(rsou,npta,r,klo,khi,ierr)
-        if(ierr.ne.0) then
-            write(*,*)'lock2 error in source_new'
-            write(*,*)'ierr=',ierr,' rho=',r
-            stop
-        else
-            call linf(rsou,sou,r,fout,klo,khi)
-            out=dabs(fout)
-        end if
-    end        
-
- 
     
     subroutine extd4(x,y,dydx)
         !use dispersion_module

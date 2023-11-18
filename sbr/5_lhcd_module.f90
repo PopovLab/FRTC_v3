@@ -32,6 +32,7 @@ contains
         use driver_module, only : lfree
         use driven_current_module, only : zv1, zv2
         use decrements, only: kzero
+        use source_new_mod
         implicit real*8 (a-h,o-z)
         type(Spectrum) spectr
         real*8 outpe,pe_out 
