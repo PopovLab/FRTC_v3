@@ -555,8 +555,6 @@ contains
         
         call calculate_metrics(pa, ptet)
 
-        if(ivar.eq.1) return
-
         call calculate_dielectric_tensor(pa)
 
         call calculate_dispersion_equation(yn2 , yn3)
