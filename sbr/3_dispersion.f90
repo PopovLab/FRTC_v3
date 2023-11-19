@@ -520,7 +520,7 @@ contains
     end subroutine
 
     subroutine disp2(pa,yn2,ptet,xnro,prt,prm)
-        ! case iroot == 1
+        ! case iroot == 1 ivar= 0 or 3
         use constants, only: zero, one, two
         use constants, only: c0, c1,pi
         use constants, only: zalfa, xmalfa, xlog, clt
