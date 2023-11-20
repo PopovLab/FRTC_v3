@@ -40,9 +40,10 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
     use constants
     use approximation
     use plasma
-    use dispersion_module, only: zatukh
+    use decrements, only: pdec1,pdec2,pdec3,pdecv,pdecal,dfdv
+    use decrements, only: zatukh
     use rt_parameters, only :  nr, itend0, kv, nmaxm    
-    use dispersion_module
+    use iterator_mod, only : dflf, dfrt, distr
     use driver_module !, only: jrad, iww, izz, length
 
     implicit none
