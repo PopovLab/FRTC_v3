@@ -269,7 +269,7 @@
       },
       "ipol": {
         "title": "ipol",
-        "value": -1,
+        "value": 1,
         "type": "int",
         "description": "+-1, Bpol direction in right coord{drho,dteta,dfi}"
       }
