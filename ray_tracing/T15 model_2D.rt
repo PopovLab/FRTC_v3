@@ -257,19 +257,19 @@
       },
       "inew": {
         "title": "inew",
-        "value": 1,
+        "value": 0,
         "type": "int",
         "description": "inew=0 for usual tokamak&Ntor_grill; 1 or 2 for g' in ST&Npol_grill"
       },
       "itor": {
         "title": "itor",
-        "value": 1,
+        "value": -1,
         "type": "int",
         "description": "+-1, Btor direction in right coord{drho,dteta,dfi}"
       },
       "ipol": {
         "title": "ipol",
-        "value": 1,
+        "value": -1,
         "type": "int",
         "description": "+-1, Bpol direction in right coord{drho,dteta,dfi}"
       }
@@ -304,7 +304,7 @@
     },
     "spectrum": {
       "spectrum_type": "scatter_spectrum",
-      "source": "D:/dev/FRTC_v3/ray_tracing/t15pam245x_sp.dat"
+      "source": "D:/PopovLab/FRTC_v3/ray_tracing/t15pam25new2D.dat"
     }
   }
 }
