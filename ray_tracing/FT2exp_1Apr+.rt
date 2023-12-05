@@ -2,7 +2,7 @@
   "name": "FT2exp_1Apr+",
   "setting": {
     "Comments": {
-      "value": "0.5 gap\n\n\n\n\n",
+      "value": "0.3 gap\n\n\n\n\n",
       "title": "Comments",
       "type": "text"
     },
@@ -304,7 +304,7 @@
     },
     "spectrum": {
       "spectrum_type": "spectrum_1D",
-      "source": "C:/Users/user1/Desktop/WK/spcpz.dat",
+      "source": "C:/Users/user1/Desktop/03_2211(\u041f\u0440\u0430\u0432\u0430\u044f1).dat",
       "parameters": {
         "angle": {
           "title": "Angle",
