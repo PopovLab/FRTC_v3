@@ -1,7 +1,7 @@
  Name   Time    Value   Error   Comment
 
 RTOR            0.55               !major radius of a chamber, m
-AB              0.078               !midplane limiter position
+AB              0.084               !midplane limiter position
 ABC             0.078               !midplane calculation boundary
 AWALL           0.078               !wall position in horizontal axis
 BTOR            2.08                !tor.vac.magn.field cham.cent.,T
