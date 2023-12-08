@@ -80,7 +80,7 @@ CCD2=IINT(CULHB);   !driven current
 
 
 !========Current Density===========
-IPL=0.6;
+IPL=0.9;
 CU:Eq;
 CU=CUX;
 !CU=1.0; !0.3;

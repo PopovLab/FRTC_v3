@@ -9,7 +9,7 @@
     "Physical parameters": {
       "Freq": {
         "title": "Frequency",
-        "value": 2.45,
+        "value": 4.6,
         "unit": "GHz",
         "type": "float",
         "description": "RF frequency, GHz"
@@ -263,7 +263,7 @@
       },
       "itor": {
         "title": "itor",
-        "value": -1,
+        "value": 1,
         "type": "int",
         "description": "+-1, Btor direction in right coord{drho,dteta,dfi}"
       },
@@ -306,9 +306,9 @@
       "spectrum_type": "gaussian",
       "options": {
         "x_min": -3.5,
-        "x_max": -0.5,
+        "x_max": -1.5,
         "step": 0.005,
-        "bias": -2.0,
+        "bias": -2.5,
         "sigma": 0.2
       },
       "parameters": {

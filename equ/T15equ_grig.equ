@@ -77,7 +77,7 @@ drivencurrent(CULH,ZRD35,ZRD36,CAR12,CAR13,CAR32)::CF2:CF3:;
 
 
 !========Current Density===========
-IPL=0.6;
+IPL=1.0;
 CU:Eq;
 CU=CUX;
 !CU=TIX/2;
