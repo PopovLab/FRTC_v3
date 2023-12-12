@@ -56,6 +56,8 @@ cc*********************************************************************
 
       call write_plasma(time)
       
+      call write_lcms
+
       full_spectrum = read_spectrum('lhcd/spectrum.dat')
       full_spectrum%input_power = p_in
 

@@ -87,24 +87,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
     htet=zero
     h=1d0/dble(nr+1)
     if(ntet.ne.1) htet=(tet2-tet1)/(ntet-1)
-    open(1,file='lhcd/out/lcms.dat')
-    write(1,*)'     R(m)            Z(m)'
-    write(1,*)
-    xr=1.d0
-    xdl=fdf(xr,cdl,ncoef,xdlp)
-    xly=fdf(xr,cly,ncoef,xlyp)
-    xgm=fdf(xr,cgm,ncoef,xgmp)
-    do i=1,101
-        th=dble(i-1)*pi2/dble(100)
-        cotet=dcos(th)
-        sitet=dsin(th)
-        xx=-xdl+xr*cotet-xgm*sitet**2
-        zz=xr*xly*sitet
-        x=(r0+rm*xx)/1d2
-        z=(z0+rm*zz)/1d2
-        write(1,5) x,z
-    end do
-    close(1)
+
 
     open(1,file=fname)
     write(1,3) !write header 

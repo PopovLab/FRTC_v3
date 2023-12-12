@@ -258,6 +258,36 @@ contains
 
     end subroutine
 
+    subroutine write_lcms
+        !! write lcms
+        use constants
+        use approximation
+        integer, parameter :: iu = 20
+        integer  :: i
+        real(wp) :: xr, th
+        real(wp) :: xdl, xdlp, xly, xlyp, xgm, xgmp
+        real(wp) :: x, xx, z, zz, pl, pc, pa
+        real(wp) :: cotet, sitet
+        open(iu,file='lhcd/out/lcms.dat')
+        write(iu,*)'     R(m)            Z(m)'
+        write(iu,*)
+        xr=1.d0
+        xdl=fdf(xr,cdl,ncoef,xdlp)
+        xly=fdf(xr,cly,ncoef,xlyp)
+        xgm=fdf(xr,cgm,ncoef,xgmp)
+        do i=1,101
+            th=dble(i-1)*pi2/dble(100)
+            cotet=dcos(th)
+            sitet=dsin(th)
+            xx=-xdl+xr*cotet-xgm*sitet**2
+            zz=xr*xly*sitet
+            x=(r0+rm*xx)/1d2
+            z=(z0+rm*zz)/1d2
+            write(iu,'(6(e13.6,3x))') x,z
+        end do
+        close(iu)
+    end subroutine
+
     subroutine find_volums_and_surfaces
         use constants
         use rt_parameters, only: nr
