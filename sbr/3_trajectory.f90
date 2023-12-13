@@ -1,4 +1,4 @@
-module trajectory
+module trajectory_module
     use kind_module
     implicit none
 
@@ -377,4 +377,4 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
 
     
 
-end module trajectory
+end module trajectory_module

@@ -20,7 +20,7 @@ contains
         use plasma
         use rt_parameters
         use maxwell      
-        use trajectory, only: view, nrefj, init_trajectory
+        use trajectory_module, only: view, nrefj, init_trajectory
         use spectrum_mod
         use manager_mod
         use dispersion_module

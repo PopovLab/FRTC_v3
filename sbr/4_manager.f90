@@ -9,7 +9,7 @@ contains
         use constants            
         use plasma
         use rt_parameters, only : nr, ipri, iw, nmaxm, pabs0, eps, eps_const            
-        use trajectory
+        use trajectory_module
         use spectrum_mod
         use iterator_mod,only: plost, pnab
         use dispersion_module, only: icall1, icall2, yn3, ivar, izn
