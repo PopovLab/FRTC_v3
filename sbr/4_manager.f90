@@ -20,21 +20,6 @@ contains
         real(wp) pabs
         integer iznzap(mpnt),iwzap(mpnt),irszap(mpnt)
         real(wp) rzap(mpnt),tetzap(mpnt),xmzap(mpnt),yn3zap(mpnt)
-        !common /a0a1/ ynzm(1001),pm(1001) 
-        !common /a0a2/ tet1,tet2
-        ! real(wp) plost,pnab
-        !common /a0a4/ plost,pnab
-        !real(wp) rzz,tetzz,xmzz
-        !common /abc/ rzz,tetzz,xmzz,iznzz,iwzz,irszz
-        !common /abcd/ irs
-        !common /abcde/ izn
-        !common /abcdg/ iabsorp
-        !common /abefo/ yn3
-
-        !common /a0gh/ pabs
-        !common /aef2/ icall1,icall2
-        !common /ag/ inak,lenstor,lfree
-        !common/refl/nrefj(mpnt)
         integer ntet, iout, itr,  nnj,  n_it
         integer maxref, iterat, nmax0, ibad, itet, nref
         integer nbad1, nbad2, inz
