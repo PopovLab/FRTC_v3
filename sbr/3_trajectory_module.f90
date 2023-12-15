@@ -1,5 +1,6 @@
 module trajectory_module
     use kind_module
+    use trajectory_data
     implicit none
 
     integer, parameter :: mpnt = 100000
@@ -10,6 +11,8 @@ module trajectory_module
 
     integer mbeg(mpnt),mend(mpnt),mbad(mpnt)
 
+    integer, parameter :: max_num_trajectories = 10000
+    type(Trajectory) ::  trajectories(max_num_trajectories)
 contains
 
 subroutine init_trajectory
