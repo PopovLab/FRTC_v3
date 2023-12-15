@@ -2,7 +2,7 @@
   "name": "FT2exp_1Apr",
   "setting": {
     "Comments": {
-      "value": "0.2 gap\n\n\n\n\n",
+      "value": "0.001 gap\n\n\n\n\n",
       "title": "Comments",
       "type": "text"
     },
@@ -40,7 +40,7 @@
       },
       "dni2": {
         "title": "dni2",
-        "value": 0.05,
+        "value": 0.03,
         "type": "float",
         "description": "Ni2/Ni1, relative density of ions 2"
       },
@@ -277,14 +277,14 @@
     "grill parameters": {
       "Zplus": {
         "title": "Zplus",
-        "value": 5.0,
+        "value": 11.0,
         "type": "float",
         "unit": "cm",
         "description": "upper grill corner in centimeters"
       },
       "Zminus": {
         "title": "Zminus",
-        "value": -5.0,
+        "value": -11.0,
         "type": "float",
         "unit": "cm",
         "description": "lower grill corner in centimeters"
@@ -304,7 +304,7 @@
     },
     "spectrum": {
       "spectrum_type": "spectrum_1D",
-      "source": "C:/Users/user1/Desktop/03_22_11 no soll.dat",
+      "source": "D:/Lab/FRTC_v3/ray_tracing/FT2exp_2Apr.dat",
       "parameters": {
         "angle": {
           "title": "Angle",

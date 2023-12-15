@@ -12,7 +12,7 @@ DTOUT = 1.d-5;
 DSTART = 0.025d0;
 
 CF1 = 0.1d-3;
-CF2 = 0.026d0;
+CF2 = 0.0281d0;
 CF3 = 0.034d0;
 !----------------- Electrons parametrs -----------------
 CF14 = 1.5d0;
@@ -34,8 +34,9 @@ TE = TEX;
 
 TI:AS;
 
-TI = 0.16*(1.d0+0.1d0*FRAMP(0.026,0.034))*FPR**CF14+CF13;
+!TI = 0.16*(1.d0+0.1d0*FRAMP(0.026,0.034))*FPR**CF14+CF13;
 !TI = 0.265*(1.d0+0.1d0*FRAMP(CF2,CF3))*EXP(-(CF14+0.4)*(RHO/ROC)**2);
+TI = 0.5*TE
 
 !----------------- Impurities -----------------
 
@@ -47,7 +48,7 @@ ZMAIN = ZMJ;
 AIM1 = 16;
 ZIM1 = 8;
 
-ZEF = 3.7d0
+ZEF = 2.5d0
 
 !Its densities
 
@@ -60,6 +61,7 @@ NI = NE*(ZIM1-ZEF)/(ZIM1-ZMJ)/ZMJ;
 CU:EQ;
 !CU = CUX;
 
+
 CAR31 = CNHR + CCMHD;
 CC = CAR31;
 
@@ -69,7 +71,7 @@ NEQUIL = 41;
 
 !----------------- LHCD & DrivenCurrent -----------------
 
-QLH = (0.0245d0+1.d-3*FRAMP(CF2,CF3)-0.0255*FJUMP(CF3))*FJUMP(CF2);
+QLH = (0.079d0-1.d-2*FRAMP(CF2,CF3)-0.069*FJUMP(CF3))*FJUMP(CF2);
 
 debug:0.0001:DSTART::;
 saveprofiles::CF2:CF3:;
@@ -83,10 +85,9 @@ CCD2 = IINT(CULHB);
 !----------------- Radial output -----------------
 
 J\CU\-1;        Upl\UPL;            Poh\POH\-2;      E\UPL/RTOR/GP2;
-Jlh\CULH\-1;    Te\TE\\TEX;         CC\CC\-3;        Q\1./MU;
-JBS\CUBS;       ZEF\ZEF;            Plh\PELH\-2;     En\CAR24;
-Johm\CUOHM\8;   Ne\NE\\NEX;         sig\CAR32\-3;    Chr\CAR31; 
-
+Jlh\CULH\-1;    Te\TE;              CC\CC\-3;        Q\1./MU;
+JBS\CUBS;       Ti\TI;            Plh\PELH\-2;     En\CAR24;
+Johm\CUOHM\8;   Ne\NE;              sig\CAR32\-3;    Chr\CAR31; 
 !----------------- Time output -----------------
 
 Ilh_ILHB_-10;       Qlh_QLH_-5;

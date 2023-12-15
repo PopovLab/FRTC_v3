@@ -1,8 +1,8 @@
 {
-  "name": "FT2exp_1Apr+",
+  "name": "new_model_3805",
   "setting": {
     "Comments": {
-      "value": "0.3 gap\n\n\n\n\n",
+      "value": "Comments about ....",
       "title": "Comments",
       "type": "text"
     },
@@ -28,7 +28,7 @@
       },
       "xmi2": {
         "title": "xmi2",
-        "value": 16.0,
+        "value": 18.0,
         "type": "float",
         "description": "Mi2/Mp,  relative mass of ions 2"
       },
@@ -40,7 +40,7 @@
       },
       "dni2": {
         "title": "dni2",
-        "value": 0.05,
+        "value": 0.03,
         "type": "float",
         "description": "Ni2/Ni1, relative density of ions 2"
       },
@@ -239,7 +239,7 @@
       },
       "ismth": {
         "title": "ismth",
-        "value": 0,
+        "value": 1,
         "type": "int",
         "description": "if=0, no smoothing in Ne(rho),Te(rho),Ti(rho)"
       },
@@ -277,14 +277,14 @@
     "grill parameters": {
       "Zplus": {
         "title": "Zplus",
-        "value": 5.0,
+        "value": 11,
         "type": "float",
         "unit": "cm",
         "description": "upper grill corner in centimeters"
       },
       "Zminus": {
         "title": "Zminus",
-        "value": -5.0,
+        "value": -11,
         "type": "float",
         "unit": "cm",
         "description": "lower grill corner in centimeters"
@@ -303,8 +303,14 @@
       }
     },
     "spectrum": {
-      "spectrum_type": "spectrum_1D",
-      "source": "C:/Users/user1/Desktop/03_2211(\u041f\u0440\u0430\u0432\u0430\u044f1).dat",
+      "spectrum_type": "gaussian",
+      "options": {
+        "x_min": -15.0,
+        "x_max": 15.0,
+        "step": 0.05,
+        "bias": -3.0,
+        "sigma": 1.0
+      },
       "parameters": {
         "angle": {
           "title": "Angle",
