@@ -69,7 +69,7 @@ contains
         implicit none
         integer, intent(in)  :: NA1
         real(wp), intent(in) :: ABC, BTOR, RTOR, UPDWN, GP2
-        real(wp), dimension(*) :: AMETR, RHO, SHIF, ELON, TRIA,MU,  NE, TE, TI, ZEF, UPL
+        real(wp), dimension(*) :: AMETR, RHO, SHIF, ELON, TRIA, MU,  NE, TE, TI, ZEF, UPL
         integer i, k
         integer, parameter :: N  = 501
         real(wp) :: znak_tor, znak_pol, fpol, dfmy
