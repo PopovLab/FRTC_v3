@@ -27,6 +27,7 @@ module trajectory_data
         integer  :: iw     ! iwzap(itr)
         integer  :: izn    ! iznzap(itr)
 
+        integer  :: spectrum_point_index
         integer  :: mbad
         integer  :: nrefj 
 
@@ -50,12 +51,14 @@ module trajectory_data
 
     type(Trajectory), pointer :: current_trajectory
 contains
-    subroutine init_method(this)
+    subroutine init_method(this, theta, index)
         !! инициализация траетории
         implicit none
         class(Trajectory), intent(inout) :: this
         print *,'инит массива точек:', size(this%points)
         if (allocated(this%points)) deallocate(this%points)
+        this%tetin = theta
+        this%spectrum_point_index = index
         this%size = 0
         this%nrefj = 0
         this%mbad = 0 

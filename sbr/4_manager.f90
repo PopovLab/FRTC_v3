@@ -90,7 +90,7 @@ contains
                         !inak0 = inak
                         go to 10
                     end if
-                    call current_trajectory%init
+                    call current_trajectory%init(tetin, inz)
                     current_trajectory%rin = rin
 
                 else
