@@ -14,12 +14,13 @@ contains
         use iterator_mod,only: plost, pnab
         use dispersion_module, only: icall1, icall2, yn3, ivar, izn
         use driver_module !, only: irs, iabsorp
+        use trajectory_data
         implicit none
         type (Spectrum) spectr
         type (SpectrumPoint) point
         real(wp) pabs
-        integer iznzap(mpnt),iwzap(mpnt),irszap(mpnt)
-        real(wp) rzap(mpnt),tetzap(mpnt),xmzap(mpnt),yn3zap(mpnt)
+        !integer iznzap(mpnt),iwzap(mpnt),irszap(mpnt)
+        !real(wp) rzap(mpnt),tetzap(mpnt),xmzap(mpnt),yn3zap(mpnt)
         integer ntet, iout, itr,  nnj,  n_it
         integer maxref, iterat, nmax0, ibad, itet, nref
         integer nbad1, nbad2, inz
@@ -32,15 +33,15 @@ contains
 
         pabs = spectr%max_power*pabs0/1.d2
         print *, 'pabs =', pabs, spectr%max_power, pabs0
-        lenstor = length
+        !lenstor = length
         htet = zero
         hr = 1.d0/dble(nr+1) !sav2008
         if (ntet.ne.1) htet = (tet2-tet1)/(ntet-1)
         irs = 1
         iout = 0
-        mbeg(1) = 1
+        !mbeg(1) = 1
         itr = 0
-        inak = 0
+        !inak = 0
         nnj = 0
         do n_it = 0,3
             nnj = nnj+nmaxm(n_it+1)
@@ -68,6 +69,7 @@ contains
             !--------------------------------------
             do inz = 1, spectr%size
                 itr = itr+1
+                current_trajectory => trajectories(itr)
                 !ipri          if(ipri.eq.4)  write(23,*)
                 point = spectr%data(inz)
                 if(iterat.eq.0) then
@@ -85,28 +87,30 @@ contains
                     if (ifail.eq.1) then
                         if (ipri.gt.1) write (*,*) 'error: no roots'
                         iabsorp = -1
-                        inak0 = inak
+                        !inak0 = inak
                         go to 10
                     end if
+                    call current_trajectory%init
+                    current_trajectory%rin = rin
 
                 else
-                    if (mbad(itr).ne.0) then
+                    if (current_trajectory%mbad.ne.0) then
                         plost = plost+point%power
                         go to 31
                     end if
-                    ib = mbeg(itr)
-                    ie = mend(itr)
+                    !ib = mbeg(itr)
+                    !ie = mend(itr)
                     powexit = point%power
                     dltpow = pabs
-                    call dqliter(dltpow,ib,ie,hr,powexit,iout)
+                    call dqliter(dltpow,current_trajectory,hr,powexit,iout)
                     if (nmax0.eq.0) then
-                        ib = mbeg(itr)
-                        ie = mend(itr)
+                        !ib = mbeg(itr)
+                        !ie = mend(itr)
                         pow1 = powexit
                         pgamma = 1.d0-pow1/point%power
                         powexit = pow1/pgamma
                         dltpow = powexit-pow1+pabs
-                        call dqliter(dltpow,ib,ie,hr,powexit,iout)
+                        call dqliter(dltpow,current_trajectory,hr,powexit,iout)
                         powexit = powexit-dltpow+pabs
                         if (powexit.lt.zero) powexit=zero
                         go to 30
@@ -114,17 +118,19 @@ contains
 	                if (iout.eq.0) then
                         go to 30
                     else
-                        tetin = tetzap(itr)
-                        xmin = xmzap(itr)
-                        rin = rzap(itr)
-                        yn3 = yn3zap(itr)
-                        pow = powexit
-                        irs = irszap(itr)
-                        iw = iwzap(itr)
-                        izn = iznzap(itr)
-                        jrad(ie+1) = 1
-                        dland(ie+1) = lfree
-                        inak = lfree-1
+                        tetin = current_trajectory%tetzap
+                        xmin = current_trajectory%xmzap
+                        rin = current_trajectory%rzap
+                        yn3 = current_trajectory%yn3zap
+                        pow = current_trajectory%powexit
+                        irs = current_trajectory%irszap
+                        iw =  current_trajectory%iwzap
+                        izn = current_trajectory%iznzap
+                        !jrad(ie+1) = 1
+                        !dland(ie+1) = lfree
+                        !inak = lfree-1
+                        !call current_trajectory%reset(0)
+                        ! продолжение траектории !! ресет не нужен 
                     end if
                 end if
                 !---------------------------------------
@@ -135,7 +141,7 @@ contains
                 tet = tetin
                 nmax = nmax0
                 iabsorp = 0
-                inak0 = inak
+                !inak0 = inak
                 !-------------------------------------
                 ! call ray tracing
                 !-------------------------------------
@@ -143,14 +149,15 @@ contains
                 eps = eps_const 
                 nbad1 = nbad1+nb1
                 nbad2 = nbad2+nb2
-                nrefj(itr) = nrefj(itr)+nmax
+                current_trajectory%nrefj = current_trajectory%nrefj + nmax
                 powexit = pow
                 nref = nref+nmax
 10              if (iabsorp.lt.0) then
                     !-------------------------------------
                     !    encounted problems
                     !-------------------------------------
-                    if (inak.eq.lenstor-1) then
+                    !if (inak.eq.lenstor-1) then
+                    if (current_trajectory%size.eq.max_size-1) then
                         write (*,*) 'fix maximal length'
                         nmax0 = 0
                         do i=1,4
@@ -165,44 +172,45 @@ contains
 
 111                     format(1x,'traj. with tet0=',f10.5,1x,', Ninput=',f10.5,1x,'failed')
                     end if
-                    mbad(itr) = 1
+                    current_trajectory%mbad = 1 ! плохоая траектория
                     plost= plost+pow
-                    inak = inak0
-                    mend(itr) = inak-1
+                    !inak = inak0
+                    !mend(itr) = inak-1
                     goto 30
                 end if
                 !---------------------------------------
                 ! remember end point of trajectory
                 !---------------------------------------
-                rzap(itr) = rzz
-                tetzap(itr) = tetzz
-                xmzap(itr) = xmzz
-                yn3zap(itr) = yn3
-                iznzap(itr) = iznzz
-                iwzap(itr) = iwzz
-                irszap(itr) = irszz
+                current_trajectory%rzap   = rzz
+                current_trajectory%tetzap = tetzz
+                current_trajectory%xmzap  = xmzz
+                current_trajectory%yn3zap = yn3
+                current_trajectory%iznzap = iznzz
+                current_trajectory%iwzap  = iwzz
+                current_trajectory%irszap = irszz
                 if (iterat.eq.0) then
-                    if (itr.gt.1) mbeg(itr) = mend(itr-1)+2
-                    mend(itr) = inak
-                    jrad(mend(itr)+1) = 0
-                    lfree = mend(itr)+2
-                    inak = lfree-1
+                    !if (itr.gt.1) mbeg(itr) = mend(itr-1)+2
+                    !mend(itr) = inak
+                    !jrad(mend(itr)+1) = 0
+                    !lfree = mend(itr)+2
+                    !inak = lfree-1
                 end if
 20              continue
                 if(iout.ne.0) then
-                    dcoll(ie+1) = inak
-                    jrad(inak+1) = 0
-                    lfree = inak+2
+                    print *,'**************'
+                    !dcoll(ie+1) = inak
+                    !jrad(inak+1) = 0
+                    !lfree = inak+2
                 end if
-                if(nrefj(itr).gt.maxref.and.pow.gt.pabs) then !forced absorp
+                if(current_trajectory%nrefj.gt.maxref.and.pow.gt.pabs) then !forced absorp
                     if(pow.ge.point%power) go to 30 !sav2008
-                    ib = mbeg(itr)
-                    ie = mend(itr)
+                    !ib = mbeg(itr)
+                    !ie = mend(itr)
                     pow1 = pow
                     pgamma = 1.d0-pow1/point%power
                     powexit = pow1/pgamma
                     dltpow = powexit-pow1+pabs
-                    call dqliter(dltpow,ib,ie,hr,powexit,iout)
+                    call dqliter(dltpow, current_trajectory, hr,powexit,iout)
                     powexit = powexit-dltpow+pabs
                     if(powexit.lt.zero) powexit=zero
                 end if
@@ -210,8 +218,7 @@ contains
                 pnab = pnab+powexit
 31              continue
             end do
-            if(ipri.gt.1) write(*,1003)itet,icall1,icall2,nref,lfree-1,nbad1,nbad2
-            print *,'itr =', itr
+            if(ipri.gt.1) write(*,1003)itet,icall1,icall2,nref,nbad1,nbad2
         end do
 1001    format (30x,i4,' iteration')
 1002    format (6x,'n',5x,'call2',6x,'call4',6x,'nrefl',4x,'last',5x,'bad2',5x,'bad4')
@@ -268,7 +275,7 @@ contains
         end do
     end      
 
-    subroutine dqliter(dltpow, ib, ie, h, powexit, iout) !sav2008
+    subroutine dqliter(dltpow, traj, h, powexit, iout) !sav2008
         use constants, only: clt, zero
         use rt_parameters, only: itend0, kv
         use iterator_mod, only: vlf, vrt, dflf, dfrt
@@ -278,17 +285,20 @@ contains
         use current, only: dfind
         use plasma, only: vperp
         use iterator_mod, only: psum4
-        use driver_module, only: jrad, iww, length      
-        use driver_module, only: pow, vel, perpn, dland, dcoll, dalf
-
+        !use driver_module, only: jrad, iww, length      
+        !use driver_module, only: pow, vel, perpn, dland, dcoll, dalf
+        use driver_module, only: pow
+        use trajectory_data
         implicit none
 
+        type(Trajectory), pointer, intent(in) :: traj
         real(wp), intent(in)   :: dltpow
         real(wp), intent(in)   :: h
         real(wp), intent(out)  :: powexit
-        integer, intent(inout) :: ib, ie
+        !integer, intent(inout) :: ib, ie
         integer, intent(inout) :: iout
 
+        type(TrajectoryPoint) :: tp
         integer  :: i, iv,  jr, ifast, jchek
         real(wp) :: pdec1z, pdec3z, pintld, pintal
         real(wp) :: v, refr, dek3, argum, valfa
@@ -306,15 +316,16 @@ contains
         pintal=zero
   10    continue
         iout=0
-        do i=ib,ie
+        do i = 1, traj%size
             !-----------------------------------
             ! restore memorized decrements and
             ! integrate power equation
             !------------------------------------
-            v=vel(i)
-            jr=jrad(i)
-            refr=perpn(i)
-            ifast=iww(i)
+            tp = traj%points(i)
+            v=tp%vel
+            jr=tp%jrad
+            refr=tp%perpn
+            ifast=tp%iww
             dek3=zero
             if(itend0.gt.0) then
                 argum=clt/(refr*valfa)
@@ -333,23 +344,23 @@ contains
                 jr=-jr
                 !variant        pintld=-dland(i)*df
                 !!        pintld=-dland(i)*(dflf+dfrt)/2d0
-                pintld=dabs(dland(i)*(dflf+dfrt)/2d0)
-                pdec2=dexp(-2d0*dcoll(i))
-                pintal=dabs(dalf(i)*dek3)
+                pintld=dabs(tp%dland*(dflf+dfrt)/2d0)
+                pdec2=dexp(-2d0*tp%dcoll)
+                pintal=dabs(tp%dalf*dek3)
                 pcurr=pdec2*dexp(-2d0*pintld-2d0*pintal)
                 psum4=psum4+pow*(1d0-pcurr)
-                dcv=dland(i)/vsr
+                dcv=tp%dland/vsr
             else
-                pdec2=dcoll(i)
-                pdecv=dland(i)
+                pdec2=tp%dcoll
+                pdecv=tp%dland
                 !!        pdec1=-pdecv*df
                 pdec1=dabs(pdecv*df)
-                pdec3=dabs(dalf(i)*dek3)
+                pdec3=dabs(tp%dalf*dek3)
                 pintld=(pdec1+pdec1z)/2d0*h
                 pintal=(pdec3+pdec3z)/2d0*h
                 pdec1z=pdec1
                 pdec3z=pdec3
-            dcv=pdecv*h/vsr
+                dcv=pdecv*h/vsr
             end if
             powpr=pow
             if(dltpow.ne.zero) then
@@ -364,11 +375,11 @@ contains
             call dfind(jr,iv,v,powpr,pil,pic,pia,dfsr,dcv, &
                     refr,vlf,vrt,ifast)
             if(pow.lt.dltpow) then
-            powexit=pow
-            return
+                powexit=pow
+                return
             end if
         end do
-        jchek=jrad(ie+1)
+        jchek= 0 !jrad(ie+1) !!!!!
         !c-------------------------------------------
         !c  check whether trajectory has continuation
         !c---------------------------------------------
@@ -377,8 +388,10 @@ contains
             powexit=pow
             return
         else
-            ib=idnint(dland(ie+1))
-            ie=idnint(dcoll(ie+1))
+            print *,'dqliter stop'
+            stop
+            !ib=idnint(dland(ie+1))
+            !ie=idnint(dcoll(ie+1))
             goto 10
         end if
     end    

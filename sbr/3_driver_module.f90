@@ -3,11 +3,11 @@ module driver_module
     implicit none
     integer, parameter :: length = 5000000
 
-    real(wp) dland(length),dcoll(length),perpn(length),dalf(length)
-    real(wp) vel(length),tetai(length)
-    real(wp) xnpar(length)
-    real(wp) :: rho(length)
-    integer izz(length),iww(length),jrad(length)
+    !real(wp) dland(length),dcoll(length),perpn(length),dalf(length)
+    !real(wp) vel(length),tetai(length)
+    !real(wp) xnpar(length)
+    !real(wp) :: rho(length)
+    !integer izz(length),iww(length),jrad(length)
     !!common/agh/xnpar,vel,dland,dcoll,dalf,perpn,tetai,jrad,iww,izz
 
     integer     :: irs
@@ -32,13 +32,13 @@ module driver_module
     real(wp)    :: pow
     !!common /acg/ pow
 
-    integer     :: inak, lenstor, lfree
+    !integer     :: inak, lenstor, lfree
     !common /ag/ inak,lenstor,lfree
 
     real(wp)    :: pintld4,pintcl4,pintal4
     !common /dg/ pintld4,pintcl4,pintal4
 
-    real(wp)    ::  vthc(length),poloidn(length)
+    !real(wp)    ::  vthc(length),poloidn(length)
     !common /vth/ vthc(length),poloidn(length)
 contains
 
@@ -63,40 +63,45 @@ contains
         use decrements, only: icf1, icf2
         use dispersion_module, only: ipow
         use decrements, only: pdecv, pdecal
+        use trajectory_data
+
         implicit none
+        type(TrajectoryPoint) :: tp
         real(wp), intent(in)     :: vz, ro, powccc
         integer, intent(in)      :: j
         real(wp)    :: radth
-        inak=inak+1
-        if(inak.eq.lenstor) then
-            write(*,*)'storage capacity exceeded !'
-            iabsorp=-1
-            inak=lenstor-1
-            return
-        end if
-        vel(inak)=vz
-        rho(inak)=ro
-        perpn(inak)=cf1 !refr
-        poloidn(inak)=cf6 !npoloid
-        tetai(inak)= cf2 ! tet_i
+        !inak=inak+1
+        !if(inak.eq.lenstor) then
+            !write(*,*)'storage capacity exceeded !'
+            !iabsorp=-1
+            !inak=lenstor-1
+            !return
+        !end if
+        tp%vel = vz
+        tp%rho =ro
+        tp%perpn = cf1 !refr
+        tp%poloidn = cf6 !npoloid
+        tp%tetai = cf2 ! tet_i
         radth=dble(j)/dble(31)
-        vthc(inak)=3.d10/fvt(radth)
-        iww(inak)=icf1 ! было ifast 
-        izz(inak)=icf2 ! было idir
-        xnpar(inak)=cf3 !было xparn
+        tp%vthc = 3.d10/fvt(radth)
+        tp%iww = icf1 ! было ifast 
+        tp%izz = icf2 ! было idir
+        tp%xnpar = cf3 !было xparn
         if(im4.eq.1) then
-            jrad(inak)=-j
-            dland(inak)=pintld4
-            dcoll(inak)=pintcl4
-            dalf(inak)=pintal4
+            tp%jrad = -j
+            tp%dland = pintld4
+            tp%dcoll = pintcl4
+            tp%dalf  = pintal4
             im4=0
+            call current_trajectory%add_point(tp)
             return
         end if
-        jrad(inak)=j
-        dland(inak)=pdecv
-        dalf(inak)=pdecal
-        if(ipow.ne.1) dcoll(inak)=powccc
-        if(ipow.eq.1) dcoll(inak)=1d0
+        tp%jrad  = j
+        tp%dland = pdecv
+        tp%dalf  = pdecal
+        if(ipow.ne.1) tp%dcoll = powccc
+        if(ipow.eq.1) tp%dcoll = 1d0
+        call current_trajectory%add_point(tp)
     end subroutine
 
     subroutine driver2(ystart,x1,x2,xsav,hmin,h1, pabs) !sav2008

@@ -3,38 +3,38 @@ module trajectory_module
     use trajectory_data
     implicit none
 
-    integer, parameter :: mpnt = 100000
+    !integer, parameter :: mpnt = 100000
 
 
-    integer nrefj(mpnt)
+    !integer nrefj(mpnt)
     !!common/refl/nrefj(mpnt)
 
-    integer mbeg(mpnt),mend(mpnt),mbad(mpnt)
+    !integer mbeg(mpnt),mend(mpnt),mbad(mpnt)
 
     integer, parameter :: max_num_trajectories = 10000
-    type(Trajectory) ::  trajectories(max_num_trajectories)
+    type(Trajectory), target ::  trajectories(max_num_trajectories)
 contains
 
 subroutine init_trajectory
     use constants
     use driver_module
     implicit none
-    nrefj = 0
+    !nrefj = 0
     
-    dland = zero
-    dcoll = zero
-    perpn = zero 
-    dalf  = zero
-    vel = zero
-    jrad = zero
-    iww = zero
-    tetai = zero
-    xnpar = zero
-    izz = zero
+    !dland = zero
+    !dcoll = zero
+    !perpn = zero 
+    !dalf  = zero
+    !vel = zero
+    !jrad = zero
+    !iww = zero
+    !tetai = zero
+    !xnpar = zero
+    !izz = zero
 
-    mbeg = zero
-    mend = zero
-    mbad = zero
+    !mbeg = zero
+    !mend = zero
+    !mbad = zero
 
 end subroutine 
 
@@ -48,12 +48,15 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
     use rt_parameters, only :  nr, itend0, kv, nmaxm    
     use iterator_mod, only : dflf, dfrt, distr
     use driver_module !, only: jrad, iww, izz, length
-
+    use trajectory_data
     implicit none
     
     real(wp), intent(in) :: tview
 
     integer, intent(in) :: ispectr, nnz, ntet  !sav#
+
+    type(Trajectory) :: traj
+    type(TrajectoryPoint) ::tp
     !common /bcef/ ynz,ynpopq
     !common /vth/ vthc(length),poloidn(length)
     real(wp) vthcg,npoli
@@ -110,22 +113,24 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         jrc=nr+1
         jznak=-1
         nturn=1
-        if(mbad(itr).eq.0) then 
+        traj = trajectories(itr)
+        if(traj%mbad.eq.0) then 
             ntraj=ntraj+1
-            ib=mbeg(itr)
-            ie=mend(itr)
+            !ib=mbeg(itr)
+            !ie=mend(itr)
 10          continue
-            do i=ib,ie
-                v=vel(i)
-                jr=jrad(i)
-                refr=perpn(i)
-                npoli=poloidn(i)
-                ifast=iww(i)
-                vthcg=vthc(i)
-                idir=izz(i)
-                dek3=zero
-                th=tetai(i)
-                parn=xnpar(i)
+            do i=1, traj%size
+                tp = traj%points(i)
+                v  = tp%vel
+                jr = tp%jrad
+                refr  = tp%perpn
+                npoli = tp%poloidn
+                ifast = tp%iww
+                vthcg = tp%vthc
+                idir  = tp%izz
+                dek3  = zero
+                th = tp%tetai
+                parn = tp%xnpar
                 if(itend0.gt.0) then
                     argum=clt/(refr*valfa)
                     dek3=zatukh(argum,abs(jr),vperp,kv)
@@ -136,19 +141,19 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
                     jr=-jr
                     !variant          pintld=-dland(i)*df
                     !!          pintld=-dland(i)*(dflf+dfrt)/2d0
-                    pintld=dabs(dland(i)*(dflf+dfrt)/2d0)
-                    pdec2=dexp(-2d0*dcoll(i))
-                    pintal=dabs(dalf(i)*dek3)
+                    pintld = dabs(tp%dland*(dflf+dfrt)/2d0)
+                    pdec2  = dexp(-2d0*tp%dcoll)
+                    pintal = dabs(tp%dalf*dek3)
                 else
-                    pdec2=dcoll(i)
-                    pdecv=dland(i)
+                    pdec2 = tp%dcoll
+                    pdecv = tp%dland
                     !!          pdec1=-pdecv*df
-                    pdec1=dabs(pdecv*df)
-                    pdec3=dabs(dalf(i)*dek3)
-                    pintld=(pdec1+pdec1z)/2d0*h
-                    pintal=(pdec3+pdec3z)/2d0*h
-                    pdec1z=pdec1
-                    pdec3z=pdec3
+                    pdec1 = dabs(pdecv*df)
+                    pdec3 = dabs(tp%dalf*dek3)
+                    pintld = (pdec1+pdec1z)/2d0*h
+                    pintal = (pdec3+pdec3z)/2d0*h
+                    pdec1z = pdec1
+                    pdec3z = pdec3
                 end if
                 powpr=pow
                 powd=pow*dexp(-2d0*pintld)
@@ -168,7 +173,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
                     pc=pc+dabs(pic*fff)  !el. collisions absorbed power
                     pa=pa+dabs(pia*fff)  !alpha Landau absorbed power
                 end if
-                xr= rho(i)!h*dble(jr)
+                xr= tp%rho !h*dble(jr)
                 cotet=dcos(th)
                 sitet=dsin(th)
                 xdl=fdf(xr,cdl,ncoef,xdlp)
@@ -190,10 +195,12 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
                 
                 if(pt.ge.1d0-pleft) go to 11 !maximal absorbed power along a ray
             end do
-            jchek=jrad(ie+1)
+            jchek = 0 !jrad(ie+1)
             if(jchek.ne.0) then  !continue this trajectory
-                ib=idnint(dland(ie+1))
-                ie=idnint(dcoll(ie+1))
+                !ib=idnint(dland(ie+1))
+                !ie=idnint(dcoll(ie+1))
+                print *,'-----------------------------'
+                stop
                 goto 10
             end if
 11          continue
@@ -222,10 +229,12 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         use rt_parameters, only: eps, rrange, hdrob, nr, ipri, iw
         use dispersion_module, only: izn
         use dispersion_module, only: extd4, disp2, disp2_iroot3, disp2_ider0
-        use driver_module, only: inak, im4, hrad, irs, iabsorp, iznzz, iwzz, irszz, rzz
+        use driver_module, only: im4, hrad, irs, iabsorp, iznzz, iwzz, irszz, rzz
         use driver_module, only: tetzz, xmzz
         use driver_module, only: driver2, driver4
         use dispersion_equation, only: ynz
+        use trajectory_data
+
         implicit none
         real(wp), intent(in)    :: xm0
         real(wp), intent(in)    :: tet0
@@ -316,7 +325,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         x1=0d0
         x2=1d+10
         rexi=xend
-        inak_saved = inak
+        inak_saved = current_trajectory%size !inak
         call driver4(yy,x1,x2,rexi,hmin, extd4)
         if(iabsorp.eq.-1) return !failed to turn
 
@@ -343,12 +352,13 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
             if (ib2.gt.4) then
                 if (ipri.gt.1) write (*,*) 'error: cant leave 4 eqs'
                 iabsorp=-1
+                print *,'exit ib2.gt.4'
                 return
             end if
             eps=eps/5d0
             rrange=rrange*2d0
             hdrob=hdrob*2d0
-            inak = inak_saved ! костыль - восстанавливаю занчение счетчика точек траектории
+            call current_trajectory%reset(inak_saved) ! костыль - восстанавливаю занчение счетчика точек траектории
             goto 40
         end if
         !-------------------------------------

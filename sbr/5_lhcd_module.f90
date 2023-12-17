@@ -20,7 +20,7 @@ contains
         use plasma
         use rt_parameters
         use maxwell      
-        use trajectory_module, only: view, nrefj, init_trajectory
+        use trajectory_module, only: view,  init_trajectory
         use spectrum_mod
         use manager_mod
         use dispersion_module
@@ -29,7 +29,7 @@ contains
         use iterator_mod
         use lock_module
         use math_module
-        use driver_module, only : lfree
+        !use driver_module, only : lfree
         use driven_current_module, only : zv1, zv2
         use decrements, only: kzero
         use source_new_mod
@@ -73,7 +73,7 @@ contains
         plaun = spectr%input_power
 
         ispectr = spectr%direction
-        lfree=1
+        !lfree=1
 
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         hr = 1.d0/dble(nr+1)
