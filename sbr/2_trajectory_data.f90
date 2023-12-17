@@ -46,7 +46,7 @@ module trajectory_data
         procedure :: init  => init_method
         procedure :: reset => reset_method
         procedure :: add_point => add_point_method
-        !procedure :: write => write_metod
+        procedure :: write_info => write_info_method
     end type Trajectory    
 
     type(Trajectory), pointer :: current_trajectory
@@ -55,7 +55,9 @@ contains
         !! инициализация траетории
         implicit none
         class(Trajectory), intent(inout) :: this
-        print *,'инит массива точек:', size(this%points)
+        real(wp),          intent(in)    :: theta
+        integer,           intent(in)    :: index
+        !print *,'инит массива точек:', size(this%points)
         if (allocated(this%points)) deallocate(this%points)
         this%tetin = theta
         this%spectrum_point_index = index
@@ -85,5 +87,17 @@ contains
         end if
         this%points(this%size) = tpoint
     end subroutine
+
+    subroutine write_info_method(this, iu)
+        !! сохранение в файл информации о траектории
+        implicit none
+        class(Trajectory), intent(inout) :: this
+        integer, intent(in) :: iu
+        write (iu,'(3(A,10x))') 'theta',  'index', 'mbad'
+        write (iu,'(f7.5,1x,i5,2x,i5,2x)') this%tetin, this%spectrum_point_index, this%mbad
+        write (iu,*)
+
+    end subroutine
+
 
 end module trajectory_data

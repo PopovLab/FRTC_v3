@@ -77,18 +77,28 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
     real(wp) :: df, powpr, powd, powal, pil, pic
     real(wp) :: powcol, pia, pt, denom, powdamped, domin, fff
 
+    character(14) folder
+    character(40) ver_fn
     character(40) fname
 
     print *, 'view_time=',tview
     !print *, name(m)
     if (ispectr>0) then
-        write(fname,'("lhcd/traj/pos/", f9.7,".dat")') tview
+        folder = "lhcd/traj/pos/"
     else
-        write(fname,'("lhcd/traj/neg/", f9.7,".dat")') tview
+        folder = "lhcd/traj/neg/"
     endif
+
+    write(ver_fn,'(A, "v2")') folder
+    print *, ver_fn
+    open(1,file=ver_fn)
+    write (1,*) 'version 2'
+    close(1)
+
+    write(fname,'(A, f9.7,".dat")') folder, tview
     print *, fname
-    !name(m) = fname
-    !print *, name(m)
+
+
 
     htet=zero
     h=1d0/dble(nr+1)
@@ -96,7 +106,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
 
 
     open(1,file=fname)
-    write(1,3) !write header 
+
     ntraj=0 !sav2008
     do itr=1,nnz*ntet !sav2008
         pow=1.d0
@@ -113,12 +123,13 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
         jrc=nr+1
         jznak=-1
         nturn=1
+
         traj = trajectories(itr)
+        call traj%write_info(1)
+
         if(traj%mbad.eq.0) then 
             ntraj=ntraj+1
-            !ib=mbeg(itr)
-            !ie=mend(itr)
-10          continue
+            write(1,3) !write header 
             do i=1, traj%size
                 tp = traj%points(i)
                 v  = tp%vel
@@ -195,16 +206,8 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
                 
                 if(pt.ge.1d0-pleft) go to 11 !maximal absorbed power along a ray
             end do
-            jchek = 0 !jrad(ie+1)
-            if(jchek.ne.0) then  !continue this trajectory
-                !ib=idnint(dland(ie+1))
-                !ie=idnint(dcoll(ie+1))
-                print *,'-----------------------------'
-                stop
-                goto 10
-            end if
 11          continue
-
+            write (1,*)
         end if
     end do
 

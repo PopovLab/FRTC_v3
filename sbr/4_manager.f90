@@ -77,6 +77,8 @@ contains
                     !    find initial radius for a trajectory
                     !    on the 1th iteration
                     !-----------------------------------------
+                    call current_trajectory%init(tetin, inz)
+
                     yn = point%Ntor
                     pow = point%power
                     !yn=ynzm(inz) !sav2008, yn is introduced
@@ -84,14 +86,13 @@ contains
                     irs = 1
                     iw = iw0
                     rin = rini(xmin,tetin,point,hr,ifail)
+                    current_trajectory%rin = rin
                     if (ifail.eq.1) then
                         if (ipri.gt.1) write (*,*) 'error: no roots'
                         iabsorp = -1
                         !inak0 = inak
                         go to 10
                     end if
-                    call current_trajectory%init(tetin, inz)
-                    current_trajectory%rin = rin
 
                 else
                     if (current_trajectory%mbad.ne.0) then
