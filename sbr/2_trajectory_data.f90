@@ -10,7 +10,8 @@ module trajectory_data
         real(wp)    :: rho
         real(wp)    :: vthc, poloidn
         integer     :: izz, iww, jrad
-
+        integer     :: driver 
+        !! value = 2 or 4, где была создана точка в driver2 или driver4 
     end type TrajectoryPoint
 
     integer, parameter :: max_size = 10000

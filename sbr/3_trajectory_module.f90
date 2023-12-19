@@ -201,8 +201,8 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
                     jznak=-jznak
                 end if
 
-                        !   R, Z, rho, theta, N_par, N_pol, P_tot,P_land, P_coll, vth,  'slow=1','out=1', N_traj 
-                write(1, 7) x, z, xr,  th,    parn,  npoli, pt,   pl,     pc,     vthcg, ifast,  idir,    itr
+                        !   R, Z, rho, theta, N_par, N_pol, P_tot,P_land, P_coll, vth,  'slow=1','out=1', driver, N_traj 
+                write(1, 7) x, z, xr,  th,    parn,  npoli, pt,   pl,     pc,     vthcg, ifast,  idir,  tp%driver,  itr
                 
                 if(pt.ge.1d0-pleft) go to 11 !maximal absorbed power along a ray
             end do
@@ -217,7 +217,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
 
 1     format(2x,'N_traj',3x,'mbad',6x,'theta',9x,'Npar',9x,'rho_start')
 2     format('R_pass',4x,'Ptot',6x,'Pland',6x,'Pcoll',8x,'Pa',7x,'dPtot',6x,'dPland',5x,'dPcoll',6x,'dPa')
-3     format(5x,'R',10x,'Z',11x,'rho',8x,'theta',7x,'N_par',7x,'N_pol',6x,'P_tot',7x,'P_land',6x,'P_coll',6x,'vth',4x,'slow=1',4x,'out=1',2x,'N_traj',6x)
+3     format(5x,'R',10x,'Z',11x,'rho',8x,'theta',7x,'N_par',7x,'N_pol',6x,'P_tot',7x,'P_land',6x,'P_coll',6x,'vth',4x,'slow=1',4x,'out=1',2x,'driver',2x'N_traj',6x)
 4     format(i3,5x,8(f6.3,5x))
 5     format(6(e13.6,3x))
 6     format(2(i6,2x),4(e13.6,1x))

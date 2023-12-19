@@ -53,10 +53,10 @@ contains
         cf2 = theta
         if(jf.le.0) jf=1
         if(jf.gt.nr) jf=nr
-        call memorize_trajectory_point(vfound, jf, ro, 1d0)
+        call memorize_trajectory_point(vfound, jf, ro, 1d0, 4)
     end subroutine
 
-    subroutine memorize_trajectory_point(vz, j, ro, powccc)
+    subroutine memorize_trajectory_point(vz, j, ro, powccc, driver)
         !!  memorize trajectory point
         use plasma, only: fvt
         use decrements, only: cf1, cf2, cf3, cf6
@@ -68,7 +68,7 @@ contains
         implicit none
         type(TrajectoryPoint) :: tp
         real(wp), intent(in)     :: vz, ro, powccc
-        integer, intent(in)      :: j
+        integer, intent(in)      :: j, driver
         real(wp)    :: radth
         !inak=inak+1
         !if(inak.eq.lenstor) then
@@ -87,6 +87,7 @@ contains
         tp%iww = icf1 ! было ifast 
         tp%izz = icf2 ! было idir
         tp%xnpar = cf3 !было xparn
+        tp%driver = driver
         if(im4.eq.1) then
             tp%jrad = -j
             tp%dland = pintld4
@@ -196,7 +197,7 @@ contains
                 ! -----------------------------------
                 !      memorize trajectory
                 ! ----------------------------------
-                call memorize_trajectory_point(vfound, jfoundr, x, powccc)
+                call memorize_trajectory_point(vfound, jfoundr, x, powccc, 2)
                 if(iabsorp.eq.1) then !absorption
                     rzz=x
                     tetzz=y(1)
