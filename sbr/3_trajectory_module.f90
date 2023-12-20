@@ -221,7 +221,7 @@ subroutine view(tview, ispectr,nnz,ntet) !sav2008
 4     format(i3,5x,8(f6.3,5x))
 5     format(6(e13.6,3x))
 6     format(2(i6,2x),4(e13.6,1x))
-7     format(10(e11.4,1x),i5,2x,i5,2x,i5)
+7     format(10(e11.4,1x),i5,2x,i5,2x,i5, 2x,i5)
 8     format('after radial pass=',i3,2x,' P_tot=',f6.3,2x,' P_land=',f5.3,2x,' P_coll=',f6.3,2x,' P_a=',f6.3)
 9     format('Total passes:           P_tot=',f6.3,2x,' P_land=',f5.3,2x,' P_coll=',f6.3,2x,' P_a=',f6.3)
 20    format('written time slice (seconds) =',f9.3)
