@@ -5,10 +5,10 @@ DPOUT=1.d-4;
 DROUT=1.d-4;
 DTOUT=0.00001;
 TSTART = 0.11;
-TEND = 5.9;
-TINIT=0.299;
+TEND = 2.9;
+TINIT=8.0;
 TSCALE = 0.006;
-TPAUSE = 5.405;
+TPAUSE = 9.305;
 
      
 !BTOR=1.0d0;
@@ -22,7 +22,12 @@ NEOCL(100)<:;
 
 
 !!=========Ion temperature============
-TI=4.0*TIX;
+!TI=TIX;
+TI:As;
+
+TI=(12.0-0.05)*((1-(AMETR/0.57)**1.5)**4)+0.05;
+
+
 GN2I=1.0;
 PI=-PICX+PINEU+PIONZ-PIREC; !+CAR27+CAR29;
 XI=("work(j,165)"*NDEUT+"work(j,145)"*NHYDR)/(NI+0.001d0)+DN;  ! 
@@ -45,8 +50,8 @@ CAR31X = 1.5e-6           ! to substitute this for "volume" neutral density
 !============Stationary FRTC 2014============
 !QLH=ZRD1;
 !QLH=0.12d0*(FRAMP(0.180,0.182)-FJUMP(0.3d0));
-!CF1=0.18d0;
-!CF2=0.195d0;
+CF1=0.18d0;
+CF2=0.195d0;
 !CF3=1.d-4;
 !lhcd(0.d0,CULH,PELH,CAR12,CAR13,CAR14,CAR15):0.001:0.185::A;
 !CAR12 = power deposition into electrons via collisional damping
@@ -61,15 +66,13 @@ CCD3=VINT(CAR12B);  !absorbed power via collisional damping
 
 
 !===========Dynamic FRTC===========
-QLH=10.0d0;
+QLH=4.0d0;
 
 CF1=0.1d-3;  !interval between lhcd() calls, sec
-CF2=5.3d0;  !first call of lhcd()
-CF3=5.61d0;
-DSTART=5.298;
+CF2=8.3d0;  !first call of lhcd()
+CF3=8.61d0;
+DSTART=8.298;
 debug:0.0001:DSTART::;
-
-
 saveprofiles::CF2:CF3:;
 lhcd2017(PELH,CAR14,CAR15,ZRD8):CF1:CF2:CF3:;
 drivencurrent(CULH,ZRD35,ZRD36,CAR12,CAR13,CAR32)::CF2:CF3:;
@@ -79,7 +82,8 @@ drivencurrent(CULH,ZRD35,ZRD36,CAR12,CAR13,CAR32)::CF2:CF3:;
 !========Current Density===========
 IPL=5.0;
 CU:Eq;
-CU=CUX;
+!CU=CUX;
+CU=1.0;
 !CU=TIX/2;
 CAR25=TEX/6;
 !CU=CAR25; 
@@ -115,7 +119,9 @@ NNWM=0.45e-4*(1-FJUMP(0.180));
 SN=SNNEU*NE+CAR20;
 
 !=========DENSITY============
-NE=8.0*NEX;
+!NE=NEX;
+NE=(2.0-0.3)*((1-(AMETR/ABC)**2)**1)+0.3;
+
 CAR17=(2.5-0.8)*((1-(AMETR/0.223)**1.5)**8)+0.79;
 CAR19=(0.8-0.6)*((1-(AMETR/0.223)**15)**2)+0.6;
 CAR18=CAR17*STEP(0.161-AMETR)+CAR19*STEP(AMETR-0.161)+0.001;
@@ -129,8 +135,10 @@ ZRD44=1-0.3*(FRAMP(0.2,0.21));
 CAR21=(0.72-0.17)*((1-(AMETR/0.223)**1.5)**7)+0.17;
 CAR22=(0.17-0.02)*((1-(AMETR/0.223)**15)**2)+0.02;
 CAR23=CAR21*STEP(0.171-AMETR)+CAR22*STEP(AMETR-0.171)+0.001;
-TE=4.0*TEX;
-!TE=(3.5-0.05)*((1-(AMETR/0.66)**1.5)**4)+0.05;
+
+TE:As;
+!TE=TEX;
+TE=(12.0-0.05)*((1-(AMETR/0.57)**1.5)**4)+0.05;
 
 
 HE=6.0*(1-FRAMP(0.120,0.135))+(0.9*4.7*(1.-FJUMP(0.165))+2*FJUMP(0.165));
