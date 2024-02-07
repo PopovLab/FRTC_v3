@@ -68,7 +68,8 @@ QLH=10.0d0;
 CF1=0.1d-3;  !interval between lhcd() calls, sec
 CF2=0.3d0;  !first call of lhcd()
 CF3=0.61d0;
-!debug:0.0001:DSTART::;
+DSTART=0.298;
+debug:0.0001:DSTART::;
 saveprofiles::CF2:CF3:;
 lhcd2017(PELH,CAR14,CAR15,ZRD8):CF1:CF2:CF3:;
 drivencurrent(CULH,ZRD35,ZRD36,CAR12,CAR13,CAR32)::CF2:CF3:;
@@ -114,7 +115,7 @@ NNWM=0.45e-4*(1-FJUMP(0.180));
 SN=SNNEU*NE+CAR20;
 
 !=========DENSITY============
-NE=NEX;
+NE=0.5*NEX;
 CAR17=(2.5-0.8)*((1-(AMETR/0.223)**1.5)**8)+0.79;
 CAR19=(0.8-0.6)*((1-(AMETR/0.223)**15)**2)+0.6;
 CAR18=CAR17*STEP(0.161-AMETR)+CAR19*STEP(AMETR-0.161)+0.001;
